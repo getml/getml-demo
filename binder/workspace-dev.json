@@ -61,6 +61,7 @@
         "current": "filebrowser",
         "widgets": [
           "filebrowser",
+          "git-sessions",
           "@jupyterlab/toc:plugin"
         ]
       },

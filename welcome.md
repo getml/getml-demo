@@ -1,13 +1,14 @@
-<img src="https://static.getml.com/logo/logo-main.png" 
-     width="50%" 
+<img src="binder/getml_logo.png" 
+     width="35%" 
      align=right
-     alt="getML logo" >
+     alt="getML logo"
+     style="margin-top: 1.5rem;">
 
 # Welcome to the getML live-demo
 
 **This is a live session from which you can run example notebooks showing how to use getML.**
 
-To get started with getML start with [this](loans_small.ipynb) notebook. It is a jupyter notebook on loan default prediction, which is reduced to a bare minimum. The notebook is derived from the extended version out of our getml-example repository.
+To get started with getML start with [this](loans_short.ipynb) notebook. It is a jupyter notebook on loan default prediction, which is reduced to the essential. The notebook is derived from the extended version out of our getml-example repository.
 
 
 # The getML Monitor on mybinder
