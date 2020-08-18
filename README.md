@@ -7,7 +7,8 @@
 </p>
 
 <p align="center" style="text-align: center;">
-        <a href="https://mybinder.org/v2/gh/getml/getml-demo/master?urlpath=lab" target="_blank" alt="mybinder.org">
+        <a href="https://binder.mybinder.ovh/v2/gh/getml/getml-demo/master?urlpath=lab" target="_blank" alt="mybinder.org">
+        <!-- <a href="https://mybinder.org/v2/gh/getml/getml-demo/master?urlpath=lab" target="_blank" alt="mybinder.org"> -->
         <img src="https://mybinder.org/badge_logo.svg" /></a>
         <a href="https://go.getml.com/meetings/alexander-uhlig/call" target="_blank">
         <img src="https://img.shields.io/badge/schedule-a_meeting-blueviolet.svg" /></a>
