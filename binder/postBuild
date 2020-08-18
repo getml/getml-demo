@@ -1,0 +1,75 @@
+#!/bin/bash
+
+export GETML_DOWNLOAD_PATH='https://static.getml.com/private/0.12/'
+export GETML_ENGINE='getml-0.12.0-rc.1.linux-beta.tar.xz'
+export GETML_API='getml-0.12.0_datasets.2-py3-none-any.whl'
+
+# Install getML
+######
+# engine
+curl $GETML_DOWNLOAD_PATH$GETML_ENGINE --output getml_engine.tar.xz
+cd $HOME
+mkdir -p $HOME/binder/getml
+tar -xJf getml_engine.tar.xz -C $HOME/binder/getml/ --strip-components=1
+rm getml_engine.tar.xz
+
+# python-api
+curl $GETML_DOWNLOAD_PATH$GETML_API -OJ
+pip install $HOME/$GETML_API
+rm $HOME/$GETML_API
+
+
+# Launch getML as jupyter server extension
+######
+mv $HOME/binder/getml-serverextension.py ${NB_PYTHON_PREFIX}/lib/python*/site-packages/
+jupyter serverextension enable --sys-prefix getml-serverextension
+
+
+# Install & enable jupyter nbextensions
+######
+# https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
+# jupyter contrib nbextension install --sys-prefix
+# jupyter nbextension enable toc2/main
+
+
+# Install JupyterLab extensions
+######
+jupyter labextension install @jupyterlab/server-proxy
+jupyter labextension install @jupyterlab/toc
+jupyter labextension install @jupyterlab/shortcutui
+
+# jupyter labextension install jupyterlab_iframe
+# jupyter serverextension enable --py jupyterlab_iframe
+
+
+# Load jupyter_notebook_config.py
+######
+# includes user-settings for jupyterlab extensions
+mv $HOME/binder/.jupyter $HOME/
+
+# https://jupyter-notebook.readthedocs.io/en/stable/config.html
+# mkdir -p $HOME/.jupyter
+# mkdir -p $HOME/.local/bin
+
+# mv $HOME/binder/jupyter_notebook_config.py $HOME/.jupyter/
+# mv $HOME/binder/getml_logo.png $HOME/.jupyter/
+
+# ln -s $HOME/getml/getML $HOME/.local/bin
+
+
+# getML demo setup
+######
+# mkdir -p $HOME/.getML/getml-0.12-beta-linux
+mv $HOME/binder/.getML $HOME/
+
+
+# Setup a workspace
+######
+jupyter lab workspaces import $HOME/binder/workspace.json
+jupyter lab workspaces import $HOME/binder/workspace-dev.json
+
+
+# Clone getml-examples
+######
+
+# git clone https://github.com/getml/getml-examples $HOME/getml-examples-git

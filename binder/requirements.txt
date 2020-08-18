@@ -1,0 +1,12 @@
+numpy
+pandas
+# python-dateutil
+matplotlib
+jupyterlab_launcher
+scipy
+jupyter-server-proxy
+vdom
+jupyter-offlinenotebook
+jupyterlab-git
+# jupyter_contrib_nbextensions
+# jupyterlab_iframe

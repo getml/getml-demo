@@ -1,0 +1,10 @@
+{
+    "overrides": {
+        "tab-manager": "right",
+        "running-sessions": "right",
+        "command-palette": "right",
+        "jp-property-inspector": "right",
+        "jp-running-sessions": "right",
+        "extensionmanager.main-view": "right"
+    }
+}

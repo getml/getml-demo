@@ -1,0 +1,4 @@
+nano
+vim
+zip
+htop
