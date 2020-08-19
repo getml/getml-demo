@@ -12,6 +12,8 @@ preparation/
 .local/
 .npm/
 .yarn/
+.jupyter/
+.profile
 binder/getml/
 
 # Byte-compiled / optimized / DLL files
