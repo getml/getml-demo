@@ -1,9 +1,18 @@
 **/.DS_Store
 
 # Temp
-playground/
-notebooks/
 preparation/
+
+# Binder
+.bash_logout
+.bashrc
+.cache/
+.config/
+.getML/
+.local/
+.npm/
+.yarn/
+binder/getml/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
