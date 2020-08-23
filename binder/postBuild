@@ -2,7 +2,7 @@
 
 export GETML_DOWNLOAD_PATH='https://static.getml.com/private/0.12/'
 export GETML_ENGINE='getml-0.12.0-rc.1.linux-beta.tar.xz'
-export GETML_API='getml-0.12.0_datasets.2-py3-none-any.whl'
+export GETML_API='getml-0.12.0_datasets.3-py3-none-any.whl'
 
 # Install getML
 ######
@@ -37,6 +37,8 @@ jupyter serverextension enable --sys-prefix getml-serverextension
 jupyter labextension install @jupyterlab/server-proxy
 jupyter labextension install @jupyterlab/toc
 jupyter labextension install @jupyterlab/shortcutui
+
+# jupyter labextension install jupyter-offlinenotebook
 
 # jupyter labextension install jupyterlab_iframe
 # jupyter serverextension enable --py jupyterlab_iframe
