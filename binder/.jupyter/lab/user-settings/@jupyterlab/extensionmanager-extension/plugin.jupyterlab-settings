@@ -11,5 +11,5 @@
     // Enabled Status
     // Enables extension manager (requires Node.js/npm).
     // WARNING: installing untrusted extensions may be unsafe.
-    "enabled": false
+    "enabled": true
 }

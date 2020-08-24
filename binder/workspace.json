@@ -5,9 +5,7 @@
         "dock": {
           "type": "tab-area",
           "currentIndex": 0,
-          "widgets": [
-            "markdownviewer-widget:welcome.md"
-          ]
+          "widgets": ["markdownviewer-widget:welcome.md"]
         },
         "mode": "multiple-document",
         "current": "markdownviewer-widget:welcome.md"
@@ -15,11 +13,7 @@
       "left": {
         "collapsed": false,
         "current": "filebrowser",
-        "widgets": [
-          "filebrowser",
-          "git-sessions",
-          "@jupyterlab/toc:plugin"
-        ]
+        "widgets": ["filebrowser", "git-sessions", "@jupyterlab/toc:plugin"]
       },
       "right": {
         "collapsed": true,
@@ -27,7 +21,8 @@
           "running-sessions",
           "command-palette",
           "jp-property-inspector",
-          "tab-manager"
+          "tab-manager",
+          "extensionmanager.main-view"
         ]
       }
     },

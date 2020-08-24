@@ -1,12 +1,12 @@
 numpy
 pandas
-# python-dateutil
 matplotlib
-jupyterlab_launcher
 scipy
-jupyter-server-proxy
 vdom
+nbdime
+jupyter-server-proxy
 jupyter-offlinenotebook
 jupyterlab-git
-# jupyter_contrib_nbextensions
-# jupyterlab_iframe
+jupyterlab_iframe
+jupyter_contrib_nbextensions
+jupyter_nbextensions_configurator
