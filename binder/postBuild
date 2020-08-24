@@ -59,7 +59,7 @@ jupyter labextension install @jupyterlab/server-proxy
 mv $HOME/binder/.jupyter $HOME/
 
 # other extensions
-nbdime extensions --enable --sys-prefix
+# nbdime extensions --enable --sys-prefix
 
 
 # getML demo setup
