@@ -30,7 +30,6 @@ def load_jupyter_server_extension(nbapp):
         install = Popen(["./getML", "--install", "--proxy-url",
                          user_base+"proxy/1709", "--http-port", "1709"],
                         cwd=getml_dir, stdout=out, stderr=err)
-        install.wait()
         env = get_environment(getml_dir)
 
     # pass base url to markdown
