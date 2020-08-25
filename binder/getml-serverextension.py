@@ -34,9 +34,6 @@ def load_jupyter_server_extension(nbapp):
                         cwd=getml_dir, stdout=out, stderr=err)
         env = get_environment(getml_dir)
 
-        while env[3] < 0:
-            env = get_environment(getml_dir)
-
     # pass base url to markdown
     with open(home/'welcome.md', 'r+') as f:
         content = f.read()
