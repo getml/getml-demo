@@ -14,8 +14,10 @@ def get_environment(getml_dir):
 
     with open(getml_env_file) as f:
         getml_env = json.load(f)
-
-    license_seed = getml_env['monitor']['licenseSeedStatic']
+        license_seed = getml_env['monitor']['licenseSeedStatic']
+        while lecense_seed < 0:
+            getml_env = json.load(f)
+            license_seed = getml_env['monitor']['licenseSeedStatic']
 
     return binder_ref, client_id, license_seed
 
@@ -32,10 +34,14 @@ def load_jupyter_server_extension(nbapp):
                         cwd=getml_dir, stdout=out, stderr=err)
         env = get_environment(getml_dir)
 
+        while env[3] < 0:
+            env = get_environment(getml_dir)
+
     # pass base url to markdown
     with open(home/'welcome.md', 'r+') as f:
         content = f.read()
         f.seek(0)
         f.write(re.sub(r'(http:\/\/localhost:1709)',
-                       user_base + r'proxy/1709/', content, '\n\n', env))
+                       user_base + r'proxy/1709/', content))
+        f.write(env)
         f.truncate()
