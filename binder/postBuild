@@ -18,12 +18,13 @@ curl $GETML_DOWNLOAD_PATH$GETML_API -OJ
 pip install $HOME/$GETML_API
 rm $HOME/$GETML_API
 
-
 # Jupyter serverextension
 ######
 # getML labextension
-mv $HOME/binder/getml-serverextension.py ${NB_PYTHON_PREFIX}/lib/python*/site-packages/
-jupyter serverextension enable --sys-prefix getml-serverextension
+mv $HOME/binder/getml_install.py ${NB_PYTHON_PREFIX}/lib/python*/site-packages/
+mv $HOME/binder/getml_binder_init.py ${NB_PYTHON_PREFIX}/lib/python*/site-packages/
+jupyter serverextension enable --sys-prefix getml_install
+jupyter serverextension enable --sys-prefix getml_binder_init
 
 # official & contribs
 jupyter serverextension enable --py jupyter_server_proxy --sys-prefix
@@ -32,17 +33,14 @@ jupyter serverextension enable --py jupyter_server_proxy --sys-prefix
 # jupyter serverextension enable --py nbdime --sys-prefix
 # jupyter serverextension enable --py jupyter_offlinenotebook --sys-prefix
 
-
 # Install & enable jupyter nbextensions
 ######
 # https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
 # jupyter contrib nbextension install --sys-prefix
 
-
 # jupyter nbextension enable jupyter_server_proxy/tree --sys-prefix
 # jupyter nbextension enable toc2/main --sys-prefix
 # jupyter nbextensions_configurator enable --sys-prefix
-
 
 # Install JupyterLab extensions
 ######
@@ -52,7 +50,6 @@ jupyter labextension install @jupyterlab/server-proxy
 # jupyter labextension install jupyter-offlinenotebook
 # jupyter labextension install jupyterlab_iframe
 
-
 # Load jupyter presets
 ######
 # includes user-settings for jupyterlab extensions & jupyter_notebook_config
@@ -61,12 +58,10 @@ mv $HOME/binder/.jupyter $HOME/
 # other extensions
 # nbdime extensions --enable --sys-prefix
 
-
 # getML demo setup
 ######
 # mkdir -p $HOME/.getML/getml-0.12-beta-linux
 mv $HOME/binder/.getML $HOME/
-
 
 # Setup a workspace
 ######
