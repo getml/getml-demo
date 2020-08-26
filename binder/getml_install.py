@@ -16,7 +16,7 @@ def load_jupyter_server_extension(nbapp):
     with open(home / "binder/getml.log", "wb") as out, open(home / "binder/stderr.log", "wb") as err:
         Popen(["./getML", "--install", "--proxy-url",
                user_base+"proxy/1709", "--http-port", "1709"],
-              cwd=getml_dl_dir, stdout=out, stderr=err)
+              cwd=getml_dl_dir, stdout=out, stderr=err, start_new_session=True)
 
     # pass base url to markdown
     with open(home / 'welcome.md', 'r+') as f:
@@ -32,4 +32,4 @@ def load_jupyter_server_extension(nbapp):
 
     with open(home / "binder/watch.log", "wb") as out, open(home / "binder/watch_stderr.log", "wb") as err:
         Popen(["/srv/conda/envs/notebook/bin/python", "watch.py"],
-              cwd="/home/srnnkls/binder/", stdout=out, stderr=err)
+              cwd=home / "binder", stdout=out, stderr=err, start_new_session=True)
