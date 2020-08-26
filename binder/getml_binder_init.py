@@ -16,12 +16,10 @@ def get_environment(getml_dir):
 
     env = dict()
     env['binder_ref'] = os.environ.get("BINDER_REF_URL")
-    env['binder_persistent'] = os.environ.get("BINDER_PERSISTENT_REQUEST")
-    env['binder_persistent'] = os.environ.get("BINDER_PERSISTENT_REQUEST")
+    env['binder_request'] = os.environ.get("BINDER_REQUEST")
     env['client_id'] = os.environ.get("JUPYTERHUB_CLIENT_ID")
-    env['jupyter_image'] = os.environ.get("JUPYTERHUB_IMAGE")
-
-    # server = re.search("(\w+)/", jupyter_image).group(1)
+    env['jupyter_image'] = os.environ.get("JUPYTER_IMAGE")
+    env['binder_cluster'] = re.search("(\w+)/", env['jupyter_image']).group(1)
 
     with open(getml_env_file) as f:
         getml_env = json.load(f)
@@ -62,6 +60,7 @@ def add_telemetry(globs, env):
         env['file_name'] = fp.stem
         telemetry = dict()
         telemetry["writeKey"] = "YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm"
+        telemetry["anonymousId"] = env["license_seed"]
         telemetry["properties"] = env
         if fp.suffix == ".md":
             telemetry["event"] = "Markdown rendered"
