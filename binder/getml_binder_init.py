@@ -87,7 +87,7 @@ def send_watch_event(command, time, env):
         "POST", SEGMENT_TRACK_URL, headers=headers, json=payload, timeout=5).json()
 
 
-def watch_log(log_file):
+def watch_log(log_file, env):
     log_file = Path(log_file).expanduser()
     if log_file.exists():
         for changes in watch(log_file):
