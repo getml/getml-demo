@@ -113,7 +113,7 @@ def watch_log(log_file, env):
                         send_watch_event("Engine: Set project", command["name_"], env)
                         # print("Set Project to", project, "at", time)
                     if command["type_"] == "Pipeline.fit":
-                        send_watch_event("Engine: Pipeline fitted", "", env)
+                        send_watch_event("Engine: Pipeline fitted", "fitted", env)
                         # print("Fitted a pipeline in project", project, "at", time)
                         # print(command, time)
                 except:
