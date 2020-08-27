@@ -77,7 +77,7 @@ def add_telemetry(globs, env):
 def send_watch_event(command, time, env):
     headers = dict()
     headers["Content-Type"] = "application/json"
-    headers["Authorization"] = "Authorization: Basic "
+    headers["Authorization"] = "Basic "
     headers["Authorization"] += base64.urlsafe_b64encode("YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm".encode('utf-8')).decode()  
     telemetry = dict()
     telemetry["anonymousId"] = env["license_seed"]
