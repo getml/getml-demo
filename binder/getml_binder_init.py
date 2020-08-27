@@ -73,6 +73,10 @@ def add_telemetry(globs, env):
             append_cell(fp, telemetry)
 
 
+def send_watch_event(command, time):
+    pass
+
+
 def watch_log(log_file):
     log_file = Path(log_file).expanduser()
     if log_file.exists():
