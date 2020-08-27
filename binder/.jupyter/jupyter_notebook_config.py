@@ -40,6 +40,9 @@
 
 c.NotebookApp.tornado_settings = {'autoreload': True}
 
+c.LabBuildApp.minimize = False
+c.LabBuildApp.dev_build = False
+
 # shutdown parameters of images/ user pods from jupyterhub
 # https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html
 # https://github.com/jupyterhub/mybinder.org-deploy/blob/master/mybinder/values.yaml
