@@ -2,6 +2,7 @@ numpy
 pandas
 matplotlib
 scipy
+vdom
 watchgod
 jupyter-server-proxy
 jupyter-offlinenotebook
