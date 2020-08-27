@@ -64,7 +64,9 @@ def add_telemetry(globs, env):
         telemetry["anonymousId"] = env["license_seed"]
         telemetry["properties"] = env
         telemetry["properties"]["url"] = "https://demo.getml.com/" + env["binder_request"] + "/" + str(fp)
-        telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:]) + "/" + str(fp.parent)
+        telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:]) + "/" 
+        path = str(fp.absolute().relative_to(Path.home()).parent)
+        telemetry["properties"]["path"] += path if path != "." else ""
         telemetry["properties"]["title"] = env["file_name"]
         if fp.suffix == ".md":
             telemetry = encode_dict(telemetry)
