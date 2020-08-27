@@ -9,7 +9,7 @@ import requests
 from pathlib import Path
 from itertools import chain
 from watchgod import watch
-
+import sys
 
 def get_environment(getml_dir):
     getml_dir = Path(getml_dir).expanduser()
@@ -100,18 +100,21 @@ def watch_log(log_file, env):
     if log_file.exists():
         for changes in watch(log_file):
             with open(log_file, "r") as f:
-                log = f.read().splitlines()[-4:-1]
-                # time = datetime.datetime.strptime(
-                #     log[0], "%a %b %d %H:%M:%S %Y")
-                command = json.loads(log[2])
-            if command["type_"] == "set_project":
-                send_watch_event("Engine: Set project", command["name_"], env)
-                # print("Set Project to", project, "at", time)
-            if command["type_"] == "Pipeline.fit":
-                send_watch_event("Engine: Pipeline fitted", "", env)
-                # print("Fitted a pipeline in project", project, "at", time)
-                # print(command, time)
-
+                log = f.read()
+                try:
+                    log = log.splitlines()[-4:-1]
+                    # time = datetime.datetime.strptime(
+                    #     log[0], "%a %b %d %H:%M:%S %Y")
+                    command = json.loads(log[2])
+                    if command["type_"] == "set_project":
+                        send_watch_event("Engine: Set project", command["name_"], env)
+                        # print("Set Project to", project, "at", time)
+                    if command["type_"] == "Pipeline.fit":
+                        send_watch_event("Engine: Pipeline fitted", "", env)
+                        # print("Fitted a pipeline in project", project, "at", time)
+                        # print(command, time)
+                except:
+                    sys.stdout.write(str(log))
 
 def load_jupyter_server_extension(nbapp):
     pass
