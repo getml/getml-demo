@@ -64,7 +64,7 @@ def add_telemetry(globs, env):
         telemetry["anonymousId"] = env["license_seed"]
         telemetry["properties"] = env
         telemetry["properties"]["url"] = "https://demo.getml.com/" + env["binder_request"] + "/" + str(fp)
-        telemetry["properties"]["path"] = env["binder_request"] + "/" + str(fp.parent)
+        telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:]) + "/" + str(fp.parent)
         telemetry["properties"]["title"] = env["file_name"]
         if fp.suffix == ".md":
             telemetry = encode_dict(telemetry)
@@ -83,7 +83,7 @@ def send_watch_event(event, label, env):
     telemetry["anonymousId"] = env["license_seed"]
     telemetry["properties"] = env
     telemetry["properties"]["url"] = "https://demo.getml.com/" + env["binder_request"]
-    telemetry["properties"]["path"] = "/" + env["binder_request"]
+    telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:])
     telemetry["properties"]["commit"] = env["binder_ref"].split("/")[-1]
     telemetry["properties"]["v"] = env["binder_request"].split("/")[-1]
     telemetry["properties"]["category"] = "getml-demo " + telemetry["properties"]["v"]
@@ -101,16 +101,16 @@ def watch_log(log_file, env):
         for changes in watch(log_file):
             with open(log_file, "r") as f:
                 log = f.read().splitlines()[-4:-1]
-                time = datetime.datetime.strptime(
-                    log[0], "%a %b %d %H:%M:%S %Y")
+                # time = datetime.datetime.strptime(
+                #     log[0], "%a %b %d %H:%M:%S %Y")
                 command = json.loads(log[2])
             if command["type_"] == "set_project":
                 send_watch_event("Engine: Set project", command["name_"], env)
-                print("Set Project to", project, "at", time)
+                # print("Set Project to", project, "at", time)
             if command["type_"] == "Pipeline.fit":
                 send_watch_event("Engine: Pipeline fitted", "", env)
-                print("Fitted a pipeline in project", project, "at", time)
-                print(command, time)
+                # print("Fitted a pipeline in project", project, "at", time)
+                # print(command, time)
 
 
 def load_jupyter_server_extension(nbapp):
