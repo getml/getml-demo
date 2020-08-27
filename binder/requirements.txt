@@ -3,10 +3,7 @@ pandas
 matplotlib
 scipy
 watchgod
-#nbdime
 jupyter-server-proxy
 jupyter-offlinenotebook
 jupyterlab-git
 jupyterlab_iframe
-#jupyter_contrib_nbextensions
-#jupyter_nbextensions_configurator
