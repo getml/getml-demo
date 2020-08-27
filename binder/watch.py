@@ -5,5 +5,5 @@ import sys
 home = Path.home()
 sys.stdout.write(str(home))
 env = get_environment(home / ".getML")
-sys.stdout.write(env)
+sys.stdout.write(str(env))
 watch_log(home / "binder/getml.out.log", env)
