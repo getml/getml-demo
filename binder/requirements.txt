@@ -3,6 +3,7 @@ pandas
 matplotlib
 scipy
 vdom
+nodejs
 watchgod
 nbdime
 jupyter-server-proxy
