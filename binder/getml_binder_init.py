@@ -63,26 +63,32 @@ def add_telemetry(globs, env):
         telemetry["writeKey"] = "YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm"
         telemetry["anonymousId"] = env["license_seed"]
         telemetry["properties"] = env
+        telemetry["properties"]["url"] = "https://demo.getml.com/" env["binder_request"] "/" fp
+        telemetry["properties"]["path"] = env["binder_request"] "/" fp.parents
+        telemetry["properties"]["title"] = env[""]
         if fp.suffix == ".md":
-            telemetry["event"] = "Markdown rendered"
             telemetry = encode_dict(telemetry)
             append_md(fp, telemetry)
         elif fp.suffix == ".ipynb":
-            print(fp, env)
-            telemetry["event"] = "Notebook rendered"
             telemetry = encode_dict(telemetry)
             append_cell(fp, telemetry)
 
 
-def send_watch_event(command, time, env):
+def send_watch_event(event, label, env):
     headers = dict()
     headers["Content-Type"] = "application/json"
     headers["Authorization"] = "Basic "
-    headers["Authorization"] += base64.urlsafe_b64encode("YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm".encode('utf-8')).decode()  
+    headers["Authorization"] += base64.urlsafe_b64encode("AsELY1nc3mibN3zfIu25VFjbqAGY2Evw".encode('utf-8')).decode()  
     telemetry = dict()
     telemetry["anonymousId"] = env["license_seed"]
     telemetry["properties"] = env
-    telemetry["event"] = re.sub("[^0-9a-z]+", "_", command.lower())
+    telemetry["properties"]["url"] = "https://demo.getml.com/" env["binder_request"]
+    telemetry["properties"]["path"] = "/" env["binder_request"]
+    telemetry["properties"]["commit"] = env["binder_ref"].split("/")[-1]
+    telemetry["properties"]["v"] = env["binder_request"].split("/")[-1]
+    telemetry["properties"]["category"] = "getml-demo " telemetry["properties"]["v"]
+    telemetry["event"] = event
+    telemetry["properties"]["label"] = label
     resquest_destination = "https://api.segment.io/v1/track"
     res = requests.request(
         "POST", resquest_destination, headers=headers, json=telemetry, timeout=5).json()
@@ -99,14 +105,12 @@ def watch_log(log_file, env):
                     log[0], "%a %b %d %H:%M:%S %Y")
                 command = json.loads(log[2])
             if command["type_"] == "set_project":
-                project = command["name_"]
-                env["project"] = project
-                send_watch_event(command["type_"], time, env)
-                print("Set Project to", project, "at", time)
+                send_watch_event("Engine: Set project", command["name_"], env)
+                # print("Set Project to", project, "at", time)
             if command["type_"] == "Pipeline.fit":
-                send_watch_event(command["type_"], time, env)
-                print("Fitted a pipeline in project", project, "at", time)
-                print(command, time)
+                send_watch_event("Engine: Pipeline fitted", "", env)
+                # print("Fitted a pipeline in project", project, "at", time)
+                # print(command, time)
 
 
 def load_jupyter_server_extension(nbapp):
