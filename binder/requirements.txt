@@ -4,6 +4,7 @@ matplotlib
 scipy
 vdom
 watchgod
+nbdime
 jupyter-server-proxy
 jupyter-offlinenotebook
 jupyterlab-git
