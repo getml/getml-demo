@@ -57,7 +57,7 @@ def encode_dict(dict_):
 
 def add_telemetry(globs, env):
     for fp in walk(globs=globs):
-        env['file_name'] = fp.stem
+        env['file_name'] = fp.name
         telemetry = dict()
         telemetry["writeKey"] = "YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm"
         telemetry["anonymousId"] = env["license_seed"]

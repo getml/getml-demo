@@ -24,7 +24,7 @@ rm $HOME/$GETML_API
 mv $HOME/binder/getml_install.py ${NB_PYTHON_PREFIX}/lib/python*/site-packages/
 mv $HOME/binder/getml_binder_init.py ${NB_PYTHON_PREFIX}/lib/python*/site-packages/
 jupyter serverextension enable --sys-prefix getml_install
-jupyter serverextension enable --sys-prefix getml_binder_init
+# jupyter serverextension enable --sys-prefix getml_binder_init
 
 # official & contribs
 jupyter serverextension enable --py jupyter_server_proxy --sys-prefix
