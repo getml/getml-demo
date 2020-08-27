@@ -83,8 +83,9 @@ def send_watch_event(command, time, env):
     telemetry["anonymousId"] = env["license_seed"]
     telemetry["properties"] = env
     telemetry["event"] = re.sub("[^0-9a-z]+", "_", command.lower())
+    resquest_destination = "https://api.segment.io/v1/track"
     requests.request(
-        "POST", SEGMENT_TRACK_URL, headers=headers, json=payload, timeout=5).json()
+        "POST", resquest_destination, headers=headers, json=payload, timeout=5).json()
 
 
 def watch_log(log_file, env):
