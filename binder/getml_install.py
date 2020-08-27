@@ -1,7 +1,7 @@
 import os
 import re
 from pathlib import Path
-from subprocess import Popen, run, STDOUT
+from subprocess import Popen, run
 from getml_binder_init import get_environment, add_telemetry, watch_log
 import time
 
@@ -30,5 +30,6 @@ def load_jupyter_server_extension(nbapp):
     env = get_environment("~/.getML")
     add_telemetry(["*.md", "*.ipynb"], env)
 
-    with open(home / "binder/watch.log", "w") as w_out:
-        Popen(["/srv/conda/envs/notebook/bin/python", "watch.py"], cwd=home / "binder", stdout=w_out, stderr=STDOUT)
+    with open(home / "binder/watch.out.log", "wb") as out, open(home / "binder/watch.err.log", "wb") as err:
+        Popen(["/srv/conda/envs/notebook/bin/python", "watch.py"],
+              cwd=home / "binder", stdout=out, stderr=err)

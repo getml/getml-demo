@@ -78,7 +78,7 @@ def send_watch_event(event, label, env):
     headers = dict()
     headers["Content-Type"] = "application/json"
     headers["Authorization"] = "Basic "
-    headers["Authorization"] += base64.urlsafe_b64encode("AsELY1nc3mibN3zfIu25VFjbqAGY2Evw".encode('utf-8')).decode()  
+    headers["Authorization"] += base64.urlsafe_b64encode("YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm".encode('utf-8')).decode()  
     telemetry = dict()
     telemetry["anonymousId"] = env["license_seed"]
     telemetry["properties"] = env
