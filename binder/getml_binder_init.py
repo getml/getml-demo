@@ -84,8 +84,9 @@ def send_watch_event(command, time, env):
     telemetry["properties"] = env
     telemetry["event"] = re.sub("[^0-9a-z]+", "_", command.lower())
     resquest_destination = "https://api.segment.io/v1/track"
-    requests.request(
-        "POST", resquest_destination, headers=headers, json=payload, timeout=5).json()
+    res = requests.request(
+        "POST", resquest_destination, headers=headers, json=telemetry, timeout=5).json()
+    print(res)
 
 
 def watch_log(log_file, env):
