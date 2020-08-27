@@ -2,12 +2,11 @@ numpy
 pandas
 matplotlib
 scipy
-vdom
 watchgod
-# nbdime
+#nbdime
 jupyter-server-proxy
-# jupyter-offlinenotebook
-# jupyterlab-git
-# jupyterlab_iframe
-# jupyter_contrib_nbextensions
-# jupyter_nbextensions_configurator
+jupyter-offlinenotebook
+jupyterlab-git
+jupyterlab_iframe
+#jupyter_contrib_nbextensions
+#jupyter_nbextensions_configurator

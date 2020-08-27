@@ -5,6 +5,7 @@ import base64
 import nbformat
 import time
 import datetime
+import requests
 from pathlib import Path
 from itertools import chain
 from watchgod import watch
@@ -73,8 +74,17 @@ def add_telemetry(globs, env):
             append_cell(fp, telemetry)
 
 
-def send_watch_event(command, time):
-    pass
+def send_watch_event(command, time, env):
+    headers = dict()
+    headers["Content-Type"] = "application/json"
+    headers["Authorization"] = "Authorization: Basic "
+    headers["Authorization"] += base64.urlsafe_b64encode("YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm".encode('utf-8')).decode()  
+    telemetry = dict()
+    telemetry["anonymousId"] = env["license_seed"]
+    telemetry["properties"] = env
+    telemetry["event"] = re.sub("[^0-9a-z]+", "_", command.lower())
+    requests.request(
+        "POST", SEGMENT_TRACK_URL, headers=headers, json=payload, timeout=5).json()
 
 
 def watch_log(log_file):
@@ -88,8 +98,11 @@ def watch_log(log_file):
                 command = json.loads(log[2])
             if command["type_"] == "set_project":
                 project = command["name_"]
+                env["project"] = project
+                send_watch_event(command["type_"], time, env)
                 print("Set Project to", project, "at", time)
             if command["type_"] == "Pipeline.fit":
+                send_watch_event(command["type_"], time, env)
                 print("Fitted a pipeline in project", project, "at", time)
                 print(command, time)
 
