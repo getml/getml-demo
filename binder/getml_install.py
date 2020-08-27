@@ -30,5 +30,5 @@ def load_jupyter_server_extension(nbapp):
     env = get_environment("~/.getML")
     add_telemetry(["*.md", "*.ipynb"], env)
 
-    # with open(home / "binder/watch.log", "wb") as w_out:
-    #     Popen(["/srv/conda/envs/notebook/bin/python", "watch.py"], stdout=w_out, stderr=subprocess.STDOUT)
+    with open(home / "binder/watch.log", "wb") as w_out:
+        Popen(["/srv/conda/envs/notebook/bin/python", "watch.py"], stdout=w_out, stderr=subprocess.STDOUT)
