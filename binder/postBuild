@@ -35,6 +35,7 @@ jupyter serverextension enable --py jupyter_offlinenotebook --sys-prefix
 
 # Install & enable jupyter nbextensions
 ######
+# need to include jupyter_contrib_nbextensions & jupyter_nbextensions_configurator in requirements.txt
 # https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
 # jupyter contrib nbextension install --sys-prefix
 
