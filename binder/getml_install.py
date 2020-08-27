@@ -26,7 +26,7 @@ def load_jupyter_server_extension(nbapp):
                        user_base + r'proxy/1709/', content))
         f.truncate()
 
-    time.sleep(5)
+    time.sleep(7)
     env = get_environment("~/.getML")
     add_telemetry(["*.md", "*.ipynb"], env)
 

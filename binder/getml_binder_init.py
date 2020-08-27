@@ -63,10 +63,11 @@ def add_telemetry(globs, env):
         telemetry["writeKey"] = "YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm"
         telemetry["anonymousId"] = env["license_seed"]
         telemetry["properties"] = env
-        telemetry["properties"]["url"] = "https://demo.getml.com/" + env["binder_request"] + "/" + str(fp)
-        telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:]) + "/" 
         path = str(fp.absolute().relative_to(Path.home()).parent)
-        telemetry["properties"]["path"] += path if path != "." else ""
+        # telemetry["properties"]["url"] = "https://demo.getml.com/" + env["binder_request"] + "/" + str(fp)
+        telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:]) 
+        telemetry["properties"]["path"] += "/" + path if path != "." else ""
+        telemetry["properties"]["url"] = "https://demo.getml.com" + telemetry["properties"]["path"] + "/" + env['file_name']
         telemetry["properties"]["title"] = env["file_name"]
         if fp.suffix == ".md":
             telemetry = encode_dict(telemetry)
@@ -84,8 +85,8 @@ def send_watch_event(event, label, env):
     telemetry = dict()
     telemetry["anonymousId"] = env["license_seed"]
     telemetry["properties"] = env
-    telemetry["properties"]["url"] = "https://demo.getml.com/" + env["binder_request"]
     telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:])
+    telemetry["properties"]["url"] = "https://demo.getml.com" + telemetry["properties"]["path"]
     telemetry["properties"]["commit"] = env["binder_ref"].split("/")[-1]
     telemetry["properties"]["v"] = env["binder_request"].split("/")[-1]
     telemetry["properties"]["category"] = "getml-demo " + telemetry["properties"]["v"]
