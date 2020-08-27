@@ -4,6 +4,6 @@ import sys
 
 home = Path.home()
 sys.stdout.write(home)
-env = get_environment("/home/jovyan/.getML")
+env = get_environment(home / ".getML")
 sys.stdout.write(env)
-watch_log("/home/jovyan/binder/getml.out.log", env)
+watch_log(home / "binder/getml.out.log", env)
