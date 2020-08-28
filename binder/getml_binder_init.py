@@ -67,7 +67,7 @@ def add_telemetry(globs, env):
         # telemetry["properties"]["url"] = "https://demo.getml.com/" + env["binder_request"] + "/" + str(fp)
         telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:]) 
         telemetry["properties"]["path"] += "/" + path if path != "." else ""
-        telemetry["properties"]["path"] += env['file_name']
+        telemetry["properties"]["path"] += "/" + env['file_name']
         telemetry["properties"]["url"] = "https://demo.getml.com" + telemetry["properties"]["path"] + "/" + env['file_name']
         telemetry["properties"]["title"] = env["file_name"]
         telemetry["context"] = {
