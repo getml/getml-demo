@@ -20,7 +20,7 @@ def get_environment(getml_dir):
     env['binder_request'] = os.environ.get("BINDER_REQUEST")
     env['client_id'] = os.environ.get("JUPYTERHUB_CLIENT_ID")
     env['jupyter_image'] = os.environ.get("JUPYTER_IMAGE")
-    env['binder_cluster'] = re.search("(\w+)/", env['jupyter_image']).group(1)
+    env['binder_cluster'] = env['jupyter_image'].split('/')[0]
 
     with open(getml_env_file) as f:
         getml_env = json.load(f)
@@ -67,8 +67,14 @@ def add_telemetry(globs, env):
         # telemetry["properties"]["url"] = "https://demo.getml.com/" + env["binder_request"] + "/" + str(fp)
         telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:]) 
         telemetry["properties"]["path"] += "/" + path if path != "." else ""
+        telemetry["properties"]["path"] += env['file_name']
         telemetry["properties"]["url"] = "https://demo.getml.com" + telemetry["properties"]["path"] + "/" + env['file_name']
         telemetry["properties"]["title"] = env["file_name"]
+        telemetry["context"] = {
+            "page" : {
+                "title": telemetry["properties"]["title"]
+            }
+        }
         if fp.suffix == ".md":
             telemetry = encode_dict(telemetry)
             append_md(fp, telemetry)
