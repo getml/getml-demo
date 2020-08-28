@@ -71,4 +71,4 @@ jupyter lab workspaces import $HOME/binder/workspace.json
 # jupyter lab workspaces import $HOME/binder/workspace-dev.json
 
 cd $HOME
-git commit -c user.name='Binder' -c user.email='getml-demo@getml.com' -a -m "postBuild complete"
+git commit -c "user.name=Binder" -c user.email="getml-demo@getml.com" -a -m "postBuild complete"
