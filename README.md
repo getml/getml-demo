@@ -1,5 +1,5 @@
 <p align="center" style="text-align: center;">
-    <img width="400" style="width: 50% !important; max-width: 400px;" src="https://static.getml.com/logo/logo-main.png" />
+    <img width="400" style="width: 50% !important; max-width: 400px;" src="assets/getml_logo.png" />
 </p>
 
 <p align="center" style="text-align: center;">
@@ -15,7 +15,6 @@
         <a href="mailto:contact@getml.com" target="_blank">
         <img src="https://img.shields.io/badge/contact-us_by_mail-orange.svg" /></a>
 </p>
-
 
 <br>
 <span style="display: block; border-bottom: 1px solid #eaecef;"></span>
