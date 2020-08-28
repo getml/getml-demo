@@ -69,7 +69,3 @@ mv $HOME/binder/.getML $HOME/
 ######
 jupyter lab workspaces import $HOME/binder/workspace.json
 # jupyter lab workspaces import $HOME/binder/workspace-dev.json
-
-cd $HOME
-git -c "user.name=Binder" -c "user.email=getml-demo@getml.com"
-git commit -a -m "postBuild complete"
