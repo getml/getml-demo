@@ -14,6 +14,7 @@ preparation/
 .yarn/
 .jupyter/
 .profile
+.gitconfig
 binder/getml/
 
 # Byte-compiled / optimized / DLL files
