@@ -1,0 +1,169 @@
+{
+  "data": {
+    "layout-restorer:data": {
+      "main": {
+        "dock": {
+          "type": "split-area",
+          "orientation": "vertical",
+          "sizes": [
+            0.65,
+            0.35
+          ],
+          "children": [
+            {
+              "type": "split-area",
+              "orientation": "horizontal",
+              "sizes": [
+                0.4,
+                0.6
+              ],
+              "children": [
+                {
+                  "type": "tab-area",
+                  "currentIndex": 1,
+                  "widgets": [
+                    "editor:README.md",
+                    "editor:welcome.md"
+                  ]
+                },
+                {
+                  "type": "tab-area",
+                  "currentIndex": 1,
+                  "widgets": [
+                    "markdownviewer-widget:README.md",
+                    "markdownviewer-widget:welcome.md",
+                    "notebook:getml_examples/getting_started/getting_started.ipynb",
+                    "notebook:getml_examples/loans/loans.ipynb",
+                    "notebook:getml_examples/consumer_expenditures/consumer_expenditures.ipynb",
+                    "notebook:getml_examples/occupancy_detection/occupancy_detection.ipynb",
+                    "notebook:getml_examples/atherosclerosis/atherosclerosis.ipynb",
+                    "notebook:getml_examples/interstate94/interstate94.ipynb"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tab-area",
+              "currentIndex": 0,
+              "widgets": [
+                "terminal:1",
+                "shortcutui:shortcutui",
+                "setting-editor:setting-editor"
+              ]
+            }
+          ]
+        },
+        "mode": "multiple-document",
+        "current": "terminal:1"
+      },
+      "left": {
+        "collapsed": false,
+        "current": "filebrowser",
+        "widgets": [
+          "filebrowser",
+          "git-sessions",
+          "@jupyterlab/toc:plugin"
+        ]
+      },
+      "right": {
+        "collapsed": true,
+        "widgets": [
+          "running-sessions",
+          "command-palette",
+          "jp-property-inspector",
+          "tab-manager"
+        ]
+      }
+    },
+    "markdownviewer-widget:README.md": {
+      "data": {
+        "path": "README.md",
+        "factory": "Markdown Preview"
+      }
+    },
+    "terminal:1": {
+      "data": {
+        "name": "1"
+      }
+    },
+    "shortcutui:shortcutui": {
+      "data": {}
+    },
+    "setting-editor:setting-editor": {
+      "data": {}
+    },
+    "file-browser-filebrowser:cwd": {
+      "path": ""
+    },
+    "markdownviewer-widget:welcome.md": {
+      "data": {
+        "path": "welcome.md",
+        "factory": "Markdown Preview"
+      }
+    },
+    "editor:welcome.md": {
+      "data": {
+        "path": "welcome.md",
+        "factory": "Editor"
+      }
+    },
+    "editor:README.md": {
+      "data": {
+        "path": "README.md",
+        "factory": "Editor"
+      }
+    },
+    "@jupyterlab/settingeditor-extension:plugin": {
+      "sizes": [
+        0.45,
+        0.55
+      ],
+      "container": {
+        "plugin": "@jupyterlab/extensionmanager-extension:plugin",
+        "sizes": [
+          0.5,
+          0.5
+        ]
+      }
+    },
+    "notebook:getml_examples/getting_started/getting_started.ipynb": {
+      "data": {
+        "path": "getml_examples/getting_started/getting_started.ipynb",
+        "factory": "Notebook"
+      }
+    },
+    "notebook:getml_examples/loans/loans.ipynb": {
+      "data": {
+        "path": "getml_examples/loans/loans.ipynb",
+        "factory": "Notebook"
+      }
+    },
+    "notebook:getml_examples/consumer_expenditures/consumer_expenditures.ipynb": {
+      "data": {
+        "path": "getml_examples/consumer_expenditures/consumer_expenditures.ipynb",
+        "factory": "Notebook"
+      }
+    },
+    "notebook:getml_examples/occupancy_detection/occupancy_detection.ipynb": {
+      "data": {
+        "path": "getml_examples/occupancy_detection/occupancy_detection.ipynb",
+        "factory": "Notebook"
+      }
+    },
+    "notebook:getml_examples/atherosclerosis/atherosclerosis.ipynb": {
+      "data": {
+        "path": "getml_examples/atherosclerosis/atherosclerosis.ipynb",
+        "factory": "Notebook"
+      }
+    },
+    "notebook:getml_examples/interstate94/interstate94.ipynb": {
+      "data": {
+        "path": "getml_examples/interstate94/interstate94.ipynb",
+        "factory": "Notebook"
+      }
+    }
+  },
+  "metadata": {
+    "id": "/lab/workspaces/dev"
+  }
+}

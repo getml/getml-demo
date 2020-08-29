@@ -1,0 +1,12 @@
+numpy
+pandas
+matplotlib
+scipy
+vdom
+nodejs
+watchgod
+nbdime
+jupyter-server-proxy
+jupyter-offlinenotebook
+jupyterlab-git
+jupyterlab_iframe
