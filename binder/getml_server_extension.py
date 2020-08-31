@@ -1,9 +1,20 @@
 import os
 import re
 from pathlib import Path
+import nbformat
 from subprocess import Popen, run, STDOUT
-from getml_binder_init import get_environment, add_telemetry, watch_log
+from getml_binder_init import get_environment, walk, add_telemetry, watch_log
 import time
+
+
+def replace_monitor_refs(user_base, globs):
+    for fp in walk(globs=globs):
+        with open(fp, "r+") as f:
+            content = f.read()
+            content = re.sub(r'(/user/getml-getml-demo-\w+/)',
+                             user_base + r'proxy/1709/', content)
+            nb_node = nbformat.reads(content, as_version=4)
+            nbformat.write(nb_node, fp)
 
 
 def load_jupyter_server_extension(nbapp):
@@ -26,11 +37,13 @@ def load_jupyter_server_extension(nbapp):
                        user_base + r'proxy/1709/', content))
         f.truncate()
 
+    replace_monitor_refs(user_base, ["*.ipynb"])
+
     time.sleep(7)
 
     with open(home / "binder/watch.log", "wb") as w_log:
         Popen(["/srv/conda/envs/notebook/bin/python", "watch.py"],
-            cwd=home / "binder", stdout=w_log, stderr=STDOUT)
+              cwd=home / "binder", stdout=w_log, stderr=STDOUT)
 
     env = get_environment("~/.getML")
     add_telemetry(["*.md", "*.ipynb"], env)
