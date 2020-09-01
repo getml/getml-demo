@@ -12,7 +12,7 @@ def replace_monitor_refs(user_base, globs):
         with open(fp, "r+") as f:
             content = f.read()
             content = re.sub(r'(/user/getml-getml-demo-\w+/)',
-                             user_base + r'proxy/1709/', content)
+                             user_base, content)
             nb_node = nbformat.reads(content, as_version=4)
             nbformat.write(nb_node, fp)
 
