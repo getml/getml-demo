@@ -11,10 +11,16 @@ def replace_monitor_refs(user_base, globs):
     for fp in walk(globs=globs):
         with open(fp, "r+") as f:
             content = f.read()
-            content = re.sub(r'(/user/getml-getml-demo-\w+/)',
-                             user_base, content)
-            nb_node = nbformat.reads(content, as_version=4)
-            nbformat.write(nb_node, fp)
+            content = re.sub(r'(url:\s.*\/<\/a>)',
+                             "url: [INFO] rerun notebook to use the getML Monitor for exploration", content)
+            content = re.sub(r'(http:\/\/localhost:1709)',
+                       user_base + r'proxy/1709/', content)
+
+            # nb_node = nbformat.reads(content, as_version=4)
+            # nbformat.write(nb_node, fp)
+            f.seek(0)
+            f.write(content)
+            f.truncate()
 
 
 def load_jupyter_server_extension(nbapp):
