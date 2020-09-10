@@ -16,6 +16,7 @@ preparation/
 .profile
 .gitconfig
 binder/getml/
+.binder/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

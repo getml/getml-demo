@@ -69,3 +69,9 @@ mv $HOME/binder/.getML $HOME/
 ######
 jupyter lab workspaces import $HOME/binder/workspace.json
 # jupyter lab workspaces import $HOME/binder/workspace-dev.json
+
+
+# Compmlete setup and rename binder folder
+######
+mv $HOME/binder/.gitconfig $HOME/.gitconfig
+mv $HOME/binder $HOME/.binder

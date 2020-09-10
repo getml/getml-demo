@@ -27,10 +27,10 @@ def load_jupyter_server_extension(nbapp):
     web_app = nbapp.web_app
     user_base = web_app.settings['base_url']
     home = Path.home()
-    getml_dl_dir = home / "binder/getml"
+    getml_dl_dir = home / ".binder/getml"
     getml_dir = home / ".getML/getml-0.12-beta-linux/"
 
-    with open(home / "binder/getml.log", "wb") as e_log:
+    with open(home / ".binder/getml.log", "wb") as e_log:
         Popen(["./getML", "--install", "--proxy-url",
                user_base+"proxy/1709", "--http-port", "1709"],
               cwd=getml_dl_dir, stdout=e_log, stderr=STDOUT)
@@ -47,9 +47,9 @@ def load_jupyter_server_extension(nbapp):
 
     time.sleep(7)
 
-    with open(home / "binder/watch.log", "wb") as w_log:
+    with open(home / ".binder/watch.log", "wb") as w_log:
         Popen(["/srv/conda/envs/notebook/bin/python", "watch.py"],
-              cwd=home / "binder", stdout=w_log, stderr=STDOUT)
+              cwd=home / ".binder", stdout=w_log, stderr=STDOUT)
 
     env = get_environment("~/.getML")
     add_telemetry(["*.md", "*.ipynb"], env)
