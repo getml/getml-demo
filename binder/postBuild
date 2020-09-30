@@ -37,11 +37,11 @@ jupyter serverextension enable --py jupyter_offlinenotebook --sys-prefix
 ######
 # need to include jupyter_contrib_nbextensions & jupyter_nbextensions_configurator in requirements.txt
 # https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
-# jupyter contrib nbextension install --sys-prefix
+jupyter contrib nbextension install --sys-prefix
 
-# jupyter nbextension enable jupyter_server_proxy/tree --sys-prefix
-# jupyter nbextension enable toc2/main --sys-prefix
-# jupyter nbextensions_configurator enable --sys-prefix
+jupyter nbextension enable jupyter_server_proxy/tree --sys-prefix
+jupyter nbextension enable toc2/main --sys-prefix
+jupyter nbextensions_configurator enable --sys-prefix
 
 # Install JupyterLab extensions
 ######
