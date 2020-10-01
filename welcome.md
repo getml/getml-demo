@@ -24,12 +24,14 @@ relational data scheme involving many tables.
 
 Avaliable examples projects are listed below.
 
-|                                                                                                | Task           | Data                     | Size             | Domain         |
-| ---------------------------------------------------------------------------------------------- | -------------- | ------------------------ | ---------------- | -------------- |
-| [Loan default prediction](loans_demo.ipynb)                                    | Classification | Relational               | 8 Tables, 60 MB  | Financial      |
-| [Occupancy detection](occupancy_demo.ipynb)            | Classification | Multivariate time series | 1 Table, 32k rows   | Energy         |
-| [Traffic volume prediction](interstate94_demo.ipynb)                    | Regression     | Multivariate time series | 1 Table, 24k rows   | Transportation |
-| [Disease lethality prediction](atherosclerosis_demo.ipynb)     | Classification | Relational               | 3 Tables, 22 MB  | Health         |
+|                                                                | Task           | Data                     | Size               | Domain         |
+| -------------------------------------------------------------- | -------------- | ------------------------ | ------------------ | -------------- |
+| [Loan default prediction](loans_demo.ipynb)                    | Classification | Relational               | 8 Tables, 60 MB    | Financial      |
+| [Occupancy detection](occupancy_demo.ipynb)                    | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
+| [Expenditure categorization](consumer_expenditures_demo.ipynb) | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
+| [Disease lethality prediction](atherosclerosis_demo.ipynb)     | Classification | Relational               | 3 Tables, 22 MB    | Health         |
+| [Traffic volume prediction](interstate94_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
+| [Air pollution prediction](air_pollution_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 41k rows  | Environment    |
 
 
 # Get into contact
