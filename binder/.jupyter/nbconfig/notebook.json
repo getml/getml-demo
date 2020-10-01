@@ -6,8 +6,5 @@
     "toc2/main": false,
     "nbdime/index": false,
     "jupyter_server_proxy/tree": false
-  },
-  "rise": {
-    "scroll": true
   }
 }
