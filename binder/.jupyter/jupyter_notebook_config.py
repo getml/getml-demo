@@ -1,4 +1,3 @@
-
 # Jupyter notebook config
 # https://jupyter-notebook.readthedocs.io/en/stable/config.html#options
 
@@ -36,9 +35,11 @@
 
 #     }
 # }
+c.SlidesExporter.reveal_scroll = True
+c.SlidesExporter.reveal_theme = "solarized"
 
 
-c.NotebookApp.tornado_settings = {'autoreload': True}
+c.NotebookApp.tornado_settings = {"autoreload": True}
 
 # shutdown parameters of images/ user pods from jupyterhub
 # https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html
