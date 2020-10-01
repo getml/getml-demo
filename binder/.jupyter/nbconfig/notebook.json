@@ -1,5 +1,9 @@
 {
   "toc2": {
     "number_sections": false
+  },
+  "load_extensions": {
+    "toc2/main": false,
+    "nbdime/index": false
   }
 }
