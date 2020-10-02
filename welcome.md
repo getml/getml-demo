@@ -14,7 +14,7 @@ To get started with getML start with [this](loans_demo.ipynb) notebook. It is a 
 # Many more examples
 
 This demo contains various examples projects to help you to get started
-with **relational learning** and **getML**. They cover different aspects of the software, and can serve as documentation or
+with relational learning and getML. They cover different aspects of the software, and can serve as documentation or
 as blueprints for your own project.
 
 Each project solves a typical data science problem in a specific domain. You
