@@ -14,7 +14,7 @@ To get started with getML start with [this](loans_demo.ipynb) notebook. It is a 
 # Many more examples
 
 This demo contains various examples projects to help you to get started
-with **relational learning** and **getML**. They cover different aspects of the software, and can serve as documentation or
+with relational learning and getML. They cover different aspects of the software, and can serve as documentation or
 as blueprints for your own project.
 
 Each project solves a typical data science problem in a specific domain. You
@@ -24,12 +24,14 @@ relational data scheme involving many tables.
 
 Avaliable examples projects are listed below.
 
-|                                                                                                | Task           | Data                     | Size             | Domain         |
-| ---------------------------------------------------------------------------------------------- | -------------- | ------------------------ | ---------------- | -------------- |
-| [Loan default prediction](loans_demo.ipynb)                                    | Classification | Relational               | 8 Tables, 60 MB  | Financial      |
-| [Occupancy detection](occupancy_demo.ipynb)            | Classification | Multivariate time series | 1 Table, 32k rows   | Energy         |
-| [Traffic volume prediction](interstate94_demo.ipynb)                    | Regression     | Multivariate time series | 1 Table, 24k rows   | Transportation |
-| [Disease lethality prediction](atherosclerosis_demo.ipynb)     | Classification | Relational               | 3 Tables, 22 MB  | Health         |
+|                                                                | Task           | Data                     | Size               | Domain         |
+| -------------------------------------------------------------- | -------------- | ------------------------ | ------------------ | -------------- |
+| [Loan default prediction](loans_demo.ipynb)                    | Classification | Relational               | 8 Tables, 60 MB    | Financial      |
+| [Occupancy detection](occupancy_demo.ipynb)                    | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
+| [Expenditure categorization](consumer_expenditures_demo.ipynb) | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
+| [Disease lethality prediction](atherosclerosis_demo.ipynb)     | Classification | Relational               | 3 Tables, 22 MB    | Health         |
+| [Traffic volume prediction](interstate94_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
+| [Air pollution prediction](air_pollution_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 41k rows  | Environment    |
 
 
 # Get into contact
