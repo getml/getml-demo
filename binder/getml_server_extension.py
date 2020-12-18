@@ -28,7 +28,7 @@ def load_jupyter_server_extension(nbapp):
     user_base = web_app.settings['base_url']
     home = Path.home()
     getml_dl_dir = home / ".binder/getml"
-    getml_dir = home / ".getML/getml-0.12-beta-linux/"
+    getml_dir = home / ".getML/getml-0.13-beta-linux/"
 
     with open(home / ".binder/getml.log", "wb") as e_log:
         Popen(["./getML", "--install", "--proxy-url",
