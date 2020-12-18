@@ -13,3 +13,4 @@ jupyterlab_iframe
 jupyter_contrib_nbextensions
 jupyter_nbextensions_configurator
 RISE
+psutil
