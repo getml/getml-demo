@@ -14,11 +14,13 @@
 <meta name="twitter:card" content="summary" />
 
 {{ super() }}
-<script src="{{static_url(" dist/bundle.js")}}"></script>
+<script src="{{static_url("dist/bundle.js")}}"></script>
 <!-- <link href="{{static_url("loading.css")}}" rel="stylesheet"> -->
 <link href="{{ STATIC_THEME_URL_PREFIX }}loading.css" rel="stylesheet">
 
 {% endblock head %}
+
+{% block logo_image %}"{{ STATIC_THEME_URL_PREFIX }}main-logo.svg"{% endblock logo_image %}
 
 {% block main %}
 <div id="loader"></div>
