@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}Binder{% endblock %}</title>
+  {% block head %}
+  <meta id="base-url" data-url="{{base_url}}">
+  <meta id="badge-base-url" data-url="{{badge_base_url}}">
+  <script src="{{static_url('dist/bundle.js')}}"></script>
+  
+  <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}/assets/fonts/Inter/inter.css">
+  <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}/assets/fonts/Feather/feather.css">
+  <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}/libs/highlightjs/styles/mono-blue.css">
+
+  
+  
+
+  
+  <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}/assets/css/theme-getml.min.css">
+
+
+
+
+  
+  <meta property="og:title" content="The Binder Project">
+  <meta property="og:image" content="https://mybinder.org/static/images/logo_social.png">
+  <meta property="og:description" content="Reproducible, sharable, interactive computing environments.">
+  <meta property="og:image:width" content="1334">
+  <meta property="og:image:height" content="700">
+  <meta property="og:image:alt" content="The Binder Project Logo">
+  <meta name="twitter:card" content="summary_large_image">
+  <link id="favicon" rel="shortcut icon" type="image/png" href="{{static_url('favicon.ico')}}">
+  <link href="{{static_url('dist/styles.css')}}" rel="stylesheet">
+  {% endblock head %}
+</head>
+<body>
+  {% block body %}
+
+  {% if banner %}
+  <div id="banner-container">
+    {{ banner | safe }}
+  </div>
+  {% endif %}
+
+  {% block logo %}
+  <div class="container">
+    <div class="row">
+      <div id="logo-container">
+        <img id="logo" src="{{STATIC_THEME_URL_PREFIX}}main-logo.svg" width="390px">
+      </div>
+    </div>
+  </div>
+  {% endblock logo %}
+
+  {% block main %}
+  <div id="main" class="container">
+    <div class="row">
+      <div class="col-lg-10 col-lg-offset-1">
+        {% block header %}
+        <div id="header" class="text-center">
+          <h3>Turn a Git repo into a collection of interactive notebooks</h3>
+          <div id="explanation">
+            Have a repository full of Jupyter notebooks? With Binder, open those notebooks in an executable environment, making your code immediately reproducible by anyone, anywhere.
+          </div>
+        </div>
+        <div id="tutorials" class="text-center">
+          <h4>New to Binder? Get started with a Zero-to-Binder tutorial in <a href="https://github.com/alan-turing-institute/the-turing-way/blob/master/workshops/boost-research-reproducibility-binder/workshop-presentations/zero-to-binder-julia.md">Julia</a>, <a href="https://github.com/alan-turing-institute/the-turing-way/blob/master/workshops/boost-research-reproducibility-binder/workshop-presentations/zero-to-binder-python.md">Python</a> or <a href="https://github.com/alan-turing-institute/the-turing-way/blob/master/workshops/boost-research-reproducibility-binder/workshop-presentations/zero-to-binder-r.md">R</a>.</h4>
+        </div>
+        {% endblock header %}
+  
+        {% block form %}
+        <form id="build-form" class="form jumbotron">
+          <h4 id="form-header" class="row">Build and launch a repository</h4>
+          <input type="hidden" id="provider_prefix" value="gh">
+          <div class="form-group row">
+            <label for="repository">Git repository URL (github.com, gitlab.com or self-host)</label>
+            <div class="input-group">
+              <div class="input-group-btn" id="url-type-btn">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Specify source of repository">
+                <span id="provider_prefix-selected">
+                GitHub
+                </span>
+                <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="provider_prefix_sel">
+                  <li class="dropdown-item" value="gh"><a href="#">GitHub</a></li>
+                  <li class="dropdown-item" value="gist"><a href="#">Gist</a></li>
+                  <li class="dropdown-item" value="gl"><a href="#">GitLab.com</a></li>
+                  <li class="dropdown-item" value="git"><a href="#">Git repository</a></li>
+                  <li class="dropdown-item" value="zenodo"><a href="#">Zenodo DOI</a></li>
+                  <li class="dropdown-item" value="figshare"><a href="#">Figshare DOI</a></li>
+                  <li class="dropdown-item" value="hydroshare"><a href="#">Hydroshare resource</a></li>
+                  <li class="dropdown-item" value="dataverse"><a href="#">Dataverse DOI</a></li>
+                </ul>
+              </div>
+              <input class="form-control" type="text" id="repository" data-lpignore="true" placeholder="GitHub repository name or link">
+            </div>
+          </div>
+          <div class="form-row row">
+            <div class="form-group col-md-4">
+              <label for="ref">Git branch, tag, or commit</label>
+              <input class="form-control" type="text" id="ref" placeholder="master">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="filepath"></label>
+              <div class="input-group">
+                <input class="form-control" type="text" id="filepath" placeholder="">
+                <div class="input-group-btn" id="url-or-file-btn">
+                  <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Specify whether the path to open is a URL or a file">
+                  <span id="url-or-file-selected">
+                  {{ 'URL' if urlpath else 'File' }}
+                  </span>
+                  <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown-item"><a href="#">File</a></li>
+                    <li class="dropdown-item"><a href="#">URL</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-group col-md-2">
+              <div class="btn-group" id="launch-buttons">
+                <button id="submit" class="btn-submit" type="submit">launch</button>
+              </div>
+            </div>
+          </div>
+  
+          
+          <div class="url row">
+              <div class="dropdownmenu">
+                <label>Copy the URL below and share your Binder with others:</label>
+              </div>
+              <div class="url-row">
+                <pre id="basic-url-snippet" data-default="Fill in the fields to see a URL for sharing your Binder."></pre>
+                <img class="icon clipboard" src="{{static_url('images/copy-icon-black.svg')}}" data-clipboard-target="#basic-url-snippet" alt="Copy to clipboard">
+              </div>
+          </div>
+  
+          <div class="badges row">
+              <div class="dropdownmenu" id="toggle-badge-snippet">
+                <label>Copy the text below, then paste into your README to show a binder badge: <img id="badge" src="{{static_url('images/badge_logo.svg')}}"></label>
+                <a id="badge-link"></a>
+                <a href="#" title="show badge snippets"><span id="badge-snippet-caret" class="glyphicon glyphicon-triangle-right"></span></a>
+              </div>
+              <div id="badge-snippets" class="hidden">
+                
+                <div class="badge-snippet-row">
+                   <pre id="markdown-badge-snippet" data-default="Fill in the fields to see the markdown badge snippet."></pre>
+                   <img class="icon" src="{{static_url('images/markdown-icon.svg')}}">
+                   <img class="icon clipboard" src="{{static_url('images/copy-icon-black.svg')}}" data-clipboard-target="#markdown-badge-snippet" alt="Copy markdown link to clipboard">
+                </div>
+                
+                <div class="badge-snippet-row">
+                    <pre id="rst-badge-snippet" data-default="Fill in the fields to see the rST badge snippet."></pre>
+                    <img class="icon" src="{{static_url('images/rst-icon.svg')}}">
+                    <img class="icon clipboard" src="{{static_url('images/copy-icon-black.svg')}}" data-clipboard-target="#rst-badge-snippet" alt="Copy rst link to clipboard">
+                </div>
+              </div>
+          </div>
+  
+          <div id="build-progress" class="progress on-build hidden row">
+            <div id="phase-failed" class="progress-bar progress-bar-danger progress-bar-striped hidden" style="width: 100%">
+              Failed. Try refreshing this page in a few seconds.
+            </div>
+            <div id="phase-waiting" class="progress-bar progress-bar-danger progress-bar-striped active hidden" style="width: 10%">
+              Waiting
+            </div>
+            <div id="phase-already-built" class="progress-bar progress-bar-warning progress-bar-striped active hidden" style="width: 90%">
+              Already built!
+            </div>
+            <div id="phase-building" class="progress-bar progress-bar-warning progress-bar-striped active hidden" style="width: 40%">
+              Building
+            </div>
+            <div id="phase-pushing" class="progress-bar progress-bar-info progress-bar-striped active hidden" style="width: 40%">
+              Pushing
+            </div>
+            <div id="phase-launching" class="progress-bar progress-bar-success progress-bar-striped active hidden" style="width: 10%">
+              Launching
+            </div>
+          </div>
+  
+          <div id="log-container" class="panel panel-default on-build hidden row">
+            <div id="toggle-logs" class="panel-heading">
+              Build logs
+              <button type="button" class="btn btn-link btn-xs pull-right">show</button>
+            </div>
+            <div class="panel-body hidden">
+              <div id="log"></div>
+            </div>
+          </div>
+        </form>
+        {% endblock form %}
+      </div>
+    </div>
+    {% block how_it_works %}
+    <div id="how-it-works">
+      <h3 class="text-center">How it works</h3>
+  
+      <div class="row">
+        <div class="col-md-1 col-md-offset-2 point-container">
+          <span class="point point-orange">1</span>
+        </div>
+        <div class="col-md-7 front">
+          <span class="front-em">Enter your repository information</span><br>Provide in the above form a URL or a GitHub repository that contains Jupyter notebooks, as well as a branch, tag, or commit hash. Launch will build your Binder repository. If you specify a path to a notebook file, the notebook will be opened in your browser after building.
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-1 col-md-offset-2 point-container">
+          <span class="point point-red">2</span>
+        </div>
+        <div class="col-md-7 front">
+          <span class="front-em">We build a Docker image of your repository</span><br>Binder will search for a dependency file, such as requirements.txt or environment.yml, in the repository's root directory (<a href="http://mybinder.readthedocs.io/en/latest/using.html#preparing-a-repository-for-binder">more details on more complex dependencies in documentation</a>). The dependency files will be used to build a Docker image. If an image has already been built for the given repository, it will not be rebuilt. If a new commit has been made, the image will automatically be rebuilt.
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-1 col-md-offset-2 point-container">
+          <span class="point point-blue">3</span>
+        </div>
+        <div class="col-md-7 front">
+          <span class="front-em">Interact with your notebooks in a live environment!</span><br>A <a href="https://jupyterhub.readthedocs.io/en/latest/">JupyterHub</a> server will host your repository's contents. We offer you a reusable link and badge to your live repository that you can easily share with others.
+        </div>
+      </div>
+    </div>
+    {% endblock how_it_works %}
+  </div>
+  {% endblock main %}
+
+  {% block footer %}
+  <div class="container">
+    <div class="row text-center">
+      <h3>questions?<br>join the <a href="https://discourse.jupyter.org/c/binder">discussion</a>, read the <a href="https://mybinder.readthedocs.io/en/latest/">docs</a>, see the <a href="https://github.com/jupyterhub/binderhub">code</a></h3>
+    </div>
+  </div>
+  <script type="text/javascript">
+    indexMain();
+  </script> 
+  {% endblock footer %}
+
+  {% if google_analytics_code %}
+  <script>
+    // Only load GA if DNT is not set
+    if (navigator.doNotTrack != "1" && // Most Firefox & Chrome
+      window.doNotTrack != "1" && // IE & Safari
+      navigator.msDoNotTrack != "1" // Old IE
+  ) {
+    console.log("Loading Google Analytics, since Do Not Track is off");
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '{{ google_analytics_code }}', '{{ google_analytics_domain }}',
+      {'storage': 'none'});
+    ga('set', 'anonymizeIp', true);
+    ga('send', 'pageview');
+  }
+  </script>
+  {% endif %}
+  {% if extra_footer_scripts %}
+  {% for script in extra_footer_scripts|dictsort %}
+  <script>
+    {{ script[1]|safe }}
+  </script>
+  {% endfor %}
+  {% endif %}
+
+  
+  
+  <script src="{{STATIC_THEME_URL_PREFIX}}/libs/jquery/dist/jquery.min.js"></script>
+  <script src="{{STATIC_THEME_URL_PREFIX}}/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{STATIC_THEME_URL_PREFIX}}/libs/highlightjs/highlight.pack.min.js"></script>
+  
+  
+
+
+  
+  <script src="{{STATIC_THEME_URL_PREFIX}}/assets/js/theme-getml.min.js"></script>
+  
+    <script src="https://getml.com/assets/js/analytics.min.js" defer="defer"></script>
+  
+
+
+  {% endblock body %}
+</body>
+</html>
