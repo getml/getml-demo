@@ -51,7 +51,7 @@ https://ihatetomatoes.net for initial code templates.*/
         }
     }
 
-.error, .error:after, .error:before {
+#loader.error, #loader.error:after, #loader.error:before {
     border-top-color: red !important;
 }
 
@@ -88,10 +88,6 @@ div#loader-text {
 
 #loader-text p.launching {
     font-size: 2em;
-}
-
-div#loader-links {
-    min-height: 6em;
 }
 
 #loader-links p {

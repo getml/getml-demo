@@ -4,7 +4,13 @@
 
 #log-container .panel-body {
     /* match color of terminal! */
-    background-color: black;
+    background-color: #eee;
+    font-size: 14px;
+}
+
+.panel-body {
+    padding-left: 15px;
+    border-radius: 8px;
 }
  
 #log {
@@ -15,6 +21,13 @@
     font-family: "Roboto Mono", monospace;
 }
 
+#loader-links .text-center {
+    display: none;
+}
+
+#loader-links .text-center.longLaunch {
+    display: block;
+}
 
 /**
  * xterm.js: xterm, in the browser
@@ -52,8 +65,8 @@
  *  Default style for xterm.js
  */
  .terminal {
-    background-color: #000;
-    color: #fff;
+    background-color: #eee;
+    color: #000;
     font-family: courier-new, courier, monospace;
     font-feature-settings: "liga" 0;
     position: relative;
@@ -153,7 +166,7 @@
 
 .terminal .xterm-viewport {
     /* On OS X this is required in order for the scroll bar to appear fully opaque */
-    background-color: #000;
+    background-color: #eee;
     overflow-y: scroll;
 }
 
@@ -298,7 +311,7 @@
 }
 
 .terminal .xterm-color-9 {
-    color: #ef2929;
+    color: #513294;
 }
 
 .terminal .xterm-bg-color-9 {
