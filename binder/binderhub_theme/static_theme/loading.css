@@ -88,6 +88,10 @@ div#loader-text {
 
 #loader-text p.launching {
     /* font-size: 2em; */
+    /* font-size: 1.6875rem;
+    letter-spacing: -.01em;
+    line-height: 1.35;
+    font-weight: 600; */
 }
 
 #loader-links p {
