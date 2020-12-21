@@ -76,43 +76,63 @@
   
   {% block body %}
 
-  {% if banner %}
-  <div id="banner-container">
-    {{ banner | safe }}
-  </div>
-  {% endif %}
+  
+    <!-- HEADER
+    ================================================== -->
+    <section class="pt-11 pt-md-12">
+        <div class="container-fluid width-max-800">
+            <div class="row justify-content-center">
+            <div class="col-12 px-md-0">
+                <h1 class="h2 px-md-7 px-4 m-0 mb-md-6 mt-lg-2 mb-lg-8 font-weight-bold">
+                </h1>
+            </div>
+            </div>
+            <hr class="border-gray-300 mt-0 mb-md-7" hidden>
 
-  {% block logo %}
-  <div class="container">
-    <div class="row">
-      <div id="logo-container">
-        <img id="logo" src="{{STATIC_THEME_URL_PREFIX}}main-logo.svg" width="390px">
-      </div>
-    </div>
-  </div>
-  {% endblock logo %}
+        </div>
+    </section>
 
   {% block main %}
-  <div id="loader"></div>
-  <div id="loader-text">
-      <p class="launching">Launching your Binder...</p>
-  </div>
-  <div id="loader-links">
-      <p class="text-center">New to Binder? Check out the <a target="_blank"
-              href="https://mybinder.readthedocs.io/en/latest/">Binder Documentation</a> for more information</p>
-  </div>
+
+    <!-- SECTION
+    ================================================== -->
+    <section class="text">
+        <div class="container-fluid resources resource-list">
+            <div class="row justify-content-center">
+
+            <!-- Card Col -->
+            <div class="col-12 d-flex justify-content-center">
+                
+                <div class="container">
+                
+                    <div>
+                        <div id="loader"></div>
+                    </div>
+                    <div id="loader-text">
+                        <p class="launching">Launching your Binder...</p>
+                    </div>
+                    <div id="loader-links">
+                        <p class="text-center">New to Binder? Check out the <a target="_blank"
+                                href="https://mybinder.readthedocs.io/en/latest/">Binder Documentation</a> for more information</p>
+                    </div>
+                    
+                    <div id="log-container" class="panel panel-default on-build hidden row_">
+                        <div id="toggle-logs" class="panel-heading">
+                            Build logs
+                            <button class="btn btn-link btn-xs pull-right">show</button>
+                        </div>
+                        <div class="panel-body hidden">
+                            <div id="log"></div>
+                        </div>
+                    </div>
+                    
+
+            </div> <!-- / .col -->
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+        </section>
   
-  <div id="log-container" class="panel panel-default on-build hidden row">
-      <div id="toggle-logs" class="panel-heading">
-          Build logs
-          <button class="btn btn-link btn-xs pull-right">show</button>
-      </div>
-      <div class="panel-body hidden">
-          <div id="log"></div>
-      </div>
-  </div>
-  
-  {% block preview %}{% endblock preview %}
+
   
   {% endblock main %}
 
