@@ -117,9 +117,13 @@
                     </div>
                     
                     <div id="log-container" class="panel panel-default on-build hidden row_">
-                        <div id="toggle-logs" class="panel-heading">
-                            Build logs
-                            <button class="btn btn-link btn-xs pull-right">show</button>
+                        <div id="toggle-logs" class="btn-group my-6 mx-auto" style="
+                        font-weight: 400 !important;
+                        display: table;
+                    ">
+                            <div type="button" class="btn btn-sm font-weight-normal" style="
+                        background: #eee;
+                    ">Container logs:</div><button class="btn btn-primary btn-sm font-weight-normal" style="background: #896dc5;">hide</button>
                         </div>
                         <div class="panel-body hidden">
                             <div id="log"></div>

@@ -6,6 +6,7 @@
     /* match color of terminal! */
     background-color: #eee;
     font-size: 14px;
+    line-height: 1.2em;
 }
 
 .panel-body {
@@ -122,19 +123,19 @@
 }
 
 .terminal:not(.focus) .terminal-cursor {
-    outline: 1px solid #fff;
+    outline: 1px solid #000;
     outline-offset: -1px;
 }
 
 .terminal.xterm-cursor-style-block.focus:not(.xterm-cursor-blink-on) .terminal-cursor {
-    background-color: #fff;
+    background-color: #000;
     color: #000;
 }
 
 .terminal.focus.xterm-cursor-style-bar:not(.xterm-cursor-blink-on) .terminal-cursor::before, .terminal.focus.xterm-cursor-style-underline:not(.xterm-cursor-blink-on) .terminal-cursor::before {
     content: '';
     position: absolute;
-    background-color: #fff;
+    background-color: #000;
 }
 
 .terminal.focus.xterm-cursor-style-bar:not(.xterm-cursor-blink-on) .terminal-cursor::before {
