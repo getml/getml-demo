@@ -6,20 +6,14 @@
   <meta id="base-url" data-url="{{base_url}}">
   <meta id="badge-base-url" data-url="{{badge_base_url}}">
   <script src="{{static_url('dist/bundle.js')}}"></script>
-  
+
+  <!-- <link href="{{static_url('dist/styles.css')}}" rel="stylesheet"> -->
+
   <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}assets/fonts/Inter/inter.css">
   <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}assets/fonts/Feather/feather.css">
   <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}assets/libs/highlightjs/styles/mono-blue.css">
-
-  
-  
-
   
   <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}assets/css/theme-getml.min.css">
-
-
-
-
   
   <meta property="og:title" content="The Binder Project">
   <meta property="og:image" content="https://mybinder.org/static/images/logo_social.png">
@@ -28,8 +22,10 @@
   <meta property="og:image:height" content="700">
   <meta property="og:image:alt" content="The Binder Project Logo">
   <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- ToDo: favicon -->
   <link id="favicon" rel="shortcut icon" type="image/png" href="{{static_url('favicon.ico')}}">
-  <link href="{{static_url('dist/styles.css')}}" rel="stylesheet">
+
   {% endblock head %}
 </head>
 <body>
@@ -63,10 +59,10 @@
         <div id="nav-collapse" class="navbar-collapse collapse"><button type="button" aria-label="Toggle navigation" aria-controls="nav-collapse" aria-expanded="false" data-target="#nav-collapse" class="navbar-toggler">⨉
           </button>
           <ul class="navbar-nav dropdown ml-auto">
-            <li class="nav-item mx-lg-2"><a href="//getml.com/product" target="_self" class="nav-link">Product</a></li>
+            <li class="nav-item mx-lg-2"><a href="//getml.com/product/" target="_self" class="nav-link">Product</a></li>
             <li class="nav-item mx-lg-2"><a href="//docs.getml.com/" target="_self" class="nav-link">Docs</a></li>
-            <li class="nav-item mx-lg-2"><a target="_self" href="//go.getml.com/resources/" class="nav-link">Demo</a></li>
-          </ul><a href="//getml.com/contact/lets-talk" class="navbar-btn btn btn-sm btn-primary ml-auto ml-lg-5_">
+            <li class="nav-item mx-lg-2"><a target="_self" href="//demo.getml.com/" class="nav-link">Demo</a></li>
+          </ul><a href="//getml.com/contact/lets-talk/" class="navbar-btn btn btn-sm btn-primary ml-auto ml-lg-5_">
             Contact us</a>
         </div>
       </div>
