@@ -50,7 +50,10 @@ jupyter nbextensions_configurator enable --sys-prefix
 # jupyter labextension install @jupyterlab/shortcutui
 # jupyter labextension install jupyter-offlinenotebook
 # jupyter labextension install jupyterlab_iframe
-jupyter labextension install @jupyterlab/server-proxy @jupyterlab/toc @jupyterlab/shortcutui jupyter-offlinenotebook jupyterlab_iframe jupyterlab-topbar-extension jupyterlab-system-monitor --log-level=20 --minimize=False --dev-build=False
+jupyter labextension install @jupyterlab/server-proxy @jupyterlab/toc @jupyterlab/shortcutui jupyter-offlinenotebook jupyterlab_iframe --log-level=20 --minimize=False --dev-build=False
+
+# jupyterlab-topbar-extension jupyterlab-system-monitor
+
 
 # Load jupyter presets
 ######
