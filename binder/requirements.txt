@@ -14,4 +14,4 @@ jupyter_contrib_nbextensions
 jupyter_nbextensions_configurator
 RISE
 psutil
-nbresuse
+nbresuse==0.3.6
