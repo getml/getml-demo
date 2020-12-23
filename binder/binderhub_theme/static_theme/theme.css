@@ -30,6 +30,14 @@
     display: block;
 }
 
+.text-gray-700 {
+    color: #615d65!important;
+}
+
+.lh-1d7 {
+    line-height: 1.7!important;
+}
+
 /**
  * xterm.js: xterm, in the browser
  * Copyright (c) 2014-2016, SourceLair Private Company (www.sourcelair.com (MIT License)
