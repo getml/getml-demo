@@ -38,6 +38,8 @@
 c.SlidesExporter.reveal_scroll = True
 # c.SlidesExporter.reveal_theme = "solarized"
 
+c.NotebookApp.ResourceUseDisplay.track_cpu_percent = True
+
 
 c.NotebookApp.tornado_settings = {"autoreload": True}
 
