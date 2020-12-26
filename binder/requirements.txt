@@ -15,3 +15,4 @@ jupyter_nbextensions_configurator
 RISE
 psutil
 nbresuse==0.3.6
+jupyterlab==2.2.9
