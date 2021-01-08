@@ -46,7 +46,6 @@ If you are mainly interested in how getML performs compared to other approaches,
 | -------------------------------------------------------------- | ------------------------------------------------- |---------------------------------------- |
 | [Occupancy detection](occupancy_demo.ipynb)                    | Academic literature: Neural networks              | AUC (getML 99.8%, next best 99.6%)      | 
 | [IMdb] (imdb_demo.ipynb)                                       | Academic literature: RDN, Wordification, RPT      | AUC (getML 92.5%, next best 86%)        |
-| [Loan default prediction](loans_demo.ipynb)                    | Academic literature: ...                          | AUC (getML 94.3%, next best 88%)        |
 | [CORA] (cora_demo.ipynb)                                       | Academic literature: RelF, LBP, EPRN, PRN, ACORA  | Accuracy (getML 89.3%, next best 85.7%) |
 | [Traffic volume prediction](interstate94_demo.ipynb)           | Prophet (fbprophet)                               | R-squared (getML 98.4%, prophet 83.3%)  |
 | [Traffic volume prediction](dodgers_demo.ipynb)                | Prophet (fbprophet), tsfresh                      | R-squared (getML 76%, next best 67%)    |
