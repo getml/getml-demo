@@ -30,8 +30,8 @@ Avaliable examples projects are listed below.
 | [Occupancy detection](occupancy_demo.ipynb)                    | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
 | [Expenditure categorization](consumer_expenditures_demo.ipynb) | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
 | [Disease lethality prediction](atherosclerosis_demo.ipynb)     | Classification | Relational               | 3 Tables, 22 MB    | Health         |
-| [IMdb] (imdb_demo.ipynb)                                       | Classification | Relational               | 7 Tables, 477.1 MB | Entertainment  |
-| [CORA] (cora_demo.ipynb)                                       | Classification | Relational               | 3 Tables, 4.6 MB   | Academia       |
+| [IMdb](imdb_demo.ipynb)                                        | Classification | Relational               | 7 Tables, 477.1 MB | Entertainment  |
+| [CORA](cora_demo.ipynb)                                        | Classification | Relational               | 3 Tables, 4.6 MB   | Academia       |
 | [Order cancellation](online_retail_demo.ipynb)                 | Classification | Relational               | 1 Table, 398k rows | E-commerce     |
 | [Traffic volume prediction](interstate94_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
 | [Air pollution prediction](air_pollution_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 41k rows  | Environment    |
@@ -45,8 +45,8 @@ If you are mainly interested in how getML performs compared to other approaches,
 |                                                                | Benchmarks                                        | Results                                 |
 | -------------------------------------------------------------- | ------------------------------------------------- |---------------------------------------- |
 | [Occupancy detection](occupancy_demo.ipynb)                    | Academic literature: Neural networks              | AUC (getML 99.8%, next best 99.6%)      | 
-| [IMdb] (imdb_demo.ipynb)                                       | Academic literature: RDN, Wordification, RPT      | AUC (getML 92.5%, next best 86%)        |
-| [CORA] (cora_demo.ipynb)                                       | Academic literature: RelF, LBP, EPRN, PRN, ACORA  | Accuracy (getML 89.3%, next best 85.7%) |
+| [IMdb](imdb_demo.ipynb)                                        | Academic literature: RDN, Wordification, RPT      | AUC (getML 92.5%, next best 86%)        |
+| [CORA](cora_demo.ipynb)                                        | Academic literature: RelF, LBP, EPRN, PRN, ACORA  | Accuracy (getML 89.3%, next best 85.7%) |
 | [Traffic volume prediction](interstate94_demo.ipynb)           | Prophet (fbprophet)                               | R-squared (getML 98.4%, prophet 83.3%)  |
 | [Traffic volume prediction](dodgers_demo.ipynb)                | Prophet (fbprophet), tsfresh                      | R-squared (getML 76%, next best 67%)    |
 | [Air pollution prediction](air_pollution_demo.ipynb)           | tsfresh                                           | R-squared (getML 60.9%, tsfresh 48.7%)  |
