@@ -30,10 +30,28 @@ Avaliable examples projects are listed below.
 | [Occupancy detection](occupancy_demo.ipynb)                    | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
 | [Expenditure categorization](consumer_expenditures_demo.ipynb) | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
 | [Disease lethality prediction](atherosclerosis_demo.ipynb)     | Classification | Relational               | 3 Tables, 22 MB    | Health         |
+| [IMdb] (imdb_demo.ipynb)                                       | Classification | Relational               | ... Tables, ... MB | Entertainment  |
+| [CORA] (cora_demo.ipynb)                                       | Classification | Relational               | ... Tables, ... MB | Academia       |
+| [Order cancellation](online_retail_demo.ipynb)                 | Classification | Relational               | 1 Table, ... rows  | E-commerce     |
 | [Traffic volume prediction](interstate94_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
 | [Air pollution prediction](air_pollution_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 41k rows  | Environment    |
+| [Traffic volume prediction](dodgers_demo.ipynb)                | Regression     | Multivariate time series | 1 Table, ...k rows | Transportation |
+| [Predicting a force vector from sensor data](robot-demo.ipynb) | Regression     | Multivariate time series | 1 Table, ...k rows | Robotics       |
 
+# Benchmarks
 
-# Get into contact
+If you are mainly interested in how getML performs compared to other approaches, you can refer to the following notebooks:
+
+|                                                                | Benchmarks                                        |
+| -------------------------------------------------------------- | ------------------------------------------------- |
+| [Loan default prediction](loans_demo.ipynb)                    | Academic literature:                              |
+| [Occupancy detection](occupancy_demo.ipynb)                    | Academic literature: Neural networks              |
+| [IMdb] (imdb_demo.ipynb)                                       | Academic literature: RDN, Wordification, RPT      |
+| [CORA] (cora_demo.ipynb)                                       | Academic literature: RelF, LBP, EPRN, PRN, ACORA  |
+| [Traffic volume prediction](interstate94_demo.ipynb)           | Prophet (fbprophet)                               |
+| [Traffic volume prediction](dodgers_demo.ipynb)                | Prophet (fbprophet), tsfresh                      |
+| [Air pollution prediction](air_pollution_demo.ipynb)           | tsfresh                                           |
+
+# Get in contact
 
 If you have any question schedule a [call with Alex](https://go.getml.com/meetings/alexander-uhlig/getml-demo), the co-founder of getML, or write us an [email](team@getml.com). Do you prefer a guided demo held by us? Just contact us to make an appointment.
