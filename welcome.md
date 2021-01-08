@@ -30,13 +30,13 @@ Avaliable examples projects are listed below.
 | [Occupancy detection](occupancy_demo.ipynb)                    | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
 | [Expenditure categorization](consumer_expenditures_demo.ipynb) | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
 | [Disease lethality prediction](atherosclerosis_demo.ipynb)     | Classification | Relational               | 3 Tables, 22 MB    | Health         |
-| [IMdb] (imdb_demo.ipynb)                                       | Classification | Relational               | ... Tables, ... MB | Entertainment  |
-| [CORA] (cora_demo.ipynb)                                       | Classification | Relational               | ... Tables, ... MB | Academia       |
-| [Order cancellation](online_retail_demo.ipynb)                 | Classification | Relational               | 1 Table, ... rows  | E-commerce     |
+| [IMdb] (imdb_demo.ipynb)                                       | Classification | Relational               | 7 Tables, 477.1 MB | Entertainment  |
+| [CORA] (cora_demo.ipynb)                                       | Classification | Relational               | 3 Tables, 4.6 MB   | Academia       |
+| [Order cancellation](online_retail_demo.ipynb)                 | Classification | Relational               | 1 Table, 398k rows | E-commerce     |
 | [Traffic volume prediction](interstate94_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
 | [Air pollution prediction](air_pollution_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 41k rows  | Environment    |
-| [Traffic volume prediction](dodgers_demo.ipynb)                | Regression     | Multivariate time series | 1 Table, ...k rows | Transportation |
-| [Predicting a force vector from sensor data](robot-demo.ipynb) | Regression     | Multivariate time series | 1 Table, ...k rows | Robotics       |
+| [Traffic volume prediction](dodgers_demo.ipynb)                | Regression     | Multivariate time series | 1 Table, 47k rows  | Transportation |
+| [Predicting a force vector from sensor data](robot-demo.ipynb) | Regression     | Multivariate time series | 1 Table, 15k rows  | Robotics       |
 
 # Benchmarks
 
