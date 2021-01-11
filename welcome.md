@@ -30,7 +30,7 @@ Avaliable examples projects are listed below.
 | [Occupancy detection](occupancy_demo.ipynb)                    | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
 | [Expenditure categorization](consumer_expenditures_demo.ipynb) | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
 | [Disease lethality prediction](atherosclerosis_demo.ipynb)     | Classification | Relational               | 3 Tables, 22 MB    | Health         |
-| [IMdb: Predicting actors' gender](imdb_demo.ipynb)             | Classification | Relational               | 7 Tables, 477.1 MB | Entertainment  |
+| [IMdb: Predicting actors' gender](imdb_demo.ipynb)             | Classification | Relational with text     | 7 Tables, 477.1 MB | Entertainment  |
 | [CORA: Categorizing academic studies](cora_demo.ipynb)         | Classification | Relational               | 3 Tables, 4.6 MB   | Academia       |
 | [Order cancellation](online_retail_demo.ipynb)                 | Classification | Relational               | 1 Table, 398k rows | E-commerce     |
 | [Traffic volume prediction](interstate94_demo.ipynb)           | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
