@@ -39,6 +39,13 @@ c.SlidesExporter.reveal_scroll = True
 # c.SlidesExporter.reveal_theme = "solarized"
 
 
+# See https://github.com/jupyter-server/jupyter-resource-usage/blob/master/CHANGELOG.md
+# relevant packages: jupyterlab-system-monitor, jupyter-resource-usage, nbresuse
+
+
+# c.NotebookApp.ResourceUseDisplay.track_cpu_percent = True
+# c.NotebookApp.ResourceUseDisplay.disable_legacy_endpoint=False
+
 c.NotebookApp.tornado_settings = {"autoreload": True}
 
 # shutdown parameters of images/ user pods from jupyterhub
