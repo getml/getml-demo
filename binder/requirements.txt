@@ -2,6 +2,7 @@ numpy
 pandas
 matplotlib
 scipy
+sklearn
 vdom
 nodejs
 watchgod
