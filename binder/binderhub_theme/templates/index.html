@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>getML Demo</title>
+  {% block head %}
+  <meta id="base-url" data-url="{{base_url}}">
+  <meta id="badge-base-url" data-url="{{badge_base_url}}">
+  <script src="{{static_url('dist/bundle.js')}}"></script>
+
+  <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}assets/fonts/Inter/inter.css">
+  <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}assets/fonts/Feather/feather.css">
+  <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}assets/libs/highlightjs/styles/mono-blue.css">
+  
+  <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}assets/css/theme-getml.min.css">
+  <link rel="stylesheet" href="{{STATIC_THEME_URL_PREFIX}}theme.css">
+  
+  <link id="favicon" rel="shortcut icon" type="image/png" href="{{STATIC_THEME_URL_PREFIX}}assets/getml-favicon.png">
+
+  {% endblock head %}
+</head>
+<body>
+  <header>
+    <nav class="navbar fixed-top shadow-light-sm_ py-2 py-sm-3 navbar-light navbar-expand-lg" style="z-index:4;">
+      <div class="container-fluid container-xl-fluid"><a href="https://getml.com" title="Back to home" class="navbar-brand logo__link main-logo active--exact active"><svg width="419" height="95" viewBox="0 0 419 95" fill="none" xmlns="http://www.w3.org/2000/svg" alt="GetML.com" class="main-logo d-none_ d-lg-inline_">
+            <g clip-path="url(#clip0)">
+              <path d="M140.797 71.605a21.734 21.734 0 01-9.655-2.11 23.38 23.38 0 01-7.461-5.763 26.25 26.25 0 01-4.867-8.485 30.304 30.304 0 01-1.782-10.263c-.033-3.62.58-7.216 1.808-10.622a27.89 27.89 0 015.027-8.644 22.972 22.972 0 017.794-5.802 23.236 23.236 0 019.947-2.111c3.777-.086 7.504.87 10.773 2.762a23.275 23.275 0 017.62 7.316v-9.295h11.77V68.79c.061 3.6-.694 7.168-2.208 10.436a22.91 22.91 0 01-6.091 7.834 27.131 27.131 0 01-9.309 4.926 38.537 38.537 0 01-11.73 1.7 32.992 32.992 0 01-14.523-2.855 29.43 29.43 0 01-10.107-8.086l7.408-7.064a20.738 20.738 0 007.593 5.83 22.842 22.842 0 009.695 2.11 20.709 20.709 0 005.985-.863 14.395 14.395 0 005.08-2.655 12.413 12.413 0 003.471-4.62 16.138 16.138 0 001.33-6.64v-6.638a17.686 17.686 0 01-7.341 6.97 21.64 21.64 0 01-10.227 2.43zm4.522-10.755c1.44.011 2.87-.227 4.229-.703a15.163 15.163 0 003.724-1.899 15.577 15.577 0 003.019-2.815 12.808 12.808 0 001.968-3.412v-12.56a16.392 16.392 0 00-5.679-7.423 13.66 13.66 0 00-8.059-2.828 11.68 11.68 0 00-5.639 1.328 14.118 14.118 0 00-4.322 3.612 16.415 16.415 0 00-2.766 5.178 19.139 19.139 0 00-.958 6.028 16.385 16.385 0 001.104 6.014 15.578 15.578 0 003.072 4.926 14.512 14.512 0 004.575 3.32 13.638 13.638 0 005.732 1.234zM208.383 72.309a29.394 29.394 0 01-11.464-2.164 25.893 25.893 0 01-14.336-14.512 27.75 27.75 0 01-1.955-10.344 29.529 29.529 0 011.902-10.622 25.936 25.936 0 015.532-8.736 26.473 26.473 0 018.804-5.975 29.3 29.3 0 0111.623-2.204 28.644 28.644 0 0111.517 2.204 26.667 26.667 0 018.645 5.922 25.224 25.224 0 015.412 8.643 28.488 28.488 0 011.862 10.237v2.51c-.021.679-.106 1.354-.252 2.018h-40.762c.159 1.917.668 3.79 1.503 5.523a13.78 13.78 0 003.072 4.143 13.517 13.517 0 004.322 2.655c1.606.606 3.31.912 5.027.903a15.62 15.62 0 007.594-1.952 10.364 10.364 0 004.881-5.178l11.557 3.213a23.426 23.426 0 01-9.31 9.892 28.882 28.882 0 01-15.174 3.824zm13.711-31.733a13.967 13.967 0 00-4.375-9.494 14.094 14.094 0 00-14.483-2.655 13.202 13.202 0 00-4.176 2.655 13.599 13.599 0 00-2.965 4.117 14.41 14.41 0 00-1.33 5.31l27.329.067zM275.37 68.591a59.72 59.72 0 01-6.65 2.403 27.711 27.711 0 01-8.245 1.209 19.294 19.294 0 01-5.32-.704 11.507 11.507 0 01-4.322-2.257 10.808 10.808 0 01-2.965-3.983 14.357 14.357 0 01-1.118-5.975v-30.26h-6.942V18.681h6.942V1.607h13.486V18.68h11.065v10.343h-11.065V54.73a5.295 5.295 0 001.449 3.983c.851.863 2.248 2.11 3.551 1.952a39.602 39.602 0 0010.081-2.656l.053 10.582zM341.958 71.3V24.099l-18.405 35.145h-7.541l-18.406-35.145v47.2h-13.884V0h14.882l21.118 40.576L341.054 0h14.789v71.3h-13.885zM368.716 71.3V0h13.871v59.15H419V71.3h-50.284z" fill="#000"></path>
+              <path d="M12.421 32.118h46.215c1.153 0 2.259.457 3.075 1.272a4.338 4.338 0 011.273 3.07V82.81a3.395 3.395 0 01-2.099 3.126 3.409 3.409 0 01-3.7-.722L9.949 38.066a3.49 3.49 0 012.473-5.948z" fill="url(#paint0_linear)"></path>
+              <path d="M79.635 1.607H10.094c-1.81-.045-3.597.4-5.175 1.285A10.046 10.046 0 001.13 6.639 9.573 9.573 0 002.82 17.95l8.657 8.63a.625.625 0 00.466.2h13.591a.666.666 0 00.644-.791.664.664 0 00-.178-.338l-11.97-11.95a.65.65 0 01.466-1.115h65.165a2.93 2.93 0 012.707 1.812c.147.356.22.738.22 1.122v65.06a.65.65 0 01-.782.647.652.652 0 01-.336-.183L69.5 69.095a.652.652 0 00-1.13.466v13.556a.648.648 0 00.2.478l8.644 8.63a9.554 9.554 0 0011.344 1.673 10.032 10.032 0 003.71-3.782 10.011 10.011 0 001.264-5.14V15.495a13.853 13.853 0 00-4.066-9.82 13.9 13.9 0 00-9.831-4.068z" fill="#000"></path>
+              <path d="M12.421 32.118h46.215c1.153 0 2.259.457 3.075 1.272a4.338 4.338 0 011.273 3.07V82.81a3.395 3.395 0 01-2.099 3.126 3.409 3.409 0 01-3.7-.722L9.949 38.066a3.49 3.49 0 012.473-5.948z" fill="url(#paint1_linear)"></path>
+            </g>
+            <defs>
+              <linearGradient id="paint0_linear" x1="32.091" y1="32.569" x2="64.608" y2="64.462" gradientUnits="userSpaceOnUse">
+                <stop offset=".07" stop-color="#95339D"></stop>
+                <stop offset=".59" stop-color="#7A2DE8"></stop>
+              </linearGradient>
+              <linearGradient id="paint1_linear" x1="18.978" y1="19.744" x2="61.241" y2="61.198" gradientUnits="userSpaceOnUse">
+                <stop offset=".38" stop-color="#7A2DE8"></stop>
+                <stop offset=".52" stop-color="#7C34EA"></stop>
+                <stop offset=".73" stop-color="#8349EE"></stop>
+                <stop offset=".99" stop-color="#8D6AF5"></stop>
+                <stop offset="1" stop-color="#8E6CF5"></stop>
+              </linearGradient>
+              <clipPath id="clip0">
+                <path fill="#fff" d="M0 0h419v95H0z"></path>
+              </clipPath>
+            </defs>
+          </svg></a>
+          <button type="button" aria-label="Toggle navigation" aria-controls="nav-collapse" aria-expanded="false" data-target="#nav-collapse" data-toggle="dropdown" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+        <div id="nav-collapse" class="navbar-collapse collapse"><button type="button" aria-label="Toggle navigation" aria-controls="nav-collapse" aria-expanded="false" data-target="#nav-collapse" class="navbar-toggler">⨉
+          </button>
+          <ul class="navbar-nav dropdown ml-auto">
+            <li class="nav-item mx-lg-2"><a href="//getml.com/product/" target="_self" class="nav-link">Product</a></li>
+            <li class="nav-item mx-lg-2"><a href="//docs.getml.com/" target="_self" class="nav-link">Documentation</a></li>
+            <li class="nav-item mx-lg-2"><a target="_self" href="//demo.getml.com/" class="nav-link">Try now</a></li>
+          </ul><a href="//getml.com/contact/lets-talk/" class="navbar-btn btn btn-sm btn-primary ml-auto ml-lg-5_">
+            Contact us</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  
+  
+  {% block body %}
+
+{% block main %}
+
+<div class="min-vh-100 d-flex flex-column">
+  <section class="pt-8 pt-md-9 pt-lg-12">
+      <div class="container-fluid container-lg-fluid mx-auto">
+          <div class="d-flex flex-column justify-content-center_ align-items-center">
+              <h1 class="display-3 text-center font-weight-bolder lh-1d3 w-100 mb-0">
+                  Try getML
+              </h1>
+              <p class="h4 text-gray-700 text-center w-md-75 lh-1d7 mt-5">
+                  Work through a series of getML live code examples from your browser
+              </p>
+          </div>
+      </div>
+  </section>
+  <section class="my-8 mt-xl-10 mt-lg-9 mb-md-11 mb-md-8">
+      <div class="section pipeline container-fluid container-lg-fluid mx-auto">
+          <div class="row mt-0">
+              <div class="col-12 col-md-6">
+                  <h3 class="h3 mb-3 font-weight-bold">Test getML on popular predictive analytics problems</h3>
+                  <p class="mb-0 text-gray-800">
+
+                      Each demo session runs private JupyterLab environments that reset after 120 minutes.
+
+                  </p>
+                  <ul class="text-gray-800 mt-2 pl-5">
+                      <li class="pt-2" style="line-height: 1.5rem;">
+                          8 Jupyter Notebooks showcase getML 
+                          algorithms and software features on real-world data
+                      </li>
+                      <li class="pt-2" style="line-height: 1.5rem;">
+                          Time series forecasting: See how getML outperforms fb prophet & tsfresh
+                      </li>
+                      <li class="pt-2" style="line-height: 1.5rem;">
+                          Learn how getML's algorithms outperform brute-force feature engineering on relational data
+                      </li>
+                    </ul>
+
+                  <div class="mx-auto mt-3">
+                      <a href="https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab" class="navbar-btn btn btn-sm btn-primary ml-auto ml-lg-5_ px-5_ mt-4">
+                          Try now
+                      </a>
+                      <a href="https://docs.getml.com/latest/home/getting_started/getting_started.html" target="_blank" 
+                      class="btn btn-sm font-weight-bold text-primary mx-1_ px-5 mt-4">
+                          Tutorial
+                      </a>
+                  </div>
+              </div>
+              <div class="col-12 col-md-6">
+                  <div class="device device-macbook">
+                      <img src="static_theme/assets/img/screenshots/getml-demo.png" class="device-screen" alt="...">
+                      <img src="static_theme/assets/img/devices/macbook.svg" class="img-fluid" alt="...">
+                    </div>
+              </div>
+          </div>
+      </div>
+  </section>
+</div>
+
+{% endblock main %}
+
+
+  {% block footer %}
+  <script type="text/javascript">
+    indexMain();
+  </script> 
+  {% endblock footer %}
+
+  {% if google_analytics_code %}
+  <script>
+    // Only load GA if DNT is not set
+    if (navigator.doNotTrack != "1" && // Most Firefox & Chrome
+      window.doNotTrack != "1" && // IE & Safari
+      navigator.msDoNotTrack != "1" // Old IE
+  ) {
+    console.log("Loading Google Analytics, since Do Not Track is off");
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '{{ google_analytics_code }}', '{{ google_analytics_domain }}',
+      {'storage': 'none'});
+    ga('set', 'anonymizeIp', true);
+    ga('send', 'pageview');
+  }
+  </script>
+  {% endif %}
+  {% if extra_footer_scripts %}
+  {% for script in extra_footer_scripts|dictsort %}
+  <script>
+    {{ script[1]|safe }}
+  </script>
+  {% endfor %}
+  {% endif %}
+
+  
+  
+  <script src="{{STATIC_THEME_URL_PREFIX}}assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="{{STATIC_THEME_URL_PREFIX}}assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{STATIC_THEME_URL_PREFIX}}assets/libs/highlightjs/highlight.pack.min.js"></script>
+  
+  
+
+
+  
+  <script src="{{STATIC_THEME_URL_PREFIX}}assets/js/theme-getml.min.js"></script>
+  
+    <script src="https://getml.com/assets/js/analytics.min.js" defer="defer"></script>
+  
+
+
+  {% endblock body %}
+</body>
+</html>

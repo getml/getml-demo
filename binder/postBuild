@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export GETML_DOWNLOAD_PATH='https://static.getml.com/download/0.13.0-beta/'
-export GETML_ENGINE='getml-0.13.0-beta-linux.tar.gz'
-export GETML_API='getml-0.13.0-py3-none-any.whl'
+export GETML_DOWNLOAD_PATH='https://static.getml.com/download/0.14.0-beta/'
+export GETML_ENGINE='getml-0.14.0-beta-linux.tar.gz'
+export GETML_API='getml-0.14.0-py3-none-any.whl'
 
 # Install getML
 ######
@@ -51,6 +51,9 @@ jupyter nbextensions_configurator enable --sys-prefix
 # jupyter labextension install jupyter-offlinenotebook
 # jupyter labextension install jupyterlab_iframe
 jupyter labextension install @jupyterlab/server-proxy @jupyterlab/toc @jupyterlab/shortcutui jupyter-offlinenotebook jupyterlab_iframe --log-level=20 --minimize=False --dev-build=False
+
+# jupyterlab-topbar-extension jupyterlab-system-monitor
+
 
 # Load jupyter presets
 ######

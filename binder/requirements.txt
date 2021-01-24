@@ -2,6 +2,7 @@ numpy
 pandas
 matplotlib
 scipy
+sklearn
 vdom
 nodejs
 watchgod
@@ -14,3 +15,5 @@ jupyter_contrib_nbextensions
 jupyter_nbextensions_configurator
 RISE
 psutil
+nbresuse==0.3.6
+jupyterlab==2.2.9
