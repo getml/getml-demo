@@ -13,7 +13,7 @@ import sys
 
 def get_environment(getml_dir):
     getml_dir = Path(getml_dir).expanduser()
-    getml_env_file = getml_dir / "getml-0.13-beta-linux/environment.json"
+    getml_env_file = getml_dir / "getml-0.14-beta-linux/environment.json"
 
     env = dict()
     env['binder_ref'] = os.environ.get("BINDER_REF_URL")
