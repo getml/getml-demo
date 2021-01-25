@@ -10,11 +10,18 @@ import time
 def replace_monitor_refs(user_base, globs):
     for fp in walk(globs=globs):
         with open(fp, "r+") as f:
+            project = fp.stem
             content = f.read()
-            content = re.sub(r'(url:\s<a\b[^>]*>.*?<\/a>)',
-                             "url: [INFO] rerun notebook to use the getML Monitor for exploration", content)
-            content = re.sub(r'(http:\/\/localhost:1709)',
-                       user_base + r'proxy/1709/', content)
+            content = re.sub(
+                r"(url:\s<a\b[^>]*>.*?<\/a>)",
+                "url: [INFO] rerun notebook to use the getML Monitor for exploration",
+                content,
+            )
+            content = re.sub(
+                r"(http:\/\/localhost:1709)",
+                user_base + r"proxy/1709/listprojects/" + project,
+                content,
+            )
 
             # nb_node = nbformat.reads(content, as_version=4)
             # nbformat.write(nb_node, fp)
