@@ -1,15 +1,17 @@
+import base64
+import datetime
+import json
 import os
 import re
-import json
-import base64
-import nbformat
-import time
-import datetime
-import requests
-from pathlib import Path
-from itertools import chain
-from watchgod import watch
 import sys
+import time
+from itertools import chain
+from pathlib import Path
+
+import nbformat
+import requests
+from watchgod import watch
+
 
 def get_environment(getml_dir):
     getml_dir = Path(getml_dir).expanduser()
@@ -65,13 +67,15 @@ def add_telemetry(globs, env):
         telemetry["properties"] = env
         path = str(fp.absolute().relative_to(Path.home()).parent)
         # telemetry["properties"]["url"] = "https://demo.getml.com/" + env["binder_request"] + "/" + str(fp)
-        telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:]) 
+        telemetry["properties"]["path"] = "/" + \
+            "/".join(env["binder_request"].split("/")[-2:])
         telemetry["properties"]["path"] += "/" + path if path != "." else ""
         telemetry["properties"]["path"] += "/" + env['file_name']
-        telemetry["properties"]["url"] = "https://demo.getml.com" + telemetry["properties"]["path"] + "/" + env['file_name']
+        telemetry["properties"]["url"] = "https://demo.getml.com" + \
+            telemetry["properties"]["path"] + "/" + env['file_name']
         telemetry["properties"]["title"] = env["file_name"]
         telemetry["context"] = {
-            "page" : {
+            "page": {
                 "title": telemetry["properties"]["title"]
             }
         }
@@ -87,15 +91,19 @@ def send_watch_event(event, label, env):
     headers = dict()
     headers["Content-Type"] = "application/json"
     headers["Authorization"] = "Basic "
-    headers["Authorization"] += base64.urlsafe_b64encode("YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm".encode('utf-8')).decode()  
+    headers["Authorization"] += base64.urlsafe_b64encode(
+        "YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm".encode('utf-8')).decode()
     telemetry = dict()
     telemetry["anonymousId"] = env["license_seed"]
     telemetry["properties"] = env
-    telemetry["properties"]["path"] = "/" + "/".join(env["binder_request"].split("/")[-2:])
-    telemetry["properties"]["url"] = "https://demo.getml.com" + telemetry["properties"]["path"]
+    telemetry["properties"]["path"] = "/" + \
+        "/".join(env["binder_request"].split("/")[-2:])
+    telemetry["properties"]["url"] = "https://demo.getml.com" + \
+        telemetry["properties"]["path"]
     telemetry["properties"]["commit"] = env["binder_ref"].split("/")[-1]
     telemetry["properties"]["v"] = env["binder_request"].split("/")[-1]
-    telemetry["properties"]["category"] = "getml-demo " + telemetry["properties"]["v"]
+    telemetry["properties"]["category"] = "getml-demo " + \
+        telemetry["properties"]["v"]
     telemetry["event"] = event
     telemetry["properties"]["label"] = label
     resquest_destination = "https://api.segment.io/v1/track"
@@ -116,14 +124,17 @@ def watch_log(log_file, env):
                     #     log[0], "%a %b %d %H:%M:%S %Y")
                     command = json.loads(log[2])
                     if command["type_"] == "set_project":
-                        send_watch_event("Engine: Set project", command["name_"], env)
+                        send_watch_event("Engine: Set project",
+                                         command["name_"], env)
                         # print("Set Project to", project, "at", time)
                     if command["type_"] == "Pipeline.fit":
-                        send_watch_event("Engine: Pipeline fitted", "fitted", env)
+                        send_watch_event(
+                            "Engine: Pipeline fitted", "fitted", env)
                         # print("Fitted a pipeline in project", project, "at", time)
                         # print(command, time)
                 except:
                     sys.stdout.write(str(log))
+
 
 def load_jupyter_server_extension(nbapp):
     pass
