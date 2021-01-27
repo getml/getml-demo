@@ -1,10 +1,7 @@
 import base64
-import datetime
 import json
 import os
-import re
 import sys
-import time
 from itertools import chain
 from pathlib import Path
 
@@ -18,15 +15,15 @@ def get_environment(getml_dir):
     getml_env_file = getml_dir / "getml-0.14-beta-linux/environment.json"
 
     env = dict()
-    env['binder_ref'] = os.environ.get("BINDER_REF_URL")
-    env['binder_request'] = os.environ.get("BINDER_REQUEST")
-    env['client_id'] = os.environ.get("JUPYTERHUB_CLIENT_ID")
-    env['jupyter_image'] = os.environ.get("JUPYTER_IMAGE")
-    env['binder_cluster'] = env['jupyter_image'].split('/')[0]
+    env["binder_ref"] = os.environ.get("BINDER_REF_URL")
+    env["binder_request"] = os.environ.get("BINDER_REQUEST")
+    env["client_id"] = os.environ.get("JUPYTERHUB_CLIENT_ID")
+    env["jupyter_image"] = os.environ.get("JUPYTER_IMAGE")
+    env["binder_cluster"] = env["jupyter_image"].split("/")[0]
 
     with open(getml_env_file) as f:
         getml_env = json.load(f)
-        env['license_seed'] = getml_env['monitor']['licenseSeedStatic']
+        env["license_seed"] = getml_env["monitor"]["licenseSeedStatic"]
 
     return env
 
@@ -34,15 +31,14 @@ def get_environment(getml_dir):
 def append_cell(fp, telemetry):
     with open(fp) as nb:
         nb_node = nbformat.read(nb, as_version=4)
-        telemetry_cell = nbformat.v4.new_markdown_cell(
-            "![]("+telemetry+")")
+        telemetry_cell = nbformat.v4.new_markdown_cell("![](" + telemetry + ")")
         nb_node.cells.append(telemetry_cell)
         nbformat.write(nb_node, os.fspath(fp))
 
 
 def append_md(fp, telemetry):
     with open(fp, "a+") as f:
-        f.write("![]("+telemetry+")")
+        f.write("![](" + telemetry + ")")
 
 
 def walk(path=".", globs=(["*"])):
@@ -54,31 +50,33 @@ def walk(path=".", globs=(["*"])):
 def encode_dict(dict_):
     telemetry_encoded = "https://api.segment.io/v1/pixel/page?data="
     telemetry_encoded += base64.urlsafe_b64encode(
-        json.dumps(dict_).encode("utf-8")).decode()
+        json.dumps(dict_).encode("utf-8")
+    ).decode()
     return telemetry_encoded
 
 
 def add_telemetry(globs, env):
     for fp in walk(globs=globs):
-        env['file_name'] = fp.name
+        env["file_name"] = fp.name
         telemetry = dict()
         telemetry["writeKey"] = "YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm"
         telemetry["anonymousId"] = env["license_seed"]
         telemetry["properties"] = env
         path = str(fp.absolute().relative_to(Path.home()).parent)
         # telemetry["properties"]["url"] = "https://demo.getml.com/" + env["binder_request"] + "/" + str(fp)
-        telemetry["properties"]["path"] = "/" + \
-            "/".join(env["binder_request"].split("/")[-2:])
+        telemetry["properties"]["path"] = "/" + "/".join(
+            env["binder_request"].split("/")[-2:]
+        )
         telemetry["properties"]["path"] += "/" + path if path != "." else ""
-        telemetry["properties"]["path"] += "/" + env['file_name']
-        telemetry["properties"]["url"] = "https://demo.getml.com" + \
-            telemetry["properties"]["path"] + "/" + env['file_name']
+        telemetry["properties"]["path"] += "/" + env["file_name"]
+        telemetry["properties"]["url"] = (
+            "https://demo.getml.com"
+            + telemetry["properties"]["path"]
+            + "/"
+            + env["file_name"]
+        )
         telemetry["properties"]["title"] = env["file_name"]
-        telemetry["context"] = {
-            "page": {
-                "title": telemetry["properties"]["title"]
-            }
-        }
+        telemetry["context"] = {"page": {"title": telemetry["properties"]["title"]}}
         if fp.suffix == ".md":
             telemetry = encode_dict(telemetry)
             append_md(fp, telemetry)
@@ -92,23 +90,26 @@ def send_watch_event(event, label, env):
     headers["Content-Type"] = "application/json"
     headers["Authorization"] = "Basic "
     headers["Authorization"] += base64.urlsafe_b64encode(
-        "YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm".encode('utf-8')).decode()
+        "YBF9q7cBQqgmbR0DyR5jyB7QNW2xjwHm".encode("utf-8")
+    ).decode()
     telemetry = dict()
     telemetry["anonymousId"] = env["license_seed"]
     telemetry["properties"] = env
-    telemetry["properties"]["path"] = "/" + \
-        "/".join(env["binder_request"].split("/")[-2:])
-    telemetry["properties"]["url"] = "https://demo.getml.com" + \
-        telemetry["properties"]["path"]
+    telemetry["properties"]["path"] = "/" + "/".join(
+        env["binder_request"].split("/")[-2:]
+    )
+    telemetry["properties"]["url"] = (
+        "https://demo.getml.com" + telemetry["properties"]["path"]
+    )
     telemetry["properties"]["commit"] = env["binder_ref"].split("/")[-1]
     telemetry["properties"]["v"] = env["binder_request"].split("/")[-1]
-    telemetry["properties"]["category"] = "getml-demo " + \
-        telemetry["properties"]["v"]
+    telemetry["properties"]["category"] = "getml-demo " + telemetry["properties"]["v"]
     telemetry["event"] = event
     telemetry["properties"]["label"] = label
     resquest_destination = "https://api.segment.io/v1/track"
     res = requests.request(
-        "POST", resquest_destination, headers=headers, json=telemetry, timeout=5).json()
+        "POST", resquest_destination, headers=headers, json=telemetry, timeout=5
+    ).json()
     print(res)
 
 
@@ -124,12 +125,10 @@ def watch_log(log_file, env):
                     #     log[0], "%a %b %d %H:%M:%S %Y")
                     command = json.loads(log[2])
                     if command["type_"] == "set_project":
-                        send_watch_event("Engine: Set project",
-                                         command["name_"], env)
+                        send_watch_event("Engine: Set project", command["name_"], env)
                         # print("Set Project to", project, "at", time)
                     if command["type_"] == "Pipeline.fit":
-                        send_watch_event(
-                            "Engine: Pipeline fitted", "fitted", env)
+                        send_watch_event("Engine: Pipeline fitted", "fitted", env)
                         # print("Fitted a pipeline in project", project, "at", time)
                         # print(command, time)
                 except:
