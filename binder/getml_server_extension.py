@@ -19,7 +19,7 @@ def replace_monitor_refs(user_base, globs):
             )
             content = re.sub(
                 r"(http:\/\/localhost:1709)",
-                user_base + r"proxy/1709/#/listprojects/" + project,
+                user_base + r"proxy/1709/#/listpipelines/" + project,
                 content,
             )
 
