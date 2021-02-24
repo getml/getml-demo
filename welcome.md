@@ -25,7 +25,7 @@ Available example projects are listed below.
 
 |                                                           | Task           | Data                     | Size               | Domain         |
 | --------------------------------------------------------- | -------------- | ------------------------ | ------------------ | -------------- |
-| [Loan default prediction][loansnb]                        | Classification | Relational               | 8 Tables, 60 MB    | Financial      |
+| [Financial: Loan default prediction][loansnb]             | Classification | Relational               | 8 Tables, 60 MB    | Financial      |
 | [Occupancy detection][occupancynb]                        | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
 | [Expenditure categorization][consumerexpendituresnb]      | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
 | [Disease lethality prediction][atherosclerosisnb]         | Classification | Relational               | 3 Tables, 22 MB    | Health         |
@@ -50,6 +50,14 @@ If you are mainly interested in how getML performs compared to other approaches,
 | [Traffic volume prediction][dodgersnb]            | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)    |
 | [Air pollution prediction][airpollutionnb]        | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 50.4%)  |
 
+Some benchmarks are also featured on the [Relational Dataset Repository](https://relational.fit.cvut.cz/):
+
+|                                                   | Link                                                          | 
+| ------------------------------------------------- | ------------------------------------------------------------- |
+| [CORA: Categorizing academic studies][coranb]     | [https://relational.fit.cvut.cz/dataset/CORA](CORA)           | 
+| [Financial: Loan default prediction][loansnb]     | [https://relational.fit.cvut.cz/dataset/Financial](Financial) | 
+| [IMdb: Predicting actors' gender][imdbnb]         | [https://relational.fit.cvut.cz/dataset/IMDb](IMDb)           | 
+
 [loansnb]: loans.ipynb
 [occupancynb]: occupancy.ipynb
 [consumerexpendituresnb]: consumer_expenditures.ipynb
@@ -61,6 +69,8 @@ If you are mainly interested in how getML performs compared to other approaches,
 [airpollutionnb]: air_pollution.ipynb
 [dodgersnb]: dodgers.ipynb
 [robotnb]: robot.ipynb
+
+
 
 # Get in contact
 

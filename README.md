@@ -59,6 +59,14 @@ If you are mainly interested in how getML performs compared to other approaches,
 | [Traffic volume prediction][dodgersnb]            | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)    |
 | [Air pollution prediction][airpollutionnb]        | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 50.4%)  |
 
+Some benchmarks are also featured on the [Relational Dataset Repository](https://relational.fit.cvut.cz/):
+
+|                                                   | Link                                                          | 
+| ------------------------------------------------- | ------------------------------------------------------------- |
+| [CORA: Categorizing academic studies][coranb]     | [https://relational.fit.cvut.cz/dataset/CORA](CORA)           | 
+| [Financial: Loan default prediction][loansnb]     | [https://relational.fit.cvut.cz/dataset/Financial](Financial) | 
+| [IMdb: Predicting actors' gender][imdbnb]         | [https://relational.fit.cvut.cz/dataset/IMDb](IMDb)           | 
+
 [loansnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/loans.ipynb
 [occupancynb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/occupancy.ipynb
 [consumerexpendituresnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/consumer_expenditures.ipynb
