@@ -3,7 +3,7 @@
 </p>
 
 <p align="center" style="text-align: center;">
-    <i>getML combines Feature Learning with AutoML to build end-to-end prediction pipelines</i>
+    <i>getML combines feature learning with AutoML to build end-to-end prediction pipelines</i>
 </p>
 
 <p align="center" style="text-align: center;">
@@ -41,9 +41,9 @@ Available example projects are listed below.
 | [IMdb: Predicting actors' gender][imdbnb]                 | Classification | Relational with text     | 7 Tables, 477.1 MB | Entertainment  |
 | [CORA: Categorizing academic studies][coranb]             | Classification | Relational               | 3 Tables, 4.6 MB   | Academia       |
 | [Order cancellation][onlineretailnb]                      | Classification | Relational               | 1 Table, 398k rows | E-commerce     |
-| [Traffic volume prediction][interstate94nb]               | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
+| [Traffic volume prediction (I94)][interstate94nb]         | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
 | [Air pollution prediction][airpollutionnb]                | Regression     | Multivariate time series | 1 Table, 41k rows  | Environment    |
-| [Traffic volume prediction][dodgersnb]                    | Regression     | Multivariate time series | 1 Table, 47k rows  | Transportation |
+| [Traffic volume prediction (LA)][dodgersnb]               | Regression     | Multivariate time series | 1 Table, 47k rows  | Transportation |
 | [Predicting a force vector from sensor data][robotnb]     | Regression     | Multivariate time series | 1 Table, 15k rows  | Robotics       |
 
 ## Benchmarks
@@ -55,8 +55,8 @@ If you are mainly interested in how getML performs compared to other approaches,
 | [Occupancy detection][occupancynb]                | Academic literature: Neural networks             | AUC (getML 99.8%, next best 99.6%)      |
 | [IMdb: Predicting actors' gender][imdbnb]         | Academic literature: RDN, Wordification, RPT     | AUC (getML 92.87%, next best 86%)        |
 | [CORA: Categorizing academic studies][coranb]     | Academic literature: RelF, LBP, EPRN, PRN, ACORA | Accuracy (getML 89.9%, next best 85.7%) |
-| [Traffic volume prediction][interstate94nb]       | Prophet (fbprophet)                              | R-squared (getML 98.4%, prophet 83.3%)  |
-| [Traffic volume prediction][dodgersnb]            | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)    |
+| [Traffic volume prediction (I94)][interstate94nb] | Prophet (fbprophet)                              | R-squared (getML 98.4%, prophet 83.3%)  |
+| [Traffic volume prediction (LA)][dodgersnb]       | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)    |
 | [Air pollution prediction][airpollutionnb]        | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 50.4%)  |
 
 Some benchmarks are also featured on the [Relational Dataset Repository](https://relational.fit.cvut.cz/):
