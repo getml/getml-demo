@@ -54,9 +54,9 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 
 |                                                   | Link                                                          | 
 | ------------------------------------------------- | ------------------------------------------------------------- |
-| [CORA: Categorizing academic studies][coranb]     | [https://relational.fit.cvut.cz/dataset/CORA](CORA)           | 
-| [Financial: Loan default prediction][loansnb]     | [https://relational.fit.cvut.cz/dataset/Financial](Financial) | 
-| [IMdb: Predicting actors' gender][imdbnb]         | [https://relational.fit.cvut.cz/dataset/IMDb](IMDb)           | 
+| [CORA: Categorizing academic studies][coranb]     | [CORA](https://relational.fit.cvut.cz/dataset/CORA])          | 
+| [Financial: Loan default prediction][loansnb]     | [Financial](https://relational.fit.cvut.cz/dataset/Financial) | 
+| [IMdb: Predicting actors' gender][imdbnb]         | [IMDb](https://relational.fit.cvut.cz/dataset/IMDb)           | 
 
 [loansnb]: loans.ipynb
 [occupancynb]: occupancy.ipynb
