@@ -52,9 +52,9 @@ If you are mainly interested in how getML performs compared to other approaches,
 
 Some benchmarks are also featured on the [Relational Dataset Repository](https://relational.fit.cvut.cz/):
 
-|                                                   | Link                                                          | 
+|                                                   | Official page                                                 | 
 | ------------------------------------------------- | ------------------------------------------------------------- |
-| [CORA: Categorizing academic studies][coranb]     | [CORA](https://relational.fit.cvut.cz/dataset/CORA])          | 
+| [CORA: Categorizing academic studies][coranb]     | [CORA](https://relational.fit.cvut.cz/dataset/CORA)           | 
 | [Financial: Loan default prediction][loansnb]     | [Financial](https://relational.fit.cvut.cz/dataset/Financial) | 
 | [IMdb: Predicting actors' gender][imdbnb]         | [IMDb](https://relational.fit.cvut.cz/dataset/IMDb)           | 
 
