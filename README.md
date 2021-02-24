@@ -71,8 +71,7 @@ If you are mainly interested in how getML performs compared to other approaches,
 [dodgersnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/dodgers.ipynb
 [robotnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/robot.ipynb
 
+## Try it live
 
-## Try it live: getML on MyBinder
-
- Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab).
+You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab).
 
