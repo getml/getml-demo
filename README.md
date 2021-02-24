@@ -34,7 +34,7 @@ Available example projects are listed below.
 
 |                                                           | Task           | Data                     | Size               | Domain         |
 | --------------------------------------------------------- | -------------- | ------------------------ | ------------------ | -------------- |
-| [Loan default prediction][loansnb]                        | Classification | Relational               | 8 Tables, 60 MB    | Financial      |
+| [Financial: Loan default prediction][loansnb]             | Classification | Relational               | 8 Tables, 60 MB    | Financial      |
 | [Occupancy detection][occupancynb]                        | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
 | [Expenditure categorization][consumerexpendituresnb]      | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
 | [Disease lethality prediction][atherosclerosisnb]         | Classification | Relational               | 3 Tables, 22 MB    | Health         |
