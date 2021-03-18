@@ -17,3 +17,5 @@ RISE
 psutil
 nbresuse==0.3.6
 jupyterlab==2.2.9
+jupyter_client >= 5.3.4
+jupyter_core >= 4.6.1 
