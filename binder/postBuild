@@ -50,6 +50,7 @@ jupyter nbextensions_configurator enable --sys-prefix
 # jupyter labextension install @jupyterlab/shortcutui
 # jupyter labextension install jupyter-offlinenotebook
 # jupyter labextension install jupyterlab_iframe
+pip install $HOME/binder/.labextension/getml_demo_analytics-0.1.0-py3-none-any.whl
 jupyter labextension install @jupyterlab/server-proxy @jupyterlab/toc @jupyterlab/shortcutui jupyter-offlinenotebook jupyterlab_iframe --log-level=20 --minimize=False --dev-build=False
 
 # jupyterlab-topbar-extension jupyterlab-system-monitor
