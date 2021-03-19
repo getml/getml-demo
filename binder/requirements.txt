@@ -9,6 +9,9 @@ watchgod
 nbdime
 psutil
 jupyterlab>=3.0.11
+jupyter_client>=6.1.11
+tornado>=6.1
+jupyter-core>=4.6.0
 jupyter-resource-usage
 jupyter-server-proxy
 jupyter-offlinenotebook
