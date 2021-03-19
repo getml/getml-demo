@@ -7,9 +7,8 @@ vdom
 nodejs
 watchgod
 nbdime
-RISE
 psutil
-jupyterlab>=3
+jupyterlab>=3.0.11
 jupyter-resource-usage
 jupyter-server-proxy
 jupyter-offlinenotebook
