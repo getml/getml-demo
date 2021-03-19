@@ -12,5 +12,4 @@ psutil
 jupyterlab>=3
 jupyter-resource-usage
 jupyter-server-proxy
-jupyterlab-shortcutui
 jupyter-offlinenotebook
