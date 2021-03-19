@@ -60,7 +60,7 @@ pip install $HOME/binder/.labextensions/getml_demo_analytics-0.1.0-py3-none-any.
 # jlpm && jlpm build
 # jupyter labextension install .
 # cd $HOME
-# jupyter labextension install @jupyterlab/toc --log-level=20 --minimize=False --dev-build=False
+jupyter labextension install jupyter-offlinenotebook --log-level=20 --minimize=False --dev-build=False
 
 # jupyterlab-topbar-extension jupyterlab-system-monitor
 
