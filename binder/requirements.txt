@@ -6,7 +6,6 @@ sklearn
 vdom
 nodejs
 watchgod
-nbdime
 psutil
 jupyter-resource-usage
 jupyter-server-proxy
