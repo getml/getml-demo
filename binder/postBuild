@@ -55,12 +55,12 @@ jupyter serverextension enable --sys-prefix getml_server_extension
 # jupyter labextension install jupyter-offlinenotebook
 
 # jupyter labextension install jupyterlab_iframe loeschen
-pip install $HOME/binder/.labextensions/getml_demo_analytics-0.1.0-py3-none-any.whl
+pip install $HOME/binder/.labextensions/getml_extension-0.1.0-py3-none-any.whl
 # cd $HOME/binder/.labextensions/getml_analytics
 # jlpm && jlpm build
 # jupyter labextension install .
 # cd $HOME
-jupyter labextension install jupyter-offlinenotebook --log-level=20 --minimize=False --dev-build=False
+jupyter labextension install jupyter-offlinenotebook # --log-level=20 --minimize=False --dev-build=False
 
 # jupyterlab-topbar-extension jupyterlab-system-monitor
 
