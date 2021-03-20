@@ -56,6 +56,7 @@ jupyter serverextension enable --sys-prefix getml_server_extension
 
 # jupyter labextension install jupyterlab_iframe loeschen
 pip install $HOME/binder/.labextensions/getml_extension-0.1.0-py3-none-any.whl
+pip install $HOME/binder/.labextensions/btest-0.1.0-py3-none-any.whl
 # cd $HOME/binder/.labextensions/getml_analytics
 # jlpm && jlpm build
 # jupyter labextension install .
