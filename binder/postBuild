@@ -88,4 +88,4 @@ jupyter lab workspaces import $HOME/binder/workspace.json
 ######
 mv $HOME/binder/.gitconfig $HOME/.gitconfig
 mv $HOME/binder $HOME/.binder
-# git commit -a -m "binder postbuild"
+git commit -a -m "binder postbuild"
