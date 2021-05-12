@@ -3,6 +3,8 @@ import time
 import featuretools as ft
 import numpy as np
 import pandas as pd
+from featuretools import primitives
+from featuretools.primitives.options_utils import generate_all_primitive_options
 from scipy.stats import pearsonr
 
 from .add_original_columns import _add_original_columns
@@ -100,6 +102,9 @@ class FTTimeSeriesBuilder:
         target: The name of the target column.
     """
 
+    all_primitives = ft.list_primitives()
+    agg_primitives = all_primitives[all_primitives.type == "aggregation"].name.tolist()
+    trans_primitives = all_primitives[all_primitives.type == "transform"].name.tolist()
     def __init__(self, num_features, horizon, memory, column_id, time_stamp, target):
         self.num_features = num_features
         self.horizon = horizon
@@ -107,6 +112,10 @@ class FTTimeSeriesBuilder:
         self.column_id = column_id
         self.time_stamp = time_stamp
         self.target = target
+
+        self._runtime = None
+        self.fitted = False
+        self.max_depth = 2
 
         self.selected_features = []
 
@@ -119,7 +128,10 @@ class FTTimeSeriesBuilder:
         data_frame["_featuretools_index"] = np.arange(data_frame.shape[0])
         entityset = _make_entity_set(data_frame, rolled, self.time_stamp)
         df_extracted, _ = ft.dfs(
-            entityset=entityset, target_entity="population", max_depth=1
+            entityset=entityset,
+            agg_primitives=self.agg_primitives,
+            target_entity="population",
+            max_depth=self.max_depth,
         )
         df_extracted[np.isnan(df_extracted)] = 0.0
         df_extracted[np.isinf(df_extracted)] = 0.0
