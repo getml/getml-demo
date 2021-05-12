@@ -1,3 +1,4 @@
+import datetime
 import time
 
 import featuretools as ft
@@ -8,9 +9,8 @@ from featuretools.primitives.options_utils import generate_all_primitive_options
 from scipy.stats import pearsonr
 
 from .add_original_columns import _add_original_columns
-from .remove_target_column import _remove_target_column
 from .print_time_taken import _print_time_taken
-
+from .remove_target_column import _remove_target_column
 
 # ------------------------------------------------------------------
 
@@ -105,6 +105,7 @@ class FTTimeSeriesBuilder:
     all_primitives = ft.list_primitives()
     agg_primitives = all_primitives[all_primitives.type == "aggregation"].name.tolist()
     trans_primitives = all_primitives[all_primitives.type == "transform"].name.tolist()
+
     def __init__(self, num_features, horizon, memory, column_id, time_stamp, target):
         self.num_features = num_features
         self.horizon = horizon
@@ -167,7 +168,14 @@ class FTTimeSeriesBuilder:
         df_selected = _add_original_columns(data_frame, df_selected)
         end = time.time()
         _print_time_taken(begin, end)
+        self.fitted = True
+        self._runtime = datetime.timedelta(seconds=end - begin)
         return df_selected
+
+    @property
+    def runtime(self):
+        if self.fitted:
+            return self._runtime
 
     def transform(self, data_frame):
         """

@@ -2,13 +2,14 @@
 Utility wrapper around tsfresh.
 """
 
+import datetime
 import gc
 import time
 
 import numpy as np
 import pandas as pd
-from scipy.stats import pearsonr
 import tsfresh
+from scipy.stats import pearsonr
 from tsfresh.utilities.dataframe_functions import roll_time_series
 
 from .add_original_columns import _add_original_columns
@@ -39,6 +40,8 @@ class TSFreshBuilder:
         self.column_id = column_id
         self.time_stamp = time_stamp
         self.target = target
+
+        self._runtime = None
 
         self.selected_features = []
 
@@ -126,9 +129,15 @@ class TSFreshBuilder:
 
         end = time.time()
 
+        self._runtime = datetime.timedelta(seconds=end - begin)
+
         _print_time_taken(begin, end)
 
         return df_selected
+
+    @property
+    def runtime(self):
+        return self._runtime
 
     def transform(self, data_frame):
         """
