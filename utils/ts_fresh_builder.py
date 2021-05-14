@@ -34,12 +34,23 @@ class TSFreshBuilder:
         target: The name of the target column.
     """
 
-    def __init__(self, num_features, memory, column_id, time_stamp, target):
+    def __init__(
+        self,
+        num_features,
+        memory,
+        column_id,
+        time_stamp,
+        target,
+        horizon=0,
+        allow_lagged_targets=False,
+    ):
         self.num_features = num_features
         self.memory = memory
         self.column_id = column_id
         self.time_stamp = time_stamp
         self.target = target
+        self.horizon = horizon
+        self.allow_lagged_targets = allow_lagged_targets
 
         self._runtime = None
 
@@ -116,9 +127,13 @@ class TSFreshBuilder:
 
         target = np.asarray(data_frame[self.target])
 
-        df_without_target = self._remove_target_column(data_frame)
+        df_for_extraction = (
+            data_frame
+            if self.allow_lagged_targets
+            else self._remove_target_column(data_frame)
+        )
 
-        df_extracted = self._extract_features(df_without_target)
+        df_extracted = self._extract_features(df_for_extraction)
 
         df_selected = self._select_features(df_extracted, target)
 
@@ -143,7 +158,13 @@ class TSFreshBuilder:
         """
         Transforms the raw data into a set of features.
         """
-        df_extracted = self._extract_features(data_frame)
+        df_for_extraction = (
+            data_frame
+            if self.allow_lagged_targets
+            else self._remove_target_column(data_frame)
+        )
+
+        df_extracted = self._extract_features(df_for_extraction)
 
         df_selected = df_extracted[self.selected_features]
 

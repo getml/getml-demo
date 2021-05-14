@@ -106,13 +106,23 @@ class FTTimeSeriesBuilder:
     agg_primitives = all_primitives[all_primitives.type == "aggregation"].name.tolist()
     trans_primitives = all_primitives[all_primitives.type == "transform"].name.tolist()
 
-    def __init__(self, num_features, horizon, memory, column_id, time_stamp, target):
+    def __init__(
+        self,
+        num_features,
+        horizon,
+        memory,
+        column_id,
+        time_stamp,
+        target,
+        allow_lagged_targets=False,
+    ):
         self.num_features = num_features
         self.horizon = horizon
         self.memory = memory
         self.column_id = column_id
         self.time_stamp = time_stamp
         self.target = target
+        self.allow_lagged_targets = allow_lagged_targets
 
         self._runtime = None
         self.fitted = False
@@ -125,6 +135,11 @@ class FTTimeSeriesBuilder:
         del data_frame["index"]
         rolled = _roll_data_frame(
             data_frame, self.column_id, self.time_stamp, self.horizon, self.memory
+        )
+        data_frame = (
+            _remove_target_column(data_frame, self.target)
+            if self.allow_lagged_targets
+            else data_frame
         )
         data_frame["_featuretools_index"] = np.arange(data_frame.shape[0])
         entityset = _make_entity_set(data_frame, rolled, self.time_stamp)
@@ -162,8 +177,12 @@ class FTTimeSeriesBuilder:
         print("featuretools: Trying features...")
         begin = time.time()
         target = np.asarray(data_frame[self.target])
-        df_without_target = _remove_target_column(data_frame, self.target)
-        df_extracted = self._extract_features(df_without_target)
+        df_for_extraction = (
+            data_frame
+            if self.allow_lagged_targets
+            else _remove_target_column(data_frame, self.target)
+        )
+        df_extracted = self._extract_features(df_for_extraction)
         df_selected = self._select_features(df_extracted, target)
         df_selected = _add_original_columns(data_frame, df_selected)
         end = time.time()
@@ -182,8 +201,12 @@ class FTTimeSeriesBuilder:
         Fits the DFS on the data frame and returns
         the features for the training set.
         """
-        df_without_target = _remove_target_column(data_frame, self.target)
-        df_extracted = self._extract_features(df_without_target)
+        df_for_extraction = (
+            data_frame
+            if self.allow_lagged_targets
+            else _remove_target_column(data_frame, self.target)
+        )
+        df_extracted = self._extract_features(df_for_extraction)
         df_selected = df_extracted[self.selected_features]
         df_selected = _add_original_columns(data_frame, df_selected)
         return df_selected
