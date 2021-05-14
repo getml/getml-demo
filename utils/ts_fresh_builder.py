@@ -103,6 +103,10 @@ class TSFreshBuilder:
         return data_frame[colnames]
 
     def _select_features(self, data_frame, target):
+        print(
+            "Selecting the best out of " + str(len(data_frame.columns)) + " features..."
+        )
+
         df_selected = tsfresh.select_features(data_frame, target)
 
         colnames = np.asarray(df_selected.columns)

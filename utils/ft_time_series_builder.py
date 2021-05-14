@@ -155,6 +155,7 @@ class FTTimeSeriesBuilder:
 
     def _select_features(self, data_frame, target):
         colnames = np.asarray(data_frame.columns)
+        print("Selecting the best out of " + str(len(colnames)) + " features...")
         colnames = np.asarray(
             [col for col in colnames if np.var(np.asarray(data_frame[col])) > 0.0]
         )
