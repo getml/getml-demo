@@ -4,6 +4,7 @@ import time
 import featuretools as ft
 import numpy as np
 import pandas as pd
+from pandas.api.types import is_numeric_dtype
 from featuretools import primitives
 from featuretools.primitives.options_utils import generate_all_primitive_options
 from scipy.stats import pearsonr
@@ -149,15 +150,23 @@ class FTTimeSeriesBuilder:
             target_entity="population",
             max_depth=self.max_depth,
         )
-        df_extracted[np.isnan(df_extracted)] = 0.0
-        df_extracted[np.isinf(df_extracted)] = 0.0
+        try:
+            df_extracted[np.isnan(df_extracted)] = 0.0
+            df_extracted[np.isinf(df_extracted)] = 0.0
+        except:
+            pass
         return df_extracted
 
     def _select_features(self, data_frame, target):
         colnames = np.asarray(data_frame.columns)
         print("Selecting the best out of " + str(len(colnames)) + " features...")
         colnames = np.asarray(
-            [col for col in colnames if np.var(np.asarray(data_frame[col])) > 0.0]
+            [
+                col
+                for col in colnames
+                if is_numeric_dtype(data_frame[col])
+                and np.var(np.asarray(data_frame[col])) > 0.0
+            ]
         )
         correlations = np.asarray(
             [np.abs(pearsonr(target, data_frame[col]))[0] for col in colnames]
