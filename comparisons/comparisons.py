@@ -22,6 +22,7 @@ colors = {
     "tsfresh": (0.32, 0.71, 0.24),
 }
 
+# --------------------------------------------------------------------------
 
 ax = (
     comparisons.speedup_per_feature.unstack()
@@ -35,6 +36,7 @@ ax.set_title("Runtime per feature on different data sets (lower is better)")
 plt.tight_layout()
 plt.savefig("nrpf.png")
 
+# --------------------------------------------------------------------------
 
 fig, axes = plt.subplots(nrows=2)
 
@@ -68,6 +70,7 @@ fig.tight_layout(pad=1)
 
 plt.savefig("fps_performance.png")
 
+# --------------------------------------------------------------------------
 
 ax5 = (
     sc_data["auc/rsquared"].unstack().iloc[:, [1, 0, 2]].plot.bar(color=colors.values())
@@ -80,6 +83,7 @@ fig.tight_layout()
 
 plt.savefig("performance.png")
 
+# --------------------------------------------------------------------------
 
 col = [colors[tool] for tool in comparisons.index.get_level_values(1)]
 
@@ -98,3 +102,40 @@ ax3.set_title("Performance vs. speed")
 
 plt.tight_layout()
 plt.savefig("auc-rsquared_fps.png")
+
+# --------------------------------------------------------------------------
+
+plt.style.use("seaborn")
+
+fig, axes = plt.subplots(nrows=2)
+
+ax = (
+    comparisons.speedup_per_feature.unstack()
+    .iloc[:, [1, 0, 2]]
+    .plot.bar(color=colors.values(), ax=axes[0])
+)
+
+ax.set_ylabel("Normalized runtime/feature \n (getML=1)")
+ax.set_title("Runtime per feature on different data sets (lower is better)")
+ax.set_xticklabels([])
+
+sc_data = comparisons.copy()[["speedup_per_feature", "rsquared"]]
+sc_data.rename(columns={"rsquared": "auc/rsquared"}, inplace=True)
+sc_data["auc/rsquared"]["occupancy"] = comparisons["auc"]["occupancy"].values
+
+ax4 = (
+    sc_data["auc/rsquared"]
+    .unstack()
+    .iloc[:, [1, 0, 2]]
+    .plot.bar(color=colors.values(), ax=axes[1], legend=None)
+)
+
+ax4.set_ylabel("AUC/Rsquared")
+ax4.set_title("Predictive performance (higher is better)")
+
+fig.tight_layout(pad=1)
+
+
+plt.savefig("nrpf_performance.png")
+
+# --------------------------------------------------------------------------
