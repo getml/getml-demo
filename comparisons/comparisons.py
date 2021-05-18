@@ -90,6 +90,8 @@ ax3 = sc_data.plot.scatter(x="features_per_second", y="auc/rsquared", c=col)
 #     offset = (0.001, 0.01)
 #     ax3.annotate(dat, (point[0] + offset[0], point[1] + offset[1]))
 
+ax3.grid(True)
+
 ax3.set_ylabel("AUC/Rsquared")
 ax3.set_xlabel("Features/second")
 ax3.set_title("Performance vs. speed")
