@@ -28,8 +28,11 @@ ax = (
     .plot.bar(color=colors.values())
 )
 
+ax.set_ylabel("Normalized runtime/feature \n (getML=1)")
+ax.set_title("Runtime per feature on different data sets (lower is better)")
+
 plt.tight_layout()
-plt.savefig("spf.png")
+plt.savefig("nrpf.png")
 
 
 ax2 = (
@@ -37,6 +40,9 @@ ax2 = (
     .iloc[:, [1, 0, 2]]
     .plot.bar(color=colors.values())
 )
+
+ax2.set_ylabel("Features created per second")
+ax2.set_title("Features created per second (higher is better)")
 
 plt.tight_layout()
 plt.savefig("fps.png")
@@ -51,7 +57,23 @@ ax3 = sc_data.plot.scatter(x="features_per_second", y="auc/rsquared", c=col)
 
 # for i, dat in enumerate(sc_data.index.get_level_values(0)):
 #     point = ax3.get_children()[0].get_offsets().data[i]
-#     ax3.annotate(dat, (point[0] + 0.05, point[1]))
+#     offset = (0.001, 0.01)
+#     ax3.annotate(dat, (point[0] + offset[0], point[1] + offset[1]))
+
+ax3.set_ylabel("AUC/Rsquared")
+ax3.set_xlabel("Features/second")
+ax3.set_title("Performance vs. speed")
 
 plt.tight_layout()
 plt.savefig("auc-rsquared_fps.png")
+
+
+ax4 = (
+    sc_data["auc/rsquared"].unstack().iloc[:, [1, 0, 2]].plot.bar(color=colors.values())
+)
+
+ax4.set_ylabel("AUC/Rsquared")
+ax4.set_title("Performance (higher is better)")
+
+plt.tight_layout()
+plt.savefig("performance.png")
