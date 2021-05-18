@@ -22,6 +22,7 @@ colors = {
     "tsfresh": (0.32, 0.71, 0.24),
 }
 
+
 ax = (
     comparisons.speedup_per_feature.unstack()
     .iloc[:, [1, 0, 2]]
@@ -35,21 +36,50 @@ plt.tight_layout()
 plt.savefig("nrpf.png")
 
 
+fig, axes = plt.subplots(nrows=2)
+
 ax2 = (
     comparisons.features_per_second.unstack()
     .iloc[:, [1, 0, 2]]
-    .plot.bar(color=colors.values())
+    .plot.bar(color=colors.values(), ax=axes[0])
 )
 
-ax2.set_ylabel("Features created per second")
+# for container in ax2.containers:
+#     ax2.bar_label(container, label_type="edge")
+ax2.set_ylabel("Features created/second")
+ax2.set_xticklabels([])
 ax2.set_title("Features created per second (higher is better)")
-
-plt.tight_layout()
-plt.savefig("fps.png")
 
 sc_data = comparisons.copy()[["features_per_second", "rsquared"]]
 sc_data.rename(columns={"rsquared": "auc/rsquared"}, inplace=True)
 sc_data["auc/rsquared"]["occupancy"] = comparisons["auc"]["occupancy"].values
+
+ax4 = (
+    sc_data["auc/rsquared"]
+    .unstack()
+    .iloc[:, [1, 0, 2]]
+    .plot.bar(color=colors.values(), ax=axes[1], legend=None)
+)
+
+ax4.set_ylabel("AUC/Rsquared")
+ax4.set_title("Performance (higher is better)")
+
+fig.tight_layout(pad=1)
+
+plt.savefig("fps_performance.png")
+
+
+ax5 = (
+    sc_data["auc/rsquared"].unstack().iloc[:, [1, 0, 2]].plot.bar(color=colors.values())
+)
+
+ax5.set_ylabel("AUC/Rsquared")
+ax5.set_title("Performance (higher is better)")
+
+fig.tight_layout()
+
+plt.savefig("performance.png")
+
 
 col = [colors[tool] for tool in comparisons.index.get_level_values(1)]
 
@@ -66,14 +96,3 @@ ax3.set_title("Performance vs. speed")
 
 plt.tight_layout()
 plt.savefig("auc-rsquared_fps.png")
-
-
-ax4 = (
-    sc_data["auc/rsquared"].unstack().iloc[:, [1, 0, 2]].plot.bar(color=colors.values())
-)
-
-ax4.set_ylabel("AUC/Rsquared")
-ax4.set_title("Performance (higher is better)")
-
-plt.tight_layout()
-plt.savefig("performance.png")
