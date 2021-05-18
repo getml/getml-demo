@@ -59,6 +59,26 @@ If you are mainly interested in how getML performs compared to other approaches,
 | [Traffic volume prediction (LA)][dodgersnb]       | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)    |
 | [Air pollution prediction][airpollutionnb]        | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 50.4%)  |
 
+In particular, we have benchmarked getML's *FastProp* (short for fast propositionalization) against other implementations of the propositionalization algorithm.
+
+<p align="center" style="text-align: center;">
+    <img src="comparisons/nrpf_performance.png" />
+</p>
+
+As we can see, *FastProp* is true to its name: It achieves similar or slightly better performance than *featuretools* or *tsfresh*, but generates features between 11x to 65x faster than these implementations.
+
+If you want to reproduce these results, please refer to the following notebooks:
+
+|                                                        | Results                                                  |
+| ------------------------------------------------------ | -------------------------------------------------------- |
+| [Air pollution][airpollutionnb_prop]                   | ~23x faster than featuretools, ~11x faster than tsfresh  |
+| [Dodgers][dodgersnb_prop]                              | ~18x faster than featuretools, ~31x faster than tsfresh  |
+| [Interstate94][interstate94nb_prop]                    | ~35x faster than featuretools                            |
+| [Occupancy][occupancynb_prop]                          | ~75x faster than featuretools, ~51x faster than tsfresh  |
+| [Robot][robotnb_prop]                                  | ~65x faster than featuretools, ~22x faster than tsfresh  |
+
+These results are very hardware-dependent and may be different on your machine. However, we have no doubt that you will find that getML's *FastProp* is significantly faster than *featuretools* and *tsfresh* while consuming considerably less memory.
+
 Some benchmarks are also featured on the [Relational Dataset Repository](https://relational.fit.cvut.cz/):
 
 |                                                   | Official page                                                 | 
@@ -78,6 +98,12 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 [airpollutionnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/air_pollution.ipynb
 [dodgersnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/dodgers.ipynb
 [robotnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/robot.ipynb
+
+[airpollutionnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/air_pollution_prop.ipynb
+[dodgersnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/dodgers_prop.ipynbpynb
+[interstate94nb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/interstate94_prop.ipynb
+[occupancynb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/occupancy_prop.ipynb
+[robotnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/robot_prop.ipynb
 
 ## Try it live
 
