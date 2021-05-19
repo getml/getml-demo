@@ -119,10 +119,6 @@ ax.set_ylabel("Normalized runtime/feature \n (getML=1)")
 ax.set_title("Runtime per feature on different data sets (lower is better)")
 ax.set_xticklabels([])
 
-sc_data = comparisons.copy()[["speedup_per_feature", "rsquared"]]
-sc_data.rename(columns={"rsquared": "auc/rsquared"}, inplace=True)
-sc_data["auc/rsquared"]["occupancy"] = comparisons["auc"]["occupancy"].values
-
 ax4 = (
     sc_data["auc/rsquared"]
     .unstack()
