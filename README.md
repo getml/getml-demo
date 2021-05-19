@@ -64,7 +64,7 @@ If you are mainly interested in how getML performs compared to other approaches,
 In particular, we have benchmarked getML's _FastProp_ (short for fast propositionalization) against other implementations of the propositionalization algorithm.
 
 <p align="center" style="text-align: center;">
-    <img src="proposiltionalization/comparisons/nrpf_performance.png" />
+    <img src="propositionalization/comparisons/nrpf_performance.png" />
 </p>
 
 As we can see, _FastProp_ is true to its name: It achieves similar or slightly better performance than _featuretools_ or _tsfresh_, but generates features between 11x to 65x faster than these implementations.
