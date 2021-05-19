@@ -29,7 +29,7 @@ Available example projects are listed below.
 | [Occupancy detection][occupancynb]                        | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
 | [Expenditure categorization][consumerexpendituresnb]      | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
 | [Disease lethality prediction][atherosclerosisnb]         | Classification | Relational               | 3 Tables, 22 MB    | Health         |
-| [IMdb: Predicting actors' gender][imdbnb]                 | Classification | Relational with text     | 7 Tables, 477.1 MB | Entertainment  |
+| [IMDb: Predicting actors' gender][imdbnb]                 | Classification | Relational with text     | 7 Tables, 477.1 MB | Entertainment  |
 | [MovieLens: Predicting users' gender][movielensnb]        | Classification | Relational               | 7 Tables, 20 MB    | Entertainment  |
 | [CORA: Categorizing academic studies][coranb]             | Classification | Relational               | 3 Tables, 4.6 MB   | Academia       |
 | [Order cancellation][onlineretailnb]                      | Classification | Relational               | 1 Table, 398k rows | E-commerce     |
@@ -46,7 +46,7 @@ If you are mainly interested in how getML performs compared to other approaches,
 |                                                   | Benchmarks                                       | Results                                 |
 | ------------------------------------------------- | ------------------------------------------------ | --------------------------------------- |
 | [Occupancy detection][occupancynb]                | Academic literature: Neural networks             | AUC (getML 99.8%, next best 99.6%)      |
-| [IMdb: Predicting actors' gender][imdbnb]         | Academic literature: RDN, Wordification, RPT     | AUC (getML 92.87%, next best 86%)       |
+| [IMDb: Predicting actors' gender][imdbnb]         | Academic literature: RDN, Wordification, RPT     | AUC (getML 92.87%, next best 86%)       |
 | [MovieLens: Predicting users' gender][movielensnb]| Academic literature: PRM, MBN                    | Accuracy (getML 81.6%, next best 69%)   |
 | [CORA: Categorizing academic studies][coranb]     | Academic literature: RelF, LBP, EPRN, PRN, ACORA | Accuracy (getML 89.9%, next best 85.7%) |
 | [Traffic volume prediction (I94)][interstate94nb] | Prophet (fbprophet)                              | R-squared (getML 98.4%, prophet 83.3%)  |
@@ -59,7 +59,7 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 | --------------------------------------------------- | ------------------------------------------------------------- |
 | [CORA: Categorizing academic studies][coranb]       | [CORA](https://relational.fit.cvut.cz/dataset/CORA)           | 
 | [Financial: Loan default prediction][loansnb]       | [Financial](https://relational.fit.cvut.cz/dataset/Financial) | 
-| [IMdb: Predicting actors' gender][imdbnb]           | [IMDb](https://relational.fit.cvut.cz/dataset/IMDb)           | 
+| [IMDb: Predicting actors' gender][imdbnb]           | [IMDb](https://relational.fit.cvut.cz/dataset/IMDb)           | 
 | [MovieLens: Predicting users' gender][movielensnb]  | [MovieLens](https://relational.fit.cvut.cz/dataset/MovieLens) | 
 
 [loansnb]: loans.ipynb
