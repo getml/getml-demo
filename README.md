@@ -71,13 +71,13 @@ As we can see, _FastProp_ is true to its name: It achieves similar or slightly b
 
 If you want to reproduce these results, please refer to the following notebooks:
 
-|                                      | Results                                                 |
-| ------------------------------------ | ------------------------------------------------------- |
-| [Air pollution][airpollutionnb_prop] | ~23x faster than featuretools, ~11x faster than tsfresh |
-| [Dodgers][dodgersnb_prop]            | ~18x faster than featuretools, ~31x faster than tsfresh |
-| [Interstate94][interstate94nb_prop]  | ~35x faster than featuretools                           |
-| [Occupancy][occupancynb_prop]        | ~75x faster than featuretools, ~51x faster than tsfresh |
-| [Robot][robotnb_prop]                | ~65x faster than featuretools, ~22x faster than tsfresh |
+|                                      | Results                                                 | Remarks |
+| ------------------------------------ | ------------------------------------------------------- | --------|
+| [Air pollution][airpollutionnb_prop] | ~23x faster than featuretools, ~11x faster than tsfresh | The predictive accuracy can be significantly improved by using RelMT instead of propositionalization approaches, please refer to [this notebook][airpollutionnb]. |
+ | [Dodgers][dodgersnb_prop]            | ~18x faster than featuretools, ~31x faster than tsfresh | The predictive accuracy can be significantly improved by using the mapping preprocessor and/or more advanced feature learning algorithms, please refer to [this notebook][dodgersnb].  |
+| [Interstate94][interstate94nb_prop]  | ~35x faster than featuretools                           | |
+| [Occupancy][occupancynb_prop]        | ~75x faster than featuretools, ~51x faster than tsfresh | |
+| [Robot][robotnb_prop]                | ~65x faster than featuretools, ~22x faster than tsfresh | |
 
 These results are very hardware-dependent and may be different on your machine. However, we have no doubt that you will find that getML's _FastProp_ is significantly faster than _featuretools_ and _tsfresh_ while consuming considerably less memory.
 
