@@ -3,7 +3,7 @@
 </p>
 
 <p align="center" style="text-align: center;">
-    <i>getML)combines feature learning with AutoML to build end-to-end prediction pipelines</i>
+    <i>getML combines feature learning with AutoML to build end-to-end prediction pipelines</i>
 </p>
 
 <p align="center" style="text-align: center;">
