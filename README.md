@@ -3,7 +3,7 @@
 </p>
 
 <p align="center" style="text-align: center;">
-    <i>getML combines feature learning with AutoML to build end-to-end prediction pipelines</i>
+    <i>getML)combines feature learning with AutoML to build end-to-end prediction pipelines</i>
 </p>
 
 <p align="center" style="text-align: center;">
@@ -111,3 +111,8 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 ## Try it live
 
 You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab).
+
+## Download
+
+Download getML for free [here](https://www.getml.com/product/).
+
