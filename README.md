@@ -114,4 +114,4 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 
 ## Try it live
 
-You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab).
+You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab). (Starting the server might take a minute or two, please be patient.)
