@@ -19,10 +19,6 @@
 <br>
 <span style="display: block; border-bottom: 1px solid #eaecef;"></span>
 
-## Try it live
-
-You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab).
-
 ## Download
 
 Download getML for free [here](https://www.getml.com/product/).
@@ -116,3 +112,6 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 [occupancynb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositonilzation/occupancy_prop.ipynb
 [robotnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositonilzation/robot_prop.ipynb
 
+## Try it live
+
+You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab).
