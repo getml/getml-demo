@@ -4,26 +4,20 @@
       "main": {
         "dock": {
           "type": "tab-area",
-          "currentIndex": 0,
+          "currentIndex": 1,
           "widgets": ["markdownviewer-widget:welcome.md"]
         },
-        "mode": "multiple-document",
+        "mode": "multiple-document",        
         "current": "markdownviewer-widget:welcome.md"
       },
       "left": {
         "collapsed": false,
         "current": "filebrowser",
-        "widgets": ["filebrowser", "git-sessions", "@jupyterlab/toc:plugin"]
+        "widgets": ["filebrowser", "@jupyterlab/toc:plugin"]
       },
       "right": {
         "collapsed": true,
-        "widgets": [
-          "running-sessions",
-          "command-palette",
-          "jp-property-inspector",
-          "tab-manager",
-          "extensionmanager.main-view"
-        ]
+        "widgets": ["jp-property-inspector", "running-sessions", "extensionmanager.main-view"]
       }
     },
     "markdownviewer-widget:welcome.md": {
@@ -34,6 +28,6 @@
     }
   },
   "metadata": {
-    "id": "/lab"
+    "id": "lab"
   }
 }
