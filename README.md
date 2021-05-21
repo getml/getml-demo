@@ -19,6 +19,14 @@
 <br>
 <span style="display: block; border-bottom: 1px solid #eaecef;"></span>
 
+## Try it live
+
+You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab).
+
+## Download
+
+Download getML for free [here](https://www.getml.com/product/).
+
 ## Examples
 
 This demo contains various example projects to help you to get started
@@ -107,12 +115,4 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 [interstate94nb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositonilzation/interstate94_prop.ipynb
 [occupancynb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositonilzation/occupancy_prop.ipynb
 [robotnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositonilzation/robot_prop.ipynb
-
-## Try it live
-
-You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab).
-
-## Download
-
-Download getML for free [here](https://www.getml.com/product/).
 
