@@ -54,6 +54,8 @@ jupyter serverextension enable --sys-prefix getml_server_extension
 # should be installed from pip, not needed: https://github.com/manics/jupyter-offlinenotebook 
 # jupyter labextension install jupyter-offlinenotebook
 
+# include python packages jupyterlab-git, nbdime
+
 # jupyter labextension install jupyterlab_iframe loeschen
 pip install $HOME/binder/.labextensions/getml_extension-0.1.0-py3-none-any.whl
 # pip install $HOME/binder/.labextensions/btest-0.1.0-py3-none-any.whl
