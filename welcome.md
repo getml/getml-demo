@@ -43,15 +43,15 @@ Available example projects are listed below.
 
 If you are mainly interested in how getML performs compared to other approaches, you can refer to the following notebooks:
 
-|                                                   | Benchmarks                                       | Results                                 |
-| ------------------------------------------------- | ------------------------------------------------ | --------------------------------------- |
-| [Occupancy detection][occupancynb]                | Academic literature: Neural networks             | AUC (getML 99.8%, next best 99.6%)      |
-| [IMDb: Predicting actors' gender][imdbnb]         | Academic literature: RDN, Wordification, RPT     | AUC (getML 92.87%, next best 86%)       |
-| [MovieLens: Predicting users' gender][movielensnb]| Academic literature: PRM, MBN                    | Accuracy (getML 81.6%, next best 69%)   |
-| [CORA: Categorizing academic studies][coranb]     | Academic literature: RelF, LBP, EPRN, PRN, ACORA | Accuracy (getML 89.9%, next best 85.7%) |
-| [Traffic volume prediction (I94)][interstate94nb] | Prophet (fbprophet)                              | R-squared (getML 98.4%, prophet 83.3%)  |
-| [Traffic volume prediction (LA)][dodgersnb]       | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)    |
-| [Air pollution prediction][airpollutionnb]        | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 50.4%)  |
+|                                                    | Benchmarks                                       | Results                                  |
+| -------------------------------------------------- | ------------------------------------------------ | ---------------------------------------- |
+| [Occupancy detection][occupancynb]                 | Academic literature: Neural networks             | AUC (getML 99.8%, next best 99.6%)       |
+| [IMDb: Predicting actors' gender][imdbnb]          | Academic literature: RDN, Wordification, RPT     | AUC (getML 91.83%, next best 86%)        |
+| [MovieLens: Predicting users' gender][movielensnb] | Academic literature: PRM, MBN                    | Accuracy (getML 81.6%, next best 69%)    |
+| [CORA: Categorizing academic studies][coranb]      | Academic literature: RelF, LBP, EPRN, PRN, ACORA | Accuracy (getML 89.9%, next best 85.7%)  |
+| [Traffic volume prediction (I94)][interstate94nb]  | Prophet (fbprophet)                              | R-squared (getML 98.4%, prophet 83.3%)   |
+| [Traffic volume prediction (LA)][dodgersnb]        | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)     |
+| [Air pollution prediction][airpollutionnb]         | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 53.7%) |
 
 Some benchmarks are also featured on the [Relational Dataset Repository](https://relational.fit.cvut.cz/):
 
