@@ -41,7 +41,6 @@ def load_jupyter_server_extension(nbapp):
             [
                 "./getML",
                 "--install",
-                "--log",
                 "--proxy-url",
                 user_base + "proxy/1709",
                 "--http-port",
