@@ -65,6 +65,8 @@ If you are mainly interested in how getML performs compared to other approaches,
 | [Traffic volume prediction (LA)][dodgersnb]        | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)     |
 | [Air pollution prediction][airpollutionnb]         | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 53.7%) |
 
+### Propositionalization
+
 In particular, we have benchmarked getML's _FastProp_ (short for fast propositionalization) against other implementations of the propositionalization algorithm.
 
 <p align="center" style="text-align: center;">
@@ -84,6 +86,8 @@ If you want to reproduce these results, please refer to the following notebooks:
 | [Robot][robotnb_prop]                | ~65x faster than featuretools, ~22x faster than tsfresh |                                                                                                                                                                                       |
 
 These results are very hardware-dependent and may be different on your machine. However, we have no doubt that you will find that getML's _FastProp_ is significantly faster than _featuretools_ and _tsfresh_ while consuming considerably less memory.
+
+### Relational Dataset Repository
 
 Some benchmarks are also featured on the [Relational Dataset Repository](https://relational.fit.cvut.cz/):
 
