@@ -75,13 +75,13 @@ As we can see, _FastProp_ is true to its name: It achieves similar or slightly b
 
 If you want to reproduce these results, please refer to the following notebooks:
 
-|                                      | Results                                                 | Remarks |
-| ------------------------------------ | ------------------------------------------------------- | --------|
-| [Air pollution][airpollutionnb_prop] | ~23x faster than featuretools, ~11x faster than tsfresh | The predictive accuracy can be significantly improved by using RelMT instead of propositionalization approaches, please refer to [this notebook][airpollutionnb]. |
- | [Dodgers][dodgersnb_prop]            | ~18x faster than featuretools, ~31x faster than tsfresh | The predictive accuracy can be significantly improved by using the mapping preprocessor and/or more advanced feature learning algorithms, please refer to [this notebook][dodgersnb].  |
-| [Interstate94][interstate94nb_prop]  | ~35x faster than featuretools                           | |
-| [Occupancy][occupancynb_prop]        | ~75x faster than featuretools, ~51x faster than tsfresh | |
-| [Robot][robotnb_prop]                | ~65x faster than featuretools, ~22x faster than tsfresh | |
+|                                      | Results                                                 | Remarks                                                                                                                                                                               |
+| ------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Air pollution][airpollutionnb_prop] | ~23x faster than featuretools, ~11x faster than tsfresh | The predictive accuracy can be significantly improved by using RelMT instead of propositionalization approaches, please refer to [this notebook][airpollutionnb].                     |
+| [Dodgers][dodgersnb_prop]            | ~18x faster than featuretools, ~31x faster than tsfresh | The predictive accuracy can be significantly improved by using the mapping preprocessor and/or more advanced feature learning algorithms, please refer to [this notebook][dodgersnb]. |
+| [Interstate94][interstate94nb_prop]  | ~35x faster than featuretools                           |                                                                                                                                                                                       |
+| [Occupancy][occupancynb_prop]        | ~75x faster than featuretools, ~51x faster than tsfresh |                                                                                                                                                                                       |
+| [Robot][robotnb_prop]                | ~65x faster than featuretools, ~22x faster than tsfresh |                                                                                                                                                                                       |
 
 These results are very hardware-dependent and may be different on your machine. However, we have no doubt that you will find that getML's _FastProp_ is significantly faster than _featuretools_ and _tsfresh_ while consuming considerably less memory.
 
@@ -106,11 +106,11 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 [airpollutionnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/air_pollution.ipynb
 [dodgersnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/dodgers.ipynb
 [robotnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/robot.ipynb
-[airpollutionnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositonilzation/air_pollution_prop.ipynb
-[dodgersnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositonilzation/dodgers_prop.ipynbpynb
-[interstate94nb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositonilzation/interstate94_prop.ipynb
-[occupancynb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositonilzation/occupancy_prop.ipynb
-[robotnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositonilzation/robot_prop.ipynb
+[airpollutionnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/air_pollution_prop.ipynb
+[dodgersnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/dodgers_prop.ipynbpynb
+[interstate94nb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/interstate94_prop.ipynb
+[occupancynb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/occupancy_prop.ipynb
+[robotnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/robot_prop.ipynb
 
 ## Try it live
 
