@@ -19,6 +19,10 @@
 <br>
 <span style="display: block; border-bottom: 1px solid #eaecef;"></span>
 
+## Download
+
+Download getML for free [here](https://www.getml.com/product/).
+
 ## Examples
 
 This demo contains various example projects to help you to get started
@@ -54,12 +58,12 @@ If you are mainly interested in how getML performs compared to other approaches,
 |                                                    | Benchmarks                                       | Results                                  |
 | -------------------------------------------------- | ------------------------------------------------ | ---------------------------------------- |
 | [Occupancy detection][occupancynb]                 | Academic literature: Neural networks             | AUC (getML 99.8%, next best 99.6%)       |
-| [IMDb: Predicting actors' gender][imdbnb]          | Academic literature: RDN, Wordification, RPT     | AUC (getML 92.87%, next best 86%)        |
+| [IMDb: Predicting actors' gender][imdbnb]          | Academic literature: RDN, Wordification, RPT     | AUC (getML 91.83%, next best 86%)        |
 | [MovieLens: Predicting users' gender][movielensnb] | Academic literature: PRM, MBN                    | Accuracy (getML 81.6%, next best 69%)    |
 | [CORA: Categorizing academic studies][coranb]      | Academic literature: RelF, LBP, EPRN, PRN, ACORA | Accuracy (getML 89.9%, next best 85.7%)  |
 | [Traffic volume prediction (I94)][interstate94nb]  | Prophet (fbprophet)                              | R-squared (getML 98.4%, prophet 83.3%)   |
 | [Traffic volume prediction (LA)][dodgersnb]        | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)     |
-| [Air pollution prediction][airpollutionnb]         | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 50.4%) |
+| [Air pollution prediction][airpollutionnb]         | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 53.7%) |
 
 In particular, we have benchmarked getML's _FastProp_ (short for fast propositionalization) against other implementations of the propositionalization algorithm.
 
@@ -110,4 +114,4 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 
 ## Try it live
 
-You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab).
+You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab). (Starting the server might take a minute or two, please be patient.)
