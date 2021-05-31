@@ -27,30 +27,41 @@ jupyter serverextension enable --sys-prefix getml_server_extension
 # jupyter serverextension enable --sys-prefix getml_binder_init
 
 # official & contribs
-jupyter serverextension enable --py jupyter_server_proxy --sys-prefix
-jupyter serverextension enable --py jupyterlab_git --sys-prefix
-jupyter serverextension enable --py jupyterlab_iframe --sys-prefix
+# jupyter serverextension enable --py jupyter_server_proxy --sys-prefix
+# jupyter serverextension enable --py jupyterlab_git --sys-prefix
+# jupyter serverextension enable --py jupyterlab_iframe --sys-prefix
 # jupyter serverextension enable --py nbdime --sys-prefix
-jupyter serverextension enable --py jupyter_offlinenotebook --sys-prefix
+# jupyter serverextension enable --py jupyter_offlinenotebook --sys-prefix
 
 # Install & enable jupyter nbextensions
 ######
 # need to include jupyter_contrib_nbextensions & jupyter_nbextensions_configurator in requirements.txt
 # https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
-jupyter contrib nbextension install --sys-prefix
+# jupyter contrib nbextension install --sys-prefix
 
-jupyter nbextension enable jupyter_server_proxy/tree --sys-prefix
-jupyter nbextension enable toc2/main --sys-prefix
-jupyter nbextensions_configurator enable --sys-prefix
+# jupyter nbextension enable jupyter_server_proxy/tree --sys-prefix
+# jupyter nbextension enable toc2/main --sys-prefix
+# jupyter nbextensions_configurator enable --sys-prefix
 
 # Install JupyterLab extensions
 ######
-# jupyter labextension install @jupyterlab/server-proxy
-# jupyter labextension install @jupyterlab/toc
-# jupyter labextension install @jupyterlab/shortcutui
+# jupyter labextension install @jupyterlab/server-proxy weg
+# jupyter labextension install @jupyterlab/toc ?
+# jupyter labextension install @jupyterlab/shortcutui ?
+
+# should be installed from pip, not needed: https://github.com/manics/jupyter-offlinenotebook 
 # jupyter labextension install jupyter-offlinenotebook
-# jupyter labextension install jupyterlab_iframe
-jupyter labextension install @jupyterlab/server-proxy @jupyterlab/toc @jupyterlab/shortcutui jupyter-offlinenotebook jupyterlab_iframe --log-level=20 --minimize=False --dev-build=False
+
+# include python packages jupyterlab-git, nbdime
+
+# jupyter labextension install jupyterlab_iframe loeschen
+pip install $HOME/binder/.labextensions/getml_extension-0.1.0-py3-none-any.whl
+# pip install $HOME/binder/.labextensions/btest-0.1.0-py3-none-any.whl
+# cd $HOME/binder/.labextensions/getml_analytics
+# jlpm && jlpm build
+# jupyter labextension install .
+# cd $HOME
+jupyter labextension install jupyter-offlinenotebook # --log-level=20 --minimize=False --dev-build=False
 
 # jupyterlab-topbar-extension jupyterlab-system-monitor
 
