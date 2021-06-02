@@ -111,7 +111,7 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 [dodgersnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/dodgers.ipynb
 [robotnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/robot.ipynb
 [airpollutionnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/air_pollution_prop.ipynb
-[dodgersnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/dodgers_prop.ipynbpynb
+[dodgersnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/dodgers_prop.ipynb
 [interstate94nb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/interstate94_prop.ipynb
 [occupancynb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/occupancy_prop.ipynb
 [robotnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/robot_prop.ipynb
