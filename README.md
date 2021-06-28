@@ -19,9 +19,12 @@
 <br>
 <span style="display: block; border-bottom: 1px solid #eaecef;"></span>
 
-## Download
 
-Download getML for free [here](https://www.getml.com/product/).
+## Try it live
+
+You can run these notebooks in a jupyterhub environment on our server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab). (Launching your docker container might take a minute or two, please be patient.)
+
+You can also download getML for free [here](https://www.getml.com/product/) to run these notebooks locally on your machine.
 
 ## Examples
 
@@ -116,6 +119,4 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 [occupancynb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/occupancy_prop.ipynb
 [robotnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/robot_prop.ipynb
 
-## Try it live
 
-You can try these notebooks on a live server. No installation or registration required. Start your own getML live demo [here](https://demo.getml.com/v2/gh/getml/getml-demo/master?urlpath=lab). (Starting the server might take a minute or two, please be patient.)
