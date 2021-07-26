@@ -36,34 +36,46 @@ relational data scheme involving many tables.
 
 Available example projects are listed below.
 
-|                                                       | Task           | Data                     | Size               | Domain         |
-| ----------------------------------------------------- | -------------- | ------------------------ | ------------------ | -------------- |
-| [Financial: Loan default prediction][loansnb]         | Classification | Relational               | 8 Tables, 60 MB    | Financial      |
-| [Occupancy detection][occupancynb]                    | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
-| [Expenditure categorization][consumerexpendituresnb]  | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
-| [Disease lethality prediction][atherosclerosisnb]     | Classification | Relational               | 3 Tables, 22 MB    | Health         |
-| [IMDb: Predicting actors' gender][imdbnb]             | Classification | Relational with text     | 7 Tables, 477.1 MB | Entertainment  |
-| [MovieLens: Predicting users' gender][movielensnb]    | Classification | Relational               | 7 Tables, 20 MB    | Entertainment  |
-| [CORA: Categorizing academic studies][coranb]         | Classification | Relational               | 3 Tables, 4.6 MB   | Academia       |
-| [Order cancellation][onlineretailnb]                  | Classification | Relational               | 1 Table, 398k rows | E-commerce     |
-| [Traffic volume prediction (I94)][interstate94nb]     | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
-| [Air pollution prediction][airpollutionnb]            | Regression     | Multivariate time series | 1 Table, 41k rows  | Environment    |
-| [Traffic volume prediction (LA)][dodgersnb]           | Regression     | Multivariate time series | 1 Table, 47k rows  | Transportation |
-| [Predicting a force vector from sensor data][robotnb] | Regression     | Multivariate time series | 1 Table, 15k rows  | Robotics       |
+|                                                              | Task           | Data                     | Size               | Domain         |
+| ------------------------------------------------------------ | -------------- | ------------------------ | ------------------ | -------------- |
+| [Financial: Loan default prediction][loansnb]                | Classification | Relational               | 8 Tables, 60 MB    | Financial      |
+| [Occupancy detection][occupancynb]                           | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
+| [Expenditure categorization][consumerexpendituresnb]         | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
+| [Disease lethality prediction][atherosclerosisnb]            | Classification | Relational               | 3 Tables, 22 MB    | Health         |
+| [IMDb: Predicting actors' gender][imdbnb]                    | Classification | Relational with text     | 7 Tables, 477.1 MB | Entertainment  |
+| [MovieLens: Predicting users' gender][movielensnb]           | Classification | Relational               | 7 Tables, 20 MB    | Entertainment  |
+| [CORA: Categorizing academic studies][coranb]                | Classification | Relational               | 3 Tables, 4.6 MB   | Academia       |
+| [Order cancellation][onlineretailnb]                         | Classification | Relational               | 1 Table, 398k rows | E-commerce     |
+| [Traffic volume prediction (I94)][interstate94nb]            | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
+| [Air pollution prediction][airpollutionnb]                   | Regression     | Multivariate time series | 1 Table, 41k rows  | Environment    |
+| [Traffic volume prediction (LA)][dodgersnb]                  | Regression     | Multivariate time series | 1 Table, 47k rows  | Transportation |
+| [Predicting a force vector from sensor data][robotnb]        | Regression     | Multivariate time series | 1 Table, 15k rows  | Robotics       |
+| [AdventureWorks: Predicting customer churn][adventureworknb] | Classification | Relational               | 71 Tables, 233 MB  | Commerce       |
+| [Baseball (Lahman): Predicting salaries][baseballnb]         | Regression     | Relational               | 25 Tables, 74 MB   | Sports         |
+| [Formula 1 (ErgastF1): Predicting the winner][formula1nb]    | Classification | Relational               | 13 Tables, 56 MB   | Sports         |
+| [Seznam: Predicting the transaction volume][seznamnb]        | Regression     | Relational               | 4 Tables, 147 MB   | E-commerce     |
+| [SFScores: Predicting health check scores][sfscoresnb]       | Regression     | Relational               | 3 Tables, 9 MB     | Restaurants    |
+| [Stats: Predicting users' reputation][statsnb]               | Regression     | Relational               | 8 Tables, 658 MB   | Internet       |
 
 ## Benchmarks
 
 If you are mainly interested in how getML performs compared to other approaches, you can refer to the following notebooks:
 
-|                                                    | Benchmarks                                       | Results                                  |
-| -------------------------------------------------- | ------------------------------------------------ | ---------------------------------------- |
-| [Occupancy detection][occupancynb]                 | Academic literature: Neural networks             | AUC (getML 99.8%, next best 99.6%)       |
-| [IMDb: Predicting actors' gender][imdbnb]          | Academic literature: RDN, Wordification, RPT     | AUC (getML 91.83%, next best 86%)        |
-| [MovieLens: Predicting users' gender][movielensnb] | Academic literature: PRM, MBN                    | Accuracy (getML 81.6%, next best 69%)    |
-| [CORA: Categorizing academic studies][coranb]      | Academic literature: RelF, LBP, EPRN, PRN, ACORA | Accuracy (getML 89.9%, next best 85.7%)  |
-| [Traffic volume prediction (I94)][interstate94nb]  | Prophet (fbprophet)                              | R-squared (getML 98.4%, prophet 83.3%)   |
-| [Traffic volume prediction (LA)][dodgersnb]        | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)     |
-| [Air pollution prediction][airpollutionnb]         | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 53.7%) |
+|                                                    | Benchmarks                                       | Results                                     |
+| -------------------------------------------------- | ------------------------------------------------ | ------------------------------------------- |
+| [Occupancy detection][occupancynb]                 | Academic literature: Neural networks             | AUC (getML 99.8%, next best 99.6%)          |
+| [IMDb: Predicting actors' gender][imdbnb]          | Academic literature: RDN, Wordification, RPT     | AUC (getML 91.83%, next best 86%)           |
+| [MovieLens: Predicting users' gender][movielensnb] | Academic literature: PRM, MBN                    | Accuracy (getML 81.6%, next best 69%)       |
+| [CORA: Categorizing academic studies][coranb]      | Academic literature: RelF, LBP, EPRN, PRN, ACORA | Accuracy (getML 89.9%, next best 85.7%)     |
+| [Traffic volume prediction (I94)][interstate94nb]  | Prophet (fbprophet)                              | R-squared (getML 98.4%, prophet 83.3%)      |
+| [Traffic volume prediction (LA)][dodgersnb]        | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)        |
+| [Air pollution prediction][airpollutionnb]         | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 53.7%)    |
+| [AdventureWorks: Predicting customer churn][adventureworknb] | featuretools                           | AUC (getML 98.0%, featuretools 96.8%)       |
+| [Baseball (Lahman): Predicting salaries][baseballnb]         | featuretools                           | R-squared (getML 84.0%, featuretools 78.0%) |
+| [Formula 1 (ErgastF1): Predicting the winner][formula1nb]    | featuretools                           | AUC (getML 92.4%, featuretools 92.0%)       |
+| [Seznam: Predicting the transaction volume][seznamnb]        | featuretools                           | R-squared (getML 78.2%, featuretools 63.2%) |
+| [SFScores: Predicting health check scores][sfscoresnb]       | featuretools                           | R-squared (getML 27.9%, featuretools 26.1%) |
+| [Stats: Predicting users' reputation][statsnb]               | featuretools                           | R-squared (getML 98.1%, featuretools 96.2%) |
 
 ### Propositionalization
 
@@ -91,12 +103,18 @@ These results are very hardware-dependent and may be different on your machine. 
 
 Some benchmarks are also featured on the [Relational Dataset Repository](https://relational.fit.cvut.cz/):
 
-|                                                    | Official page                                                 |
-| -------------------------------------------------- | ------------------------------------------------------------- |
-| [CORA: Categorizing academic studies][coranb]      | [CORA](https://relational.fit.cvut.cz/dataset/CORA)           |
-| [Financial: Loan default prediction][loansnb]      | [Financial](https://relational.fit.cvut.cz/dataset/Financial) |
-| [IMDb: Predicting actors' gender][imdbnb]          | [IMDb](https://relational.fit.cvut.cz/dataset/IMDb)           |
-| [MovieLens: Predicting users' gender][movielensnb] | [MovieLens](https://relational.fit.cvut.cz/dataset/MovieLens) |
+|                                                                  | Official page                                                           |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [AdventureWorks: Predicting customer churn][adventureworksnb]    | [AdventureWorks](https://relational.fit.cvut.cz/dataset/AdventureWorks) |
+| [Baseball (Lahman): Predicting salaries][baseballnb]             | [Lahman](https://relational.fit.cvut.cz/dataset/Lahman)                 |
+| [CORA: Categorizing academic studies][coranb]                    | [CORA](https://relational.fit.cvut.cz/dataset/CORA)                     |
+| [Financial: Loan default prediction][loansnb]                    | [Financial](https://relational.fit.cvut.cz/dataset/Financial)           |
+| [Formula 1 (ErgastF1): Predicting the winner][formula1nb]        | [ErgastF1](https://relational.fit.cvut.cz/dataset/ErgastF1)             |
+| [IMDb: Predicting actors' gender][imdbnb]                        | [IMDb](https://relational.fit.cvut.cz/dataset/IMDb)                     |
+| [MovieLens: Predicting users' gender][movielensnb]               | [MovieLens](https://relational.fit.cvut.cz/dataset/MovieLens)           |
+| [Seznam: Predicting the transaction volume][seznamnb]            | [Seznam](https://relational.fit.cvut.cz/dataset/Seznam)                 |
+| [SFScores: Predicting health check scores][sfscoresnb]           | [SFScores](https://relational.fit.cvut.cz/dataset/SFScores)             |
+| [Stats: Predicting users' reputation][statsnb]                   | [Stats](https://relational.fit.cvut.cz/dataset/Stats)                   |
 
 [loansnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/loans.ipynb
 [occupancynb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/occupancy.ipynb
@@ -110,6 +128,13 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 [airpollutionnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/air_pollution.ipynb
 [dodgersnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/dodgers.ipynb
 [robotnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/robot.ipynb
+[adventureworksnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/adventure_works.ipynb
+[baseballnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/baseball.ipynb
+[formula1nb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/formula1.ipynb
+[seznamnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/seznam.ipynb
+[sfscoresnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/sfscores.ipynb
+[statsnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/stats.ipynb
+
 [airpollutionnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/air_pollution_prop.ipynb
 [dodgersnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/dodgers_prop.ipynb
 [interstate94nb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/interstate94_prop.ipynb
