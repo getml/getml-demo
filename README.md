@@ -38,24 +38,24 @@ Available example projects are listed below.
 
 |                                                              | Task           | Data                     | Size               | Domain         |
 | ------------------------------------------------------------ | -------------- | ------------------------ | ------------------ | -------------- |
-| [Financial: Loan default prediction][loansnb]                | Classification | Relational               | 8 Tables, 60 MB    | Financial      |
-| [Occupancy detection][occupancynb]                           | Classification | Multivariate time series | 1 Table, 32k rows  | Energy         |
-| [Expenditure categorization][consumerexpendituresnb]         | Classification | Relational               | 3 Tables, 150 MB   | E-commerce     |
-| [Disease lethality prediction][atherosclerosisnb]            | Classification | Relational               | 3 Tables, 22 MB    | Health         |
-| [IMDb: Predicting actors' gender][imdbnb]                    | Classification | Relational with text     | 7 Tables, 477.1 MB | Entertainment  |
-| [MovieLens: Predicting users' gender][movielensnb]           | Classification | Relational               | 7 Tables, 20 MB    | Entertainment  |
-| [CORA: Categorizing academic studies][coranb]                | Classification | Relational               | 3 Tables, 4.6 MB   | Academia       |
-| [Order cancellation][onlineretailnb]                         | Classification | Relational               | 1 Table, 398k rows | E-commerce     |
-| [Traffic volume prediction (I94)][interstate94nb]            | Regression     | Multivariate time series | 1 Table, 24k rows  | Transportation |
-| [Air pollution prediction][airpollutionnb]                   | Regression     | Multivariate time series | 1 Table, 41k rows  | Environment    |
-| [Traffic volume prediction (LA)][dodgersnb]                  | Regression     | Multivariate time series | 1 Table, 47k rows  | Transportation |
-| [Predicting a force vector from sensor data][robotnb]        | Regression     | Multivariate time series | 1 Table, 15k rows  | Robotics       |
-| [AdventureWorks: Predicting customer churn][adventureworksnb] | Classification | Relational               | 71 Tables, 233 MB  | Commerce       |
-| [Baseball (Lahman): Predicting salaries][baseballnb]         | Regression     | Relational               | 25 Tables, 74 MB   | Sports         |
-| [Formula 1 (ErgastF1): Predicting the winner][formula1nb]    | Classification | Relational               | 13 Tables, 56 MB   | Sports         |
-| [Seznam: Predicting the transaction volume][seznamnb]        | Regression     | Relational               | 4 Tables, 147 MB   | E-commerce     |
-| [SFScores: Predicting health check scores][sfscoresnb]       | Regression     | Relational               | 3 Tables, 9 MB     | Restaurants    |
-| [Stats: Predicting users' reputation][statsnb]               | Regression     | Relational               | 8 Tables, 658 MB   | Internet       |
+| [Financial: Loan default prediction][loansnb]                | Classification | Relational               | 8 tables, 60 MB    | Financial      |
+| [Occupancy detection][occupancynb]                           | Classification | Multivariate time series | 1 table, 32k rows  | Energy         |
+| [Expenditure categorization][consumerexpendituresnb]         | Classification | Relational               | 3 tables, 150 MB   | E-commerce     |
+| [Disease lethality prediction][atherosclerosisnb]            | Classification | Relational               | 3 tables, 22 MB    | Health         |
+| [IMDb: Predicting actors' gender][imdbnb]                    | Classification | Relational with text     | 7 tables, 477.1 MB | Entertainment  |
+| [MovieLens: Predicting users' gender][movielensnb]           | Classification | Relational               | 7 tables, 20 MB    | Entertainment  |
+| [CORA: Categorizing academic studies][coranb]                | Classification | Relational               | 3 tables, 4.6 MB   | Academia       |
+| [Order cancellation][onlineretailnb]                         | Classification | Relational               | 1 table, 398k rows | E-commerce     |
+| [Traffic volume prediction (I94)][interstate94nb]            | Regression     | Multivariate time series | 1 table, 24k rows  | Transportation |
+| [Air pollution prediction][airpollutionnb]                   | Regression     | Multivariate time series | 1 table, 41k rows  | Environment    |
+| [Traffic volume prediction (LA)][dodgersnb]                  | Regression     | Multivariate time series | 1 table, 47k rows  | Transportation |
+| [Predicting a force vector from sensor data][robotnb]        | Regression     | Multivariate time series | 1 table, 15k rows  | Robotics       |
+| [AdventureWorks: Predicting customer churn][adventureworksnb] | Classification | Relational               | 71 tables, 233 MB  | Commerce       |
+| [Baseball (Lahman): Predicting salaries][baseballnb]         | Regression     | Relational               | 25 tables, 74 MB   | Sports         |
+| [Formula 1 (ErgastF1): Predicting the winner][formula1nb]    | Classification | Relational               | 13 tables, 56 MB   | Sports         |
+| [Seznam: Predicting the transaction volume][seznamnb]        | Regression     | Relational               | 4 tables, 147 MB   | E-commerce     |
+| [SFScores: Predicting health check scores][sfscoresnb]       | Regression     | Relational               | 3 tables, 9 MB     | Restaurants    |
+| [Stats: Predicting users' reputation][statsnb]               | Regression     | Relational               | 8 tables, 658 MB   | Internet       |
 
 ## Benchmarks
 
