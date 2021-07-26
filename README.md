@@ -50,7 +50,7 @@ Available example projects are listed below.
 | [Air pollution prediction][airpollutionnb]                   | Regression     | Multivariate time series | 1 Table, 41k rows  | Environment    |
 | [Traffic volume prediction (LA)][dodgersnb]                  | Regression     | Multivariate time series | 1 Table, 47k rows  | Transportation |
 | [Predicting a force vector from sensor data][robotnb]        | Regression     | Multivariate time series | 1 Table, 15k rows  | Robotics       |
-| [AdventureWorks: Predicting customer churn][adventureworknb] | Classification | Relational               | 71 Tables, 233 MB  | Commerce       |
+| [AdventureWorks: Predicting customer churn][adventureworksnb] | Classification | Relational               | 71 Tables, 233 MB  | Commerce       |
 | [Baseball (Lahman): Predicting salaries][baseballnb]         | Regression     | Relational               | 25 Tables, 74 MB   | Sports         |
 | [Formula 1 (ErgastF1): Predicting the winner][formula1nb]    | Classification | Relational               | 13 Tables, 56 MB   | Sports         |
 | [Seznam: Predicting the transaction volume][seznamnb]        | Regression     | Relational               | 4 Tables, 147 MB   | E-commerce     |
@@ -70,7 +70,7 @@ If you are mainly interested in how getML performs compared to other approaches,
 | [Traffic volume prediction (I94)][interstate94nb]  | Prophet (fbprophet)                              | R-squared (getML 98.4%, prophet 83.3%)      |
 | [Traffic volume prediction (LA)][dodgersnb]        | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)        |
 | [Air pollution prediction][airpollutionnb]         | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 53.7%)    |
-| [AdventureWorks: Predicting customer churn][adventureworknb] | featuretools                           | AUC (getML 98.0%, featuretools 96.8%)       |
+| [AdventureWorks: Predicting customer churn][adventureworksnb] | featuretools                           | AUC (getML 98.0%, featuretools 96.8%)       |
 | [Baseball (Lahman): Predicting salaries][baseballnb]         | featuretools                           | R-squared (getML 84.0%, featuretools 78.0%) |
 | [Formula 1 (ErgastF1): Predicting the winner][formula1nb]    | featuretools                           | AUC (getML 92.4%, featuretools 92.0%)       |
 | [Seznam: Predicting the transaction volume][seznamnb]        | featuretools                           | R-squared (getML 78.2%, featuretools 63.2%) |
