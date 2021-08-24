@@ -19,6 +19,8 @@ def load_or_query(conn, name, **kwargs):
         print(f"Loading {name!r} from disk (project folder).")
         df = getml.data.load_data_frame(name)
 
+    print()
+
     return df
 
 
@@ -41,5 +43,7 @@ def load_or_retrieve(csv_file, name=None, **kwargs):
     else:
         print(f"Loading {name!r} from disk (project folder).")
         df = getml.data.load_data_frame(name)
+
+    print()
 
     return df
