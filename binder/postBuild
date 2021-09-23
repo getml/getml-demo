@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export GETML_DOWNLOAD_PATH='https://static.getml.com/download/0.16.0-beta/'
-export GETML_ENGINE='getml-0.16.0-beta-linux.tar.gz'
-export GETML_API='getml-0.16.0-py3-none-any.whl'
+export GETML_DOWNLOAD_PATH='https://static.getml.com/download/1.0.0/'
+export GETML_ENGINE='getml-1.0.0-linux.tar.gz'
+export GETML_API='getml-1.0.0-py3-none-any.whl'
 
 # Install getML
 ######
