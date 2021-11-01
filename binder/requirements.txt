@@ -10,3 +10,5 @@ psutil
 jupyter-resource-usage
 jupyter-server-proxy
 jupyter-offlinenotebook
+tsfresh
+featuretools
