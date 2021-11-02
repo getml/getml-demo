@@ -5,8 +5,6 @@ import featuretools as ft
 import numpy as np
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
-from featuretools import primitives
-from featuretools.primitives.options_utils import generate_all_primitive_options
 from scipy.stats import pearsonr
 
 from .add_original_columns import _add_original_columns
@@ -54,12 +52,12 @@ def _make_entity_set(data_frame, rolled, time_stamp):
         ("population", "_featuretools_index", "peripheral", "_featuretools_join_key")
     ]
 
-    entities = {
+    dataframes = {
         "population": (data_frame, "_featuretools_index", time_stamp),
         "peripheral": (rolled, "_featuretools_index", time_stamp),
     }
 
-    return ft.EntitySet("self-join-entity-set", entities, relationships)
+    return ft.EntitySet("self-join-entity-set", dataframes, relationships)
 
 
 # ------------------------------------------------------------------
@@ -147,7 +145,7 @@ class FTTimeSeriesBuilder:
         df_extracted, _ = ft.dfs(
             entityset=entityset,
             agg_primitives=self.agg_primitives,
-            target_entity="population",
+            target_dataframe_name="population",
             max_depth=self.max_depth,
         )
         try:
