@@ -4,7 +4,7 @@ import time
 import featuretools as ft
 import numpy as np
 import pandas as pd
-from pandas.api.types import is_numeric_dtype
+from pandas.api.types import is_categorical_dtype, is_numeric_dtype
 from scipy.stats import pearsonr
 
 from .add_original_columns import _add_original_columns
@@ -53,8 +53,16 @@ def _make_entity_set(data_frame, rolled, time_stamp):
     ]
 
     dataframes = {
-        "population": (data_frame, "_featuretools_index", time_stamp),
-        "peripheral": (rolled, "_featuretools_index", time_stamp),
+        "population": (
+            data_frame,
+            "_featuretools_index",
+            time_stamp,
+        ),
+        "peripheral": (
+            rolled,
+            "_featuretools_index",
+            time_stamp,
+        ),
     }
 
     return ft.EntitySet("self-join-entity-set", dataframes, relationships)
@@ -135,24 +143,30 @@ class FTTimeSeriesBuilder:
         rolled = _roll_data_frame(
             data_frame, self.column_id, self.time_stamp, self.horizon, self.memory
         )
-        data_frame = (
-            _remove_target_column(data_frame, self.target)
-            if self.allow_lagged_targets
-            else data_frame
-        )
+
         data_frame["_featuretools_index"] = np.arange(data_frame.shape[0])
+
         entityset = _make_entity_set(data_frame, rolled, self.time_stamp)
         df_extracted, _ = ft.dfs(
             entityset=entityset,
             agg_primitives=self.agg_primitives,
             target_dataframe_name="population",
             max_depth=self.max_depth,
+            ignore_columns={
+                "peripheral": [
+                    self.column_id,
+                    "index",
+                    "join_key",
+                    "_featuretools_join_key",
+                    "_featuretools_index",
+                ]
+            },
         )
-        try:
-            df_extracted[np.isnan(df_extracted)] = 0.0
-            df_extracted[np.isinf(df_extracted)] = 0.0
-        except:
-            pass
+
+        for col in df_extracted:
+            if is_numeric_dtype(df_extracted[col]):
+                df_extracted[col][df_extracted[col].isna()] = 0
+
         return df_extracted
 
     def _select_features(self, data_frame, target):
@@ -170,8 +184,7 @@ class FTTimeSeriesBuilder:
             [np.abs(pearsonr(target, data_frame[col]))[0] for col in colnames]
         )
         correlations[np.isnan(correlations) | np.isinf(correlations)] = 0.0
-        # [::-1] is somewhat unintuitive syntax,
-        # but it reverses the entire column.
+
         self.selected_features = colnames[np.argsort(correlations)][::-1][
             : self.num_features
         ]
