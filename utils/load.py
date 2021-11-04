@@ -26,8 +26,8 @@ def load_or_query(conn, name, **kwargs):
 
 def load_or_retrieve(csv_file, name=None, **kwargs):
     """
-    Loads the data from disk (the project folder) if present, if not, retrieves it from
-    `csv_file`.
+    Loads the data from disk (the project folder) if present, if not, retrieves the
+    and reads the `csv_file`.
 
     `kwargs` are passed to `getml.data.DataFrame.from_csv`.
 
