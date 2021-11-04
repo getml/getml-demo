@@ -4,7 +4,7 @@ import time
 import featuretools as ft
 import numpy as np
 import pandas as pd
-from pandas.api.types import is_categorical_dtype, is_numeric_dtype
+from pandas.api.types import is_numeric_dtype
 from scipy.stats import pearsonr
 
 from .add_original_columns import _add_original_columns
