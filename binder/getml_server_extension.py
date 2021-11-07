@@ -4,8 +4,15 @@ import time
 from pathlib import Path
 from subprocess import STDOUT, Popen
 
-from getml_binder_init import add_telemetry, get_environment, walk
+from itertools import chain
+from pathlib import Path
 
+
+def walk(path=".", globs=(["*"])):
+    paths = [Path(path).rglob(ext) for ext in globs]
+    files = chain(*paths)
+    return files
+    
 
 def replace_monitor_refs(user_base, globs):
     for fp in walk(globs=globs):
@@ -72,8 +79,5 @@ def load_jupyter_server_extension(nbapp):
             stdout=w_log,
             stderr=STDOUT,
         )
-
-    env = get_environment("~/.getML")
-    add_telemetry(["*.md", "*.ipynb"], env)
 
     os.system(f'cd {home} && git commit -a -m "postBuild complete"')
