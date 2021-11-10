@@ -72,12 +72,4 @@ def load_jupyter_server_extension(nbapp):
 
     time.sleep(7)
 
-    with open(home / ".binder/watch.log", "wb") as w_log:
-        Popen(
-            ["/srv/conda/envs/notebook/bin/python", "watch.py"],
-            cwd=home / ".binder",
-            stdout=w_log,
-            stderr=STDOUT,
-        )
-
     os.system(f'cd {home} && git commit -a -m "postBuild complete"')
