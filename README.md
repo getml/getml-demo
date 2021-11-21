@@ -67,18 +67,18 @@ If you are mainly interested in how getML performs compared to other approaches,
 |                                                    | Benchmarks                                       | Results                                     |
 | -------------------------------------------------- | ------------------------------------------------ | ------------------------------------------- |
 | [Occupancy detection][occupancynb]                 | Academic literature: Neural networks             | AUC (getML 99.8%, next best 99.6%)          |
-| [IMDb: Predicting actors' gender][imdbnb]          | Academic literature: RDN, Wordification, RPT     | AUC (getML 91.83%, next best 86%)           |
+| [IMDb: Predicting actors' gender][imdbnb]          | Academic literature: RDN, Wordification, RPT     | AUC (getML 91.34%, next best 86%)           |
 | [MovieLens: Predicting users' gender][movielensnb] | Academic literature: PRM, MBN                    | Accuracy (getML 81.6%, next best 69%)       |
 | [CORA: Categorizing academic studies][coranb]      | Academic literature: RelF, LBP, EPRN, PRN, ACORA | Accuracy (getML 89.9%, next best 85.7%)     |
-| [Traffic volume prediction (I94)][interstate94nb]  | Prophet (fbprophet)                              | R-squared (getML 98.4%, prophet 83.3%)      |
+| [Traffic volume prediction (I94)][interstate94nb]  | Prophet (fbprophet)                              | R-squared (getML 98.1%, prophet 83.3%)      |
 | [Traffic volume prediction (LA)][dodgersnb]        | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)        |
-| [Air pollution prediction][airpollutionnb]         | featuretools, tsfresh                            | R-squared (getML 62.3%, next best 53.7%)    |
-| [AdventureWorks: Predicting customer churn][adventureworksnb] | featuretools                           | AUC (getML 98.0%, featuretools 96.8%)       |
-| [Baseball (Lahman): Predicting salaries][baseballnb]         | featuretools                           | R-squared (getML 84.0%, featuretools 78.0%) |
-| [Formula 1 (ErgastF1): Predicting the winner][formula1nb]    | featuretools                           | AUC (getML 92.4%, featuretools 92.0%)       |
+| [Air pollution prediction][airpollutionnb]         | featuretools, tsfresh                            | R-squared (getML 61.0%, next best 53.7%)    |
+| [AdventureWorks: Predicting customer churn][adventureworksnb] | featuretools                           | AUC (getML 97.8%, featuretools 96.8%)       |
+| [Baseball (Lahman): Predicting salaries][baseballnb]         | featuretools                           | R-squared (getML 83.7%, featuretools 78.0%) |
+| [Formula 1 (ErgastF1): Predicting the winner][formula1nb]    | featuretools                           | AUC (getML 92.6%, featuretools 92.0%)       |
 | [Seznam: Predicting the transaction volume][seznamnb]        | featuretools                           | R-squared (getML 78.2%, featuretools 63.2%) |
-| [SFScores: Predicting health check scores][sfscoresnb]       | featuretools                           | R-squared (getML 27.9%, featuretools 26.1%) |
-| [Stats: Predicting users' reputation][statsnb]               | featuretools                           | R-squared (getML 98.1%, featuretools 96.2%) |
+| [SFScores: Predicting health check scores][sfscoresnb]       | featuretools                           | R-squared (getML 29.1%, featuretools 26.5%) |
+| [Stats: Predicting users' reputation][statsnb]               | featuretools                           | R-squared (getML 98.1%, featuretools 96.6%) |
 
 ### Propositionalization
 
@@ -94,11 +94,11 @@ If you want to reproduce these results, please refer to the following notebooks:
 
 |                                      | Results                                                 | Remarks                                                                                                                                                                               |
 | ------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Air pollution][airpollutionnb_prop] | ~51x faster than featuretools, ~39x faster than tsfresh | The predictive accuracy can be significantly improved by using RelMT instead of propositionalization approaches, please refer to [this notebook][airpollutionnb].                     |
-| [Dodgers][dodgersnb_prop]            | ~44x faster than featuretools, ~81x faster than tsfresh | The predictive accuracy can be significantly improved by using the mapping preprocessor and/or more advanced feature learning algorithms, please refer to [this notebook][dodgersnb]. |
-| [Interstate94][interstate94nb_prop]  | ~83x faster than featuretools                           |                                                                                                                                                                                       |
-| [Occupancy][occupancynb_prop]        | ~61x faster than featuretools, ~34x faster than tsfresh |                                                                                                                                                                                       |
-| [Robot][robotnb_prop]                | ~179x faster than featuretools, ~84x faster than tsfresh |                                                                                                                                                                                       |
+| [Air pollution][airpollutionnb_prop] | ~65x faster than featuretools, ~33x faster than tsfresh | The predictive accuracy can be significantly improved by using RelMT instead of propositionalization approaches, please refer to [this notebook][airpollutionnb].                     |
+| [Dodgers][dodgersnb_prop]            | ~42x faster than featuretools, ~75x faster than tsfresh | The predictive accuracy can be significantly improved by using the mapping preprocessor and/or more advanced feature learning algorithms, please refer to [this notebook][dodgersnb]. |
+| [Interstate94][interstate94nb_prop]  | ~55x faster than featuretools                           |                                                                                                                                                                                       |
+| [Occupancy][occupancynb_prop]        | ~87x faster than featuretools, ~41x faster than tsfresh |                                                                                                                                                                                       |
+| [Robot][robotnb_prop]                | ~162x faster than featuretools, ~77x faster than tsfresh |                                                                                                                                                                                       |
 
 These results are very hardware-dependent and may be different on your machine. However, we have no doubt that you will find that getML's _FastProp_ is significantly faster than _featuretools_ and _tsfresh_ while consuming considerably less memory.
 
