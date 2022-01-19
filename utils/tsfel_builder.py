@@ -65,6 +65,9 @@ class _ChunkMaker(NamedTuple):
         return chunk if len(chunk) >= self.min_chunksize else pd.DataFrame()
 
 
+# ------------------------------------------------------------------
+
+
 def _flatten_aggs(
     aggs: TSFELAggs, domains: Optional[List[str]] = None
 ) -> Dict[str, TSFELAgg]:
@@ -75,6 +78,9 @@ def _flatten_aggs(
         for name, values in agg.items()
         if domain in domains
     }
+
+
+# ------------------------------------------------------------------
 
 
 # TODO: Complete? Check for additional params
