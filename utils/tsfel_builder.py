@@ -4,6 +4,7 @@ Wrapper around TSFEL
 
 import datetime
 import time
+import warnings
 from typing import Dict, Generator, List, NamedTuple, Optional, TypedDict, Union
 
 import numpy as np
@@ -135,13 +136,15 @@ def _aggregate_chunk(
 ) -> pd.DataFrame:
     orig_colnames = [col for col in chunk.columns if col not in (time_stamp, column_id)]
     if chunk.shape[0] > 1:
-        data = tsfel.time_series_features_extractor(
-            aggregations,
-            chunk[orig_colnames],
-            verbose=0,
-        ).values.T.flatten()
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            data = tsfel.time_series_features_extractor(
+                aggregations,
+                chunk[orig_colnames],
+                verbose=0,
+            ).values.T.flatten()
     else:
-        data = [np.nan] * len(orig_colnames) * tsfel.get_number_features(aggregations)
+        data = []
     colnames = [
         agg + "(" + cname + ")"
         for cname in orig_colnames
@@ -271,7 +274,6 @@ class TSFELBuilder:
         print("TSFEL: Trying features...")
         begin = time.time()
         target = np.asarray(data_frame[self.target])
-        freq = pd.to_timedelta(f"1{data_frame[self.time_stamp].dt.freq}").seconds
         df_for_extraction = (
             data_frame
             if self.allow_lagged_targets
