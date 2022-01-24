@@ -16,9 +16,6 @@ from kats.consts import TimeSeriesData
 from kats.tsfeatures.tsfeatures import TsFeatures
 from pandas.api.types import is_numeric_dtype  # type: ignore
 from scipy.stats import pearsonr
-from tsfel.feature_extraction.calc_features import (
-    dataset_features_extractor,  # type: ignore
-)
 
 from .add_original_columns import _add_original_columns
 from .print_time_taken import _print_time_taken
