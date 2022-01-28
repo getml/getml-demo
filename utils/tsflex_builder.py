@@ -85,8 +85,6 @@ class TsflexBuilder:
             )
         )
 
-        print(fc)
-
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             df_extracted = fc.calculate([data_frame], return_df=True, n_jobs=1)
