@@ -5,7 +5,7 @@ Wrapper around TSFEL
 import datetime
 import time
 import warnings
-from typing import Dict, Generator, List, NamedTuple, Optional, TypedDict, Union
+from typing import Dict, List, Optional, Tuple, TypedDict, Union
 
 import numpy as np
 import pandas as pd  # type: ignore
@@ -33,38 +33,6 @@ class TSFELAgg(TypedDict):
 
 
 TSFELAggs = Dict[str, Dict[str, TSFELAgg]]
-
-# ------------------------------------------------------------------
-
-
-class _ChunkMaker(NamedTuple):
-    """
-    Helpers class to create chunks of data frames.
-    """
-
-    data_frame: pd.DataFrame
-    id_col: pd.Series
-    time_col: pd.Series
-    horizon: pd.Timedelta
-    memory: pd.Timedelta
-    min_chunksize: int
-
-    def make_chunk(self, current_id: str, now: pd.Timedelta) -> pd.DataFrame:
-        """
-        Generates a chunk of the data frame that
-        contains all rows within horizon and memory.
-
-        Used by roll_data_frame.
-        """
-        begin = now - self.horizon - self.memory
-        end = now - self.horizon
-        chunk = self.data_frame[
-            (self.id_col == current_id)
-            & (self.time_col > begin)
-            & (self.time_col <= end)
-        ]
-        return chunk if len(chunk) >= self.min_chunksize else pd.DataFrame()
-
 
 # ------------------------------------------------------------------
 
@@ -102,70 +70,16 @@ def _infer_required_obs(aggs: TSFELAggs) -> int:
 # ------------------------------------------------------------------
 
 
-def _roll_data_frame(
+def _get_window_params(
     data_frame: pd.DataFrame,
-    column_id: str,
-    time_stamp: str,
     horizon: pd.Timedelta,
     memory: pd.Timedelta,
-    min_chunksize: int,
-) -> Generator[pd.DataFrame, None, None]:
-    """
-    Returns a generator that contains pd.DataFrame chunks
-    to be aggregated.
-    """
-    id_col = data_frame[column_id]
-    time_col = pd.to_datetime(data_frame[time_stamp])
-    chunk_maker = _ChunkMaker(
-        data_frame, id_col, time_col, horizon, memory, min_chunksize
-    )
-    return (
-        chunk_maker.make_chunk(row[column_id], pd.to_datetime(row[time_stamp]))
-        for _, row in data_frame.iterrows()
-    )
-
-
-# ------------------------------------------------------------------
-
-
-def _aggregate_chunk(
-    chunk: pd.DataFrame,
-    column_id: str,
-    time_stamp: str,
-    aggregations: TSFELAggs,
-) -> pd.DataFrame:
-    orig_colnames = [col for col in chunk.columns if col not in (time_stamp, column_id)]
-    if chunk.shape[0] > 1:
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            data = tsfel.time_series_features_extractor(
-                aggregations,
-                chunk[orig_colnames],
-                verbose=0,
-            ).values.T.flatten()
-    else:
-        data = []
-    colnames = [
-        agg + "(" + cname + ")"
-        for cname in orig_colnames
-        for agg in _flatten_aggs(aggregations).keys()
-    ]
-    return pd.DataFrame({key: [value] for (key, value) in zip(colnames, data)})
-
-
-# ------------------------------------------------------------------
-
-
-def _aggregate_chunks(
-    rolled: Generator[pd.DataFrame, None, None],
-    column_id: str,
-    time_stamp: str,
-    aggregations: TSFELAggs,
-) -> pd.DataFrame:
-    aggregated_chunks: List[pd.DataFrame] = [
-        _aggregate_chunk(chunk, column_id, time_stamp, aggregations) for chunk in rolled
-    ]
-    return pd.concat(aggregated_chunks, ignore_index=True).reset_index()
+) -> Tuple[float, float, float]:
+    freq = pd.Timedelta(1, pd.infer_freq(data_frame.index))
+    win_size = memory // freq
+    lag = horizon // freq
+    overlap = (win_size - lag) / win_size
+    return lag, win_size, overlap
 
 
 # ------------------------------------------------------------------
@@ -185,8 +99,6 @@ class TSFELBuilder:
         memory: How much back in time you want to go until the
                 feature builder starts "forgetting" data.
 
-        column_id: The name of the column containing the ids.
-
         time_stamp: The name of the column containing the time stamps.
 
         target: The name of the target column.
@@ -194,15 +106,15 @@ class TSFELBuilder:
 
     statistical_aggs: TSFELAggs = tsfel.get_features_by_domain("statistical")
     temporal_aggs: TSFELAggs = tsfel.get_features_by_domain("temporal")
-    spectral_aggs: TSFELAggs = tsfel.get_features_by_domain("spectral")
-    all_aggs: TSFELAggs = tsfel.get_features_by_domain()
+    # spectral_aggs: TSFELAggs = tsfel.get_features_by_domain("spectral")
+    # all_aggs: TSFELAggs = tsfel.get_features_by_domain()
+    all_aggs: TSFELAggs = {**statistical_aggs, **temporal_aggs}
 
     def __init__(
         self,
         num_features: int,
         horizon: pd.Timedelta,
         memory: pd.Timedelta,
-        column_id: str,
         time_stamp: str,
         target: str,
         aggregations: Optional[TSFELAggs] = None,
@@ -212,11 +124,9 @@ class TSFELBuilder:
         self.num_features = num_features
         self.horizon = horizon
         self.memory = memory
-        self.column_id = column_id
         self.time_stamp = time_stamp
         self.target = target
         self.allow_lagged_targets = allow_lagged_targets
-        self.min_chunksize = _infer_required_obs(self.aggregations)
 
         self._runtime = None
         self.fitted = False
@@ -225,19 +135,20 @@ class TSFELBuilder:
         self.selected_features: List[int] = []
 
     def _extract_features(self, data_frame: pd.DataFrame) -> pd.DataFrame:
-        data_frame = data_frame.reset_index()
-        del data_frame["index"]
-        rolled = _roll_data_frame(
-            data_frame,
-            self.column_id,
-            self.time_stamp,
-            self.horizon,
-            self.memory,
-            self.min_chunksize,
+        data_frame = data_frame.set_index(self.time_stamp)
+        lag, window_size, overlap = _get_window_params(
+            data_frame, self.horizon, self.memory
         )
-        df_extracted = _aggregate_chunks(
-            rolled, self.column_id, self.time_stamp, self.aggregations
-        )
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            df_extracted = tsfel.time_series_features_extractor(
+                self.aggregations,
+                data_frame,
+                window_size=window_size,
+                overlap=overlap,
+                verbose=0,
+            )
+        df_extracted.set_index(data_frame.index[window_size - lag :])
         for col in df_extracted:
             if is_numeric_dtype(df_extracted[col]):
                 df_extracted[col][df_extracted[col].isna()] = 0
