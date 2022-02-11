@@ -78,7 +78,7 @@ def _aggregate_chunks(
     aggregated_chunks: List[pd.DataFrame] = [
         _aggregate_chunk(chunk, column_id, time_stamp, aggregations) for chunk in rolled
     ]
-    return pd.concat(aggregated_chunks, ignore_index=True).reset_index()
+    return pd.concat(aggregated_chunks, ignore_index=True).reset_index(drop=True)
 
 
 # -------------------------------------------------------------------
