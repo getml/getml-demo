@@ -215,7 +215,7 @@ class TSFELBuilder:
         for _, group in grouped:
             to_extract = group if self.allow_lagged_targets else group.drop(self.target)
             extracted.append(self._extract_features(to_extract))
-            other.append(group.drop(to_extract.colnames)[self.min_chunksize :])
+            other.append(group[self.min_chunksize :])
         extracted = pd.concat(extracted)
         other = pd.concat(other).reset_index(drop=True)
         selected = self._select_features(extracted, other[self.target])
