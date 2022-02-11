@@ -5,3 +5,4 @@ from .kats_builder import KATSBuilder
 from .load import load_or_query, load_or_retrieve
 from .ts_fresh_builder import TSFreshBuilder
 from .tsfel_builder import TSFELBuilder
+from .tsflex_builder import TsflexBuilder
