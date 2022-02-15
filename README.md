@@ -1,5 +1,6 @@
 <p align="center" style="text-align: center;">
-    <img width="400" style="width: 50% !important; max-width: 400px;" src="assets/getml_logo.png" />
+    <img width="400" style="width: 50% !important; max-width: 400px;" src="assets/getml_logo_dark.png#gh-dark-mode-only" />
+    <img width="400" style="width: 50% !important; max-width: 400px;" src="assets/getml_logo.png#gh-light-mode-only" />
 </p>
 
 <p align="center" style="text-align: center;">
