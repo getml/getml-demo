@@ -79,4 +79,4 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 
 # Get in contact
 
-If you have any question schedule a [call with Alex](https://go.getml.com/meetings/alexander-uhlig/getml-demo), the co-founder of getML, or write us an [email](team@getml.com). Do you prefer a guided demo held by us? Just contact us to make an appointment.
+If you have any question schedule a [call with Alex](https://getml.com/contact/lets-talk/), the co-founder of getML, or write us an [email](mailto:team@getml.com). Do you prefer a guided demo held by us? Just contact us to make an appointment.
