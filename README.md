@@ -81,6 +81,28 @@ If you are mainly interested in how getML performs compared to other approaches,
 | [SFScores: Predicting health check scores][sfscoresnb]       | featuretools                           | R-squared (getML 29.1%, featuretools 26.5%) |
 | [Stats: Predicting users' reputation][statsnb]               | featuretools                           | R-squared (getML 98.1%, featuretools 96.6%) |
 
+### Propositionalization
+
+In particular, we have benchmarked getML's _FastProp_ (short for fast propositionalization) against other implementations of the propositionalization algorithm.
+
+<p align="center" style="text-align: center;">
+    <img src="propositionalization/comparisons/nrpf_performance.png" />
+</p>
+
+As we can see, _FastProp_ is true to its name: It achieves similar or slightly better performance than _featuretools_ or _tsfresh_, but generates features between 11x to 65x faster than these implementations.
+
+If you want to reproduce these results, please refer to the following notebooks:
+
+|                                      | Results                                                 | Remarks                                                                                                                                                                               |
+| ------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Air pollution][airpollutionnb_prop] | ~65x faster than featuretools, ~33x faster than tsfresh | The predictive accuracy can be significantly improved by using RelMT instead of propositionalization approaches, please refer to [this notebook][airpollutionnb].                     |
+| [Dodgers][dodgersnb_prop]            | ~42x faster than featuretools, ~75x faster than tsfresh | The predictive accuracy can be significantly improved by using the mapping preprocessor and/or more advanced feature learning algorithms, please refer to [this notebook][dodgersnb]. |
+| [Interstate94][interstate94nb_prop]  | ~55x faster than featuretools                           |                                                                                                                                                                                       |
+| [Occupancy][occupancynb_prop]        | ~87x faster than featuretools, ~41x faster than tsfresh |                                                                                                                                                                                       |
+| [Robot][robotnb_prop]                | ~162x faster than featuretools, ~77x faster than tsfresh |                                                                                                                                                                                       |
+
+These results are very hardware-dependent and may be different on your machine. However, we have no doubt that you will find that getML's _FastProp_ is significantly faster than _featuretools_ and _tsfresh_ while consuming considerably less memory.
+
 ### Relational Dataset Repository
 
 Some benchmarks are also featured on the [Relational Dataset Repository](https://relational.fit.cvut.cz/):
@@ -117,5 +139,10 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 [sfscoresnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/sfscores.ipynb
 [statsnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/stats.ipynb
 
+[airpollutionnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/air_pollution_prop.ipynb
+[dodgersnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/dodgers_prop.ipynb
+[interstate94nb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/interstate94_prop.ipynb
+[occupancynb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/occupancy_prop.ipynb
+[robotnb_prop]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/propositionalization/robot_prop.ipynb
 
 
