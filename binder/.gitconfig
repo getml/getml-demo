@@ -1,6 +1,0 @@
-# This is Git's per-user configuration file.
-[user]
-	name = Binder
-	email = getml-demo@getml.com
-[core]
-	editor = nano

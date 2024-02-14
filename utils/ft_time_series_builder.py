@@ -1,7 +1,9 @@
 import datetime
 import time
+import warnings
 
 import featuretools as ft
+from featuretools.exceptions import UnusedPrimitiveWarning
 import numpy as np
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
@@ -91,6 +93,21 @@ def _roll_data_frame(data_frame, column_id, time_stamp, horizon, memory):
 # ------------------------------------------------------------------
 
 
+def _hide_warnings(func):
+    def wrapper(*args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                'ignore',
+                category=RuntimeWarning,
+                message="Precision loss occurred in moment calculation due to catastrophic cancellation.")
+            warnings.filterwarnings(
+                'ignore',
+                category=UnusedPrimitiveWarning,
+                message="Some specified primitives were not used during DFS")
+            return func(*args, **kwargs)
+    return wrapper
+    
+
 class FTTimeSeriesBuilder:
     """
     Scikit-learn-style feature builder based on featuretools.
@@ -110,8 +127,16 @@ class FTTimeSeriesBuilder:
     """
 
     all_primitives = ft.list_primitives()
-    agg_primitives = all_primitives[all_primitives.type == "aggregation"].name.tolist()
-    trans_primitives = all_primitives[all_primitives.type == "transform"].name.tolist()
+    breaking_agg_primitives = [
+        'date_first_event',
+        'kurtosis',
+    ]
+    agg_primitives = (all_primitives[
+        (all_primitives.type == "aggregation")
+        & (~all_primitives.name.isin(breaking_agg_primitives))]
+        .name
+        .to_list())
+    trans_primitives = all_primitives[all_primitives.type == "transform"].name.to_list()
 
     def __init__(
         self,
@@ -190,6 +215,7 @@ class FTTimeSeriesBuilder:
         ]
         return data_frame[self.selected_features]
 
+    @_hide_warnings
     def fit(self, data_frame):
         """
         Fits the DFS on the data frame and returns
@@ -216,7 +242,8 @@ class FTTimeSeriesBuilder:
     def runtime(self):
         if self.fitted:
             return self._runtime
-
+    
+    @_hide_warnings
     def transform(self, data_frame):
         """
         Fits the DFS on the data frame and returns

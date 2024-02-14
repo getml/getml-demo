@@ -1,14 +1,1 @@
-numpy
-pandas
-matplotlib
-scipy
-sklearn
-vdom
-nodejs
-watchgod
-psutil
-jupyter-resource-usage
-jupyter-server-proxy
-jupyter-offlinenotebook
-tsfresh
-featuretools
+-r ../requirements/requirements.3.11.txt
