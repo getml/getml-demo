@@ -4,40 +4,48 @@
 
 ### Download the repository
 
-`git clone https://github.com/getml/getml-demo.git`
+`$ git clone https://github.com/getml/getml-demo.git`
 
 ### Change into the docker folder
 
-`cd getml-demo/docker`
+`$ cd getml-demo/docker`
 
 ### Build the image
 
-`podman-compose build`
+`$ docker-compose build`
 
 ### Run the service
 
 Using Python 3.8
 
-`podman-compose up getml_on_3_8`
+`$ docker-compose up getml_on_3_8`
 
 or using Python 3.11
 
-`podman-compose up getml_on_3_11`
+> [!NOTE]  
+> The files are set up to also work with [podman](https://podman.io/) and [podman-compose](https://github.com/containers/podman-compose)
 
-⚠️ As they are set up to use the same ports and volume, you can't run both at the same time. 
+`$ podman-compose up getml_on_3_11`
+
+> [!WARNING]  
+> As they are set up to use the same ports and volume, you can't run both at the same time. 
 
 ### Open Jupyter Lab in the browser
 
 Look for this line in the output and copy-paste it in your browser:
 
-> Or copy and paste one of these URLs:
->
-> http://localhost:8888/lab?token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+Or copy and paste one of these URLs:
+
+http://localhost:8888/lab?token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
 
 ### Open getML Monitor in the browser
 
 Look for this line in the output and copy-paste it in your browser:
 
-> Please open a browser and point it to the following URL:
->
-> http://localhost:1709/#/token/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+Please open a browser and point it to the following URL:
+
+http://localhost:1709/#/token/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
