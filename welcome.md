@@ -1,5 +1,5 @@
-<img src="assets/getml_logo.png" 
-     width="35%" 
+<img src="assets/getml_logo.png"
+     width="35%"
      align=right
      alt="getML logo"
      style="margin-top: 1.5rem;">
@@ -53,20 +53,20 @@ If you are mainly interested in how getML performs compared to other approaches,
 | [Traffic volume prediction (LA)][dodgersnb]        | Prophet (fbprophet), tsfresh                     | R-squared (getML 76%, next best 67%)        |
 | [Air pollution prediction][airpollutionnb]         | featuretools, tsfresh                            | R-squared (getML 61.0%, next best 53.7%)    |
 
-Some benchmarks are also featured on the [Relational Dataset Repository](https://relational.fit.cvut.cz/):
+Some benchmarks are also featured on the [Relational Dataset Repository](https://relational-data.org/):
 
-|                                                     | Official page                                                 | 
+|                                                     | Official page                                                 |
 | --------------------------------------------------- | ------------------------------------------------------------- |
-| [CORA: Categorizing academic studies][coranb]       | [CORA](https://relational.fit.cvut.cz/dataset/CORA)           | 
-| [Financial: Loan default prediction][loansnb]       | [Financial](https://relational.fit.cvut.cz/dataset/Financial) | 
-| [IMDb: Predicting actors' gender][imdbnb]           | [IMDb](https://relational.fit.cvut.cz/dataset/IMDb)           | 
-| [MovieLens: Predicting users' gender][movielensnb]  | [MovieLens](https://relational.fit.cvut.cz/dataset/MovieLens) | 
+| [CORA: Categorizing academic studies][coranb]       | [CORA](https://relational-data.org/dataset/CORA)              |
+| [Financial: Loan default prediction][loansnb]       | [Financial](https://relational-data.org/dataset/Financial)    |
+| [IMDb: Predicting actors' gender][imdbnb]           | [IMDb](https://relational-data.org/dataset/IMDb)              |
+| [MovieLens: Predicting users' gender][movielensnb]  | [MovieLens](https://relational-data.org/dataset/MovieLens)    |
 
 [loansnb]: loans.ipynb
 [occupancynb]: occupancy.ipynb
 [consumerexpendituresnb]: consumer_expenditures.ipynb
 [atherosclerosisnb]: atherosclerosis.ipynb
-[imdbnb]: https://nbviewer.getml.com/github/getml/getml-demo/blob/master/imdb.ipynb 
+[imdbnb]: imdb.ipynb
 [movielensnb]: movie_lens.ipynb
 [coranb]: cora.ipynb
 [onlineretailnb]: online_retail.ipynb
@@ -79,4 +79,4 @@ Some benchmarks are also featured on the [Relational Dataset Repository](https:/
 
 # Get in contact
 
-If you have any question schedule a [call with Alex](https://go.getml.com/meetings/alexander-uhlig/getml-demo), the co-founder of getML, or write us an [email](team@getml.com). Do you prefer a guided demo held by us? Just contact us to make an appointment.
+If you have any question schedule a [call with Alex](https://getml.com/contact), the co-founder of getML, or write us an [email](mailto:hello@getml.com). Do you prefer a guided demo held by us? Just contact us to make an appointment.

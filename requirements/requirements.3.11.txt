@@ -1,0 +1,3 @@
+-r base.txt
+matplotlib==3.8.2
+pystan==3.9.0

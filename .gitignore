@@ -148,4 +148,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
+# generated
+*_spark/
+*_pipeline/
