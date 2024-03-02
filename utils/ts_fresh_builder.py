@@ -5,6 +5,7 @@ Utility wrapper around tsfresh.
 import datetime
 import gc
 import time
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -15,6 +16,17 @@ from tsfresh.utilities.dataframe_functions import roll_time_series
 from .add_original_columns import _add_original_columns
 from .print_time_taken import _print_time_taken
 
+
+def _hide_warnings(func):
+    def wrapper(*args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                'ignore',
+                category=UserWarning,
+                message="Your time stamps are not uniformly sampled, which makes rolling nonsensical in some domains.")
+            return func(*args, **kwargs)
+    return wrapper
+    
 
 class TSFreshBuilder:
     """
@@ -56,6 +68,7 @@ class TSFreshBuilder:
 
         self.selected_features = []
 
+    @_hide_warnings
     def _extract_features(self, data_frame):
         df_rolled = roll_time_series(
             data_frame,
