@@ -30,7 +30,7 @@ This repository contains different [Jupyter Notebooks](https://jupyter.org/) to 
   * [Reading Online](#reading-online)
   * [Experimenting Locally](#experimenting-locally)
     * [Using Docker or Podman](#using-docker-or-podman)
-    * [On the Machine (Linux/x64)](#on-the-machine-linuxx64)
+    * [On the Machine (Linux/x64 & arm64)](#on-the-machine-linuxx64--arm64)
 * [Notebooks](#notebooks)
   * [Overview](#overview)
   * [Descriptions](#descriptions)
@@ -79,7 +79,7 @@ After the first `getml.engine.launch(...)` is executed and the engine is started
 http://localhost:1709/#/token/token
 ```
 
-### On the Machine (Linux/x64)
+### On the Machine (Linux/x64 & arm64)
 
 Alternatively, getML and the notebooks can be run natively on the local Linux machine by having certain software installed, like Python and some Python libraries, Jupyter-Lab and the getML engine. The [getML Python library](https://github.com/getml/getml-community/) provides an engine version without [enterprise features](https://www.getml.com/pricing). But as those features are shown in the demonstration notebooks, the [trail of the enterprise version](https://www.getml.com/download) can be used for those cases.
 
@@ -91,7 +91,7 @@ $ cd getml-demo
 $ pipx install hatch
 $ hatch env create
 $ hatch shell
-$ pip install -r requirements/requirements.3.11.txt
+$ pip install -r requirements.txt
 $ jupyter-lab
 ```
 
