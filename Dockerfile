@@ -1,15 +1,15 @@
-FROM quay.io/pypa/manylinux2014_x86_64
+FROM python:3.11.8
 
 RUN useradd getml
 USER getml
 WORKDIR /home/getml
 
-COPY --chown=getml:getml --chmod=0777 ./requirements/ /home/getml/requirements/
+COPY --chown=getml:getml --chmod=0777 ./requirements.txt /home/getml/requirements.txt
 
 ENV PATH="$PATH:/home/getml/.local/bin"
-RUN /opt/python/cp38-cp38/bin/python3.8 \
+RUN python3.11 \
     -mpip install \
-    -r /home/getml/requirements/requirements.3.8.txt
+    -r /home/getml/requirements.txt
 
 RUN mkdir /home/getml/.getML /home/getml/.getML/logs /home/getml/.getML/projects /home/getml/demo
 RUN curl https://storage.googleapis.com/static.getml.com/download/1.4.0/getml-1.4.0-x64-linux.tar.gz | tar -C /home/getml/.getML -xvzf -

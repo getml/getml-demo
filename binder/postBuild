@@ -1,5 +1,0 @@
-#!/bin/sh
-set -ex
-
-mkdir $HOME/.getML $HOME/.getML/logs $HOME/.getML/projects
-curl https://storage.googleapis.com/static.getml.com/download/1.4.0/getml-1.4.0-x64-linux.tar.gz | tar -C $HOME/.getML -xvzf -
