@@ -3,9 +3,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-      platforms:
-        - "linux/amd64"
-        - "linux/arm64"
+      args:
+        - GETML_VERSION_NUMBER=$GETML_VERSION_NUMBER
     networks:
       - notebooks_network
     ports:

@@ -29,7 +29,7 @@ This repository contains different [Jupyter Notebooks](https://jupyter.org/) to 
 * [Usage](#usage)
   * [Reading Online](#reading-online)
   * [Experimenting Locally](#experimenting-locally)
-    * [Using Docker or Podman](#using-docker-or-podman)
+    * [Using Docker](#using-docker)
     * [On the Machine (Linux/x64 & arm64)](#on-the-machine-linuxx64--arm64)
 * [Notebooks](#notebooks)
   * [Overview](#overview)
@@ -51,7 +51,7 @@ As github renders the notebooks, they can each be viewed by just opening and scr
 
 To experiment with the notebooks, such as playing with different pipelines and predictors, it is best to run them on a local machine. Linux users with an x64 architecture can choose from one of the options provided below. Soon, we will offer a simple, container-based solution compatible with all major systems (Windows, Mac) and will also support ARM-based architectures.
 
-### Using Docker or Podman
+### Using Docker
 
 There are a `docker-compose.yml` and a `Dockerfile` for easy usage provided.
 
@@ -70,7 +70,7 @@ To open Jupyter Lab in the browser, look for the following lines in the output a
 ```
 Or copy and paste one of these URLs:
 
-http://localhost:8888/lab?token=<randomly_generated_token>
+http://localhost:8888/lab?token=<generated_token>
 ```
 
 After the first `getml.engine.launch(...)` is executed and the engine is started, its monitor can be opened in the browser under
@@ -103,7 +103,7 @@ With the last command, Jupyter-Lab should automatically open in the browser. If 
 ```
 Or copy and paste one of these URLs:
 
-http://localhost:8888/lab?token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+http://localhost:8888/lab?token=<generated_token>
 ```
 
 After the first `getml.engine.launch(...)` is executed and the engine is started, its monitor can be opened in the browser under
