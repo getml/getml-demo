@@ -59,11 +59,8 @@ Simply clone this repository and command to start the `notebooks` service. The i
 
 ```
 $ git clone https://github.com/getml/getml-demo.git  
-$ docker-compose up notebooks  
+$ docker compose up notebooks  
 ```
-
-> [!NOTE]  
-> The files are set up to also work with [podman](https://podman.io/) and [podman-compose](https://github.com/containers/podman-compose)
 
 To open Jupyter Lab in the browser, look for the following lines in the output and copy-paste it in your browser:
 
