@@ -79,6 +79,14 @@ After the first `getml.engine.launch(...)` is executed and the engine is started
 http://localhost:1709/#/token/token
 ```
 
+> [!NOTE]  
+> Using alternatives to [Docker Desktop](https://www.docker.com/products/docker-desktop/) like  
+> * [Podman](https://podman.io/),  
+> * [Podman Desktop](https://podman-desktop.io/) or  
+> * [Rancher Desktop](https://rancherdesktop.io/) with a container engine like dockerd(moby) or containerd(nerdctl)
+> 
+> allows bind-mounting the notebooks in a user-writeable way (this might need to include `userns_mode: keep-id`) instead of having to `COPY` them in. In combination with volume-binding `/home/getml/.getML/logs` and `/home/getml/.getML/projects`, runs and changes can be persisted across containers.
+
 ### On the Machine (Linux/x64 & arm64)
 
 Alternatively, getML and the notebooks can be run natively on the local Linux machine by having certain software installed, like Python and some Python libraries, Jupyter-Lab and the getML engine. The [getML Python library](https://github.com/getml/getml-community/) provides an engine version without [enterprise features](https://www.getml.com/pricing). But as those features are shown in the demonstration notebooks, the [trail of the enterprise version](https://www.getml.com/download) can be used for those cases.
