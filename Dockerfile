@@ -1,4 +1,6 @@
-FROM python:3.11.8
+################################################################################
+# getml-base
+FROM python:3.11.8 AS getml-base
 
 RUN useradd getml
 USER getml
@@ -12,22 +14,29 @@ RUN python3.11 \
     -mpip install \
     -r /home/getml/requirements.txt
 
-ARG TARGETOS
-ARG TARGETARCH
-ARG GETML_VERSION_NUMBER
-
 RUN mkdir /home/getml/.getML
 
-RUN <<EOT
-    #!/bin/bash
-    if [ "${TARGETARCH}" = "amd64" ]; then
-        export GETML_ARCH="x64"
-    else
-        export GETML_ARCH="${TARGETARCH}"
-    fi;
-    curl "https://storage.googleapis.com/static.getml.com/download/${GETML_VERSION_NUMBER}/getml-${GETML_VERSION_NUMBER}-"`echo \${GETML_ARCH}`"-${TARGETOS}.tar.gz" | 
-        tar -C /home/getml/.getML -xvzf -
-EOT
+################################################################################
+# getml-amd64
+FROM getml-base AS getml-amd64
+ARG GETML_ARCH=x64
+
+################################################################################
+# getml-arm64
+FROM getml-base AS getml-arm64
+ARG GETML_ARCH=arm64
+
+################################################################################
+# getml-demo
+FROM getml-${TARGETARCH} AS getml-demo
+
+ARG TARGETOS
+ARG GETML_VERSION
+ARG GETML_BUCKET="https://storage.googleapis.com/static.getml.com/download"
+ARG GETML_ENGINE_FILE="getml-${GETML_VERSION}-${GETML_ARCH}-${TARGETOS}.tar.gz"
+ARG GETML_ENGINE_URL="${GETML_BUCKET}/${GETML_VERSION}/${GETML_ENGINE_FILE}"
+
+RUN curl "${GETML_ENGINE_URL}" | tar -C /home/getml/.getML -xvzf -
 
 COPY --chown=getml:getml . /home/getml/demo/
 

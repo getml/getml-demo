@@ -3,8 +3,9 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+      target: getml-demo
       args:
-        - GETML_VERSION_NUMBER=$GETML_VERSION_NUMBER
+        - GETML_VERSION=$GETML_VERSION
     networks:
       - notebooks_network
     ports:
