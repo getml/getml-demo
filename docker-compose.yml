@@ -4,8 +4,6 @@ services:
       context: ./
       dockerfile: Dockerfile
       target: getml-demo
-      args:
-        - GETML_VERSION=$GETML_VERSION
     networks:
       - notebooks_network
     ports:
