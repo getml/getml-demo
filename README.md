@@ -29,8 +29,8 @@ This repository contains different [Jupyter Notebooks](https://jupyter.org/) to 
 * [Usage](#usage)
   * [Reading Online](#reading-online)
   * [Experimenting Locally](#experimenting-locally)
-    * [Using Docker or Podman](#using-docker-or-podman)
-    * [On the Machine (Linux/x64)](#on-the-machine-linuxx64)
+    * [Using Docker](#using-docker)
+    * [On the Machine (Linux/x64 & arm64)](#on-the-machine-linuxx64--arm64)
 * [Notebooks](#notebooks)
   * [Overview](#overview)
   * [Descriptions](#descriptions)
@@ -51,7 +51,7 @@ As github renders the notebooks, they can each be viewed by just opening and scr
 
 To experiment with the notebooks, such as playing with different pipelines and predictors, it is best to run them on a local machine. Linux users with an x64 architecture can choose from one of the options provided below. Soon, we will offer a simple, container-based solution compatible with all major systems (Windows, Mac) and will also support ARM-based architectures.
 
-### Using Docker or Podman
+### Using Docker
 
 There are a `docker-compose.yml` and a `Dockerfile` for easy usage provided.
 
@@ -59,18 +59,15 @@ Simply clone this repository and command to start the `notebooks` service. The i
 
 ```
 $ git clone https://github.com/getml/getml-demo.git  
-$ docker-compose up notebooks  
+$ docker compose up notebooks  
 ```
-
-> [!NOTE]  
-> The files are set up to also work with [podman](https://podman.io/) and [podman-compose](https://github.com/containers/podman-compose)
 
 To open Jupyter Lab in the browser, look for the following lines in the output and copy-paste it in your browser:
 
 ```
 Or copy and paste one of these URLs:
 
-http://localhost:8888/lab?token=<randomly_generated_token>
+http://localhost:8888/lab?token=<generated_token>
 ```
 
 After the first `getml.engine.launch(...)` is executed and the engine is started, its monitor can be opened in the browser under
@@ -79,7 +76,15 @@ After the first `getml.engine.launch(...)` is executed and the engine is started
 http://localhost:1709/#/token/token
 ```
 
-### On the Machine (Linux/x64)
+> [!NOTE]  
+> Using alternatives to [Docker Desktop](https://www.docker.com/products/docker-desktop/) like  
+> * [Podman](https://podman.io/),  
+> * [Podman Desktop](https://podman-desktop.io/) or  
+> * [Rancher Desktop](https://rancherdesktop.io/) with a container engine like dockerd(moby) or containerd(nerdctl)
+> 
+> allows bind-mounting the notebooks in a user-writeable way (this might need to include `userns_mode: keep-id`) instead of having to `COPY` them in. In combination with volume-binding `/home/getml/.getML/logs` and `/home/getml/.getML/projects`, runs and changes can be persisted across containers.
+
+### On the Machine (Linux/x64 & arm64)
 
 Alternatively, getML and the notebooks can be run natively on the local Linux machine by having certain software installed, like Python and some Python libraries, Jupyter-Lab and the getML engine. The [getML Python library](https://github.com/getml/getml-community/) provides an engine version without [enterprise features](https://www.getml.com/pricing). But as those features are shown in the demonstration notebooks, the [trail of the enterprise version](https://www.getml.com/download) can be used for those cases.
 
@@ -91,7 +96,7 @@ $ cd getml-demo
 $ pipx install hatch
 $ hatch env create
 $ hatch shell
-$ pip install -r requirements/requirements.3.11.txt
+$ pip install -r requirements.txt
 $ jupyter-lab
 ```
 
@@ -103,7 +108,7 @@ With the last command, Jupyter-Lab should automatically open in the browser. If 
 ```
 Or copy and paste one of these URLs:
 
-http://localhost:8888/lab?token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+http://localhost:8888/lab?token=<generated_token>
 ```
 
 After the first `getml.engine.launch(...)` is executed and the engine is started, its monitor can be opened in the browser under
