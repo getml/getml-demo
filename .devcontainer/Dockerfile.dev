@@ -1,0 +1,208 @@
+# syntax=docker/dockerfile:1
+
+# hadolint global ignore=DL3008
+
+#----------------------
+# Setup build arguments
+#----------------------
+ARG APP_NAME=vertexai-playbook
+
+# A non-root user is needed to prevent permission issues when working with host mounted files in the container
+# For reference see https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
+ARG USERNAME=vscode
+
+ARG APP_PATH=/home/${USERNAME}/${APP_NAME}
+
+ARG DEBIAN_VERSION=bookworm
+ARG PYTHON_VERSION=3.11.9
+ARG TERRAFORM_VERSION=1.8.5
+ARG GCLOUD_VERSION=479.0.0
+ARG HATCH_VERSION=1.9.7
+ARG HADOLINT_VERSION=2.12.0
+
+#----------------------
+# Stage 1: staging
+#----------------------
+
+FROM python:${PYTHON_VERSION}-${DEBIAN_VERSION} AS staging
+
+ARG APP_NAME
+ARG TERRAFORM_VERSION
+ARG GCLOUD_VERSION
+ARG HATCH_VERSION
+ARG HADOLINT_VERSION
+ARG TARGETPLATFORM
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONFAULTHANDLER=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=on
+
+# "pipefail" ensures that if any command in a pipeline fails, the entire pipeline fails:
+# Can help in identifying errors early and preventing the continuation of scripts with undetected issues.
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# Install Terraform
+RUN apt-get update; \
+    apt-get install --no-install-recommends -y lsb-release; \
+    curl -sSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg; \
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list; \
+    apt-get update; \
+    apt-get install --no-install-recommends -y "terraform=${TERRAFORM_VERSION}-*"; \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Google Cloud CLI
+RUN apt-get update; \
+    apt-get install --no-install-recommends -y apt-transport-https ca-certificates gnupg curl; \
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \
+    apt-get update; \
+    apt-get install --no-install-recommends -y "google-cloud-cli"; \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Hatch
+RUN ARCHITECTURE=$(if [ "$TARGETPLATFORM" = "linux/amd64" ]; then echo "x86_64"; elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then echo "aarch64"; else echo "unsupported"; fi); \
+    if [ "$ARCHITECTURE" = "unsupported" ]; then echo "Unsupported architecture: $TARGETPLATFORM"; exit 1; fi; \
+    curl -sSLO "https://github.com/pypa/hatch/releases/download/hatch-v${HATCH_VERSION}/hatch-${HATCH_VERSION}-${ARCHITECTURE}-unknown-linux-gnu.tar.gz"; \
+    tar -xzf "hatch-${HATCH_VERSION}-${ARCHITECTURE}-unknown-linux-gnu.tar.gz"; \
+    mv "hatch-${HATCH_VERSION}-${ARCHITECTURE}-unknown-linux-gnu" /usr/local/bin/hatch; \
+    chmod +x /usr/local/bin/hatch; \
+    hatch --version; \
+    rm -rf "hatch-${HATCH_VERSION}-${ARCHITECTURE}-unknown-linux-gnu*"
+
+# Install hadolint
+RUN ARCHITECTURE=$(if [ "$TARGETPLATFORM" = "linux/amd64" ]; then echo "x86_64"; elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then echo "arm64"; else echo "unsupported"; fi); \
+    if [ "$ARCHITECTURE" = "unsupported" ]; then echo "Unsupported architecture: $TARGETPLATFORM"; exit 1; fi; \
+    curl -o /usr/local/bin/hadolint -sSLO "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-${ARCHITECTURE}"; \
+    chmod +x /usr/local/bin/hadolint
+
+# Install Docker
+# /var/run/docker.sock must be mounted to the container to allow Docker-in-Docker
+RUN curl -fsSL https://get.docker.com -o get-docker.sh; sh get-docker.sh
+
+# TODO: Fixes locale issue related to getML 1.4.0. -> Remove once fixed with 1.5.0
+RUN apt-get update; \
+    apt-get install --no-install-recommends -y locales; \
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen; \
+    locale-gen; \
+    rm -rf /var/lib/apt/lists/*
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
+
+# Persist bash history
+# https://code.visualstudio.com/remote/advancedcontainers/persist-bash-history
+RUN mkdir /commandhistory; \
+    touch /commandhistory/.bash_history; \
+    chown -R "$USERNAME" /commandhistory; \
+    chmod -R 755 /commandhistory
+
+COPY ./.devcontainer/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+CMD ["/bin/bash"]
+
+#----------------------
+# Stage 2: development
+#----------------------
+FROM staging AS development
+
+ARG USERNAME
+
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+RUN groupadd --gid $USER_GID $USERNAME; \
+    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME; \
+    # We want to allow sudo within the dev environment
+    apt-get update; \
+    apt-get install -y --no-install-recommends sudo; \
+    echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME; \
+    chmod 0440 /etc/sudoers.d/$USERNAME
+
+RUN groupadd -f docker; \
+    usermod -aG docker $USERNAME; \
+    newgrp docker
+
+USER $USERNAME
+
+# Create the config directory with the correct permissions before switching to the non-root user
+RUN mkdir -p /home/$USERNAME/.config/hatch; \
+    chown -R $USERNAME:$USERNAME /home/$USERNAME/.config; \
+    hatch --version
+
+# Persist bash history
+# https://code.visualstudio.com/remote/advancedcontainers/persist-bash-history
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history"; \
+    echo "$SNIPPET" >> "/home/$USERNAME/.bashrc"
+
+
+#----------------------
+# Stage 3: build
+#----------------------
+
+FROM staging AS build
+
+ARG APP_PATH
+COPY --from=development ${APP_PATH} ${APP_PATH}
+WORKDIR ${APP_PATH}
+
+RUN hatch env create; \
+    hatch build
+
+# docker build --no-cache --progress=plain --target build -t code17/vertexai-playbook:build -f .devcontainer/Dockerfile.dev .
+# docker create --name built_wheel code17/vertexai-playbook:build
+# docker cp built_wheel:/home/vscode/vertexai-playbook/dist .
+# docker rm -f built_wheel
+
+
+#----------------------
+# Stage 4: production
+#----------------------
+
+FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION} AS production
+
+# User and group id for non-root user
+ARG USER=vscode
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+ARG APP_NAME
+ARG APP_PATH=/home/${USER}/${APP_NAME}
+
+# Create non-root user
+RUN groupadd --gid ${USER_GID} ${USER}; \
+    useradd --uid ${USER_UID} --gid ${USER_GID} --create-home --home-dir /home/${USER} ${USER}
+USER ${USER}
+ENV PATH="/home/${USER}/.local/bin:$PATH"
+
+COPY --from=build --chown=${USER}:${USER} ${APP_PATH}/dist/*.whl ${APP_PATH}/
+# Copy Data folder to the container [optional]
+# COPY --chown=${USER}:${USER} ./data ${APP_PATH}/data
+
+# Update the RUN command to reference the correct location of the wheel file for installation
+RUN pip install --no-cache-dir --user ${APP_PATH}/*.whl; \
+    rm ${APP_PATH}/*.whl
+
+WORKDIR ${APP_PATH}
+
+
+#----------------------
+# Stage 5: testing
+#----------------------
+
+FROM production AS testing
+
+ARG APP_PATH
+
+# Install test dependencies (e.g., pytest)
+RUN uv pip install --no-cache-dir pytest pytest-cov
+
+# Copy tests into the container
+COPY --from=development --chown=${USER}:${USER} /opt/${APP_NAME}/tests ${APP_PATH}/tests
+
+WORKDIR ${APP_PATH}
+
+ENTRYPOINT ["pytest", "./tests"]

@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "getml-vertexai"
+version = "0.1.0"
+description = "A collection of utilities for using getML with Vertex AI."
+readme = "README.md"
+license = { text = "ELv2" }
+authors = [{ email = "alexandros@getml.com" }, { name = "Alexandros Ladas" }]
+maintainers = [
+    { email = "alexandros@getml.com" },
+    { name = "Alexandros Ladas" },
+]
+requires-python = ">=3.10,<3.12"
+
+# Dependency pinning introduced issues within the Vertex AI Workbench environment.
+# Ommiting the version pinning until a better solution is found.
+dependencies = [
+    "google-cloud-aiplatform",
+    "google-cloud-storage",
+    "getml==1.4.0",
+    "numpy<2.0.0",
+    "pyyaml",
+]
+
+[project.urls]
+Homepage = "https://code17.io"
+Repository = "https://github.com/getml/getml-demo"
+Documentation = "https://docs.getml.com/latest/"
+Issues = "https://github.com/getml/getml-demo/issues"
+
+[tool.hatch]
+version.path = "src/getml/vertexai/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/.github",
+    "/.git",
+    "/.venv",
+    "/.vscode",
+    "/__pycache__",
+    "/.ipynb_checkpoints",
+    "/build",
+]
+include = ["src/getml/vertexai/**"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/getml"]
+
+[tool.hatch.envs]
+default.installer = "uv"
+default.dependencies = [
+    "getml==1.4.0",
+    "ipykernel",
+    "numpy<2.0.0",
+    "google-cloud-aiplatform[prediction]==1.56.0",
+    "pyyaml==6.0.1",
+    "pytest==8.2.2",
+    "ruff==0.4.7",
+    "mypy==1.10.0",
+]

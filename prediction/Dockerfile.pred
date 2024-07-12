@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11 AS pred-base
+
+RUN mkdir -p /app
+
+COPY ./pyproject.toml /app/pyproject.toml
+COPY ./README.md /app/README.md
+COPY ./src /app/src
+COPY ./prediction/* /app/
+COPY ./config.yaml /app/config.yaml
+
+WORKDIR /app
+
+# TODO: Create non root user
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+ENV PIP_ROOT_USER_ACTION=ignore
+
+RUN pip install --no-cache-dir .

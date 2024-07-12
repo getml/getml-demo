@@ -1,0 +1,5 @@
+*.tar.gz
+*.ipynb
+.venv/
+dist/
+service_account.json

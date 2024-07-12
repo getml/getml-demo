@@ -1,0 +1,55 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
+{
+	"name": "Existing Dockerfile",
+	"build": {
+		"context": "..",
+		"dockerfile": "Dockerfile.dev",
+		"target": "development"
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"python.defaultInterpreterPath": "${containerEnv:HOME}/.venv/bin/python",
+				"terminal.integrated.defaultProfile.linux": "bash"
+			},
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"tamasfe.even-better-toml",
+				"GitHub.copilot",
+				"exiasr.hadolint",
+				"ms-python.vscode-pylance",
+				"ms-toolsai.jupyter",
+				"ms-python.python",
+				"charliermarsh.ruff",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"ms-vscode-remote.vscode-remote-extensionpack",
+				"Gruntfuggly.todo-tree"
+			]
+		}
+	},
+	"mounts": [
+		"source=${localEnv:HOME}/.config/gcloud,target=/home/vscode/.config/gcloud,type=bind",
+		"source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind",
+		"source=${localEnv:HOME}/.1password/agent.sock,target=/home/vscode/.1password/agent.sock,type=bind",
+		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind",
+		"source=vertexai-playbook-bashhistory,target=/commandhistory,type=volume",
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+	],
+	"containerEnv": {
+		"SSH_AUTH_SOCK": "/home/vscode/.1password/agent.sock"
+	},
+	"remoteUser": "vscode",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Uncomment the next line to run commands after the container is created.
+	//"postCreateCommand": "${containerEnv:HOME}/entrypoint.sh"
+	"postCreateCommand": {
+		"configure-docker": "sudo chown $(whoami) /var/run/docker.sock"
+	},
+	"postStartCommand": "/entrypoint.sh"
+	// Configure tool-specific properties.
+	// "customizations": {},
+}
