@@ -5,12 +5,19 @@
 	"build": {
 		"context": "..",
 		"dockerfile": "Dockerfile.dev",
-		"target": "development"
+		"target": "development",
+		"args": {
+			"PROJECT_NAME": "${localWorkspaceFolderBasename}",
+			"USERNAME": "vscode",
+			"INSTALL_TERRAFORM": "true",
+			"INSTALL_GCLOUD": "true",
+			"INSTALL_HADOLINT": "true",
+			"INSTALL_DOCKER": "true"
+		}
 	},
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"python.defaultInterpreterPath": "${containerEnv:HOME}/.venv/bin/python",
 				"terminal.integrated.defaultProfile.linux": "bash"
 			},
 			"extensions": [
@@ -31,24 +38,23 @@
 	"mounts": [
 		"source=${localEnv:HOME}/.config/gcloud,target=/home/vscode/.config/gcloud,type=bind",
 		"source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind",
-		"source=${localEnv:HOME}/.1password/agent.sock,target=/home/vscode/.1password/agent.sock,type=bind",
 		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind",
-		"source=vertexai-playbook-bashhistory,target=/commandhistory,type=volume",
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+		"source=${localWorkspaceFolderBasename}-bashhistory,target=/commandhistory,type=volume",
+		"source=${localEnv:HOME}/.1password/agent.sock,target=/var/run/.1password/agent.sock,type=bind",
+		"source=${localEnv:HOME}/.config/1Password/settings,target=/root/.config/1Password/settings,type=bind",
+		"source=/run/user/1000/docker.sock,target=/var/run/docker.sock,type=bind"
 	],
 	"containerEnv": {
-		"SSH_AUTH_SOCK": "/home/vscode/.1password/agent.sock"
+		// "SSH_AUTH_SOCK": "/home/vscode/.1password/agent.sock",
+		"PROJECT_NAME": "${localWorkspaceFolderBasename}"
 	},
-	"remoteUser": "vscode",
+	"remoteUser": "root",
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Uncomment the next line to run commands after the container is created.
 	//"postCreateCommand": "${containerEnv:HOME}/entrypoint.sh"
-	"postCreateCommand": {
-		"configure-docker": "sudo chown $(whoami) /var/run/docker.sock"
-	},
 	"postStartCommand": "/entrypoint.sh"
 	// Configure tool-specific properties.
 	// "customizations": {},

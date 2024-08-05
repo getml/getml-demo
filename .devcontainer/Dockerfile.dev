@@ -2,22 +2,23 @@
 
 # hadolint global ignore=DL3008
 
+# A non-root user is needed to prevent permission issues when working with host mounted files in the container
+# For reference see https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
+
 #----------------------
 # Setup build arguments
 #----------------------
-ARG APP_NAME=vertexai-playbook
 
-# A non-root user is needed to prevent permission issues when working with host mounted files in the container
-# For reference see https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
-ARG USERNAME=vscode
-
-ARG APP_PATH=/home/${USERNAME}/${APP_NAME}
+# PROJECT_NAME and USERNAME are defined in devcontainer.json
+ARG PROJECT_NAME
+ARG USERNAME
+ARG APP_PATH=/home/${USERNAME}/${PROJECT_NAME}
 
 ARG DEBIAN_VERSION=bookworm
-ARG PYTHON_VERSION=3.11.9
-ARG TERRAFORM_VERSION=1.8.5
+ARG PYTHON_VERSION=3.12.4
+ARG HATCH_VERSION=1.12.0
+ARG TERRAFORM_VERSION=1.9.3
 ARG GCLOUD_VERSION=479.0.0
-ARG HATCH_VERSION=1.9.7
 ARG HADOLINT_VERSION=2.12.0
 
 #----------------------
@@ -26,13 +27,16 @@ ARG HADOLINT_VERSION=2.12.0
 
 FROM python:${PYTHON_VERSION}-${DEBIAN_VERSION} AS staging
 
-ARG APP_NAME
+ARG INSTALL_TERRAFORM
+ARG INSTALL_GCLOUD
+ARG INSTALL_HADOLINT
+ARG INSTALL_DOCKER
+
 ARG TERRAFORM_VERSION
 ARG GCLOUD_VERSION
 ARG HATCH_VERSION
 ARG HADOLINT_VERSION
 ARG TARGETPLATFORM
-
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONFAULTHANDLER=1 \
@@ -42,43 +46,66 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Can help in identifying errors early and preventing the continuation of scripts with undetected issues.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install Terraform
+# Install jq
 RUN apt-get update; \
+    apt-get install --no-install-recommends -y jq; \
+    rm -rf /var/lib/apt/lists/*
+
+# Set PATH for pipx-installed packages
+ENV PATH=/root/.local/bin:$PATH
+
+# Install hatch via pipx
+RUN python3 -m pip install --no-cache-dir --user pipx; \
+    python3 -m pipx ensurepath; \
+    pipx ensurepath --global; \
+    pipx install hatch==${HATCH_VERSION}
+
+# Install 1Password CLI
+RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+    gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | tee /etc/apt/sources.list.d/1password.list && \
+    mkdir -p /etc/debsig/policies/AC2D62742012EA22/ && \
+    curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | tee /etc/debsig/policies/AC2D62742012EA22/1password.pol && \
+    mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22 && \
+    curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg && \
+    apt-get update && apt-get --no-install-recommends -y install 1password 1password-cli && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Terraform
+RUN if [ "$INSTALL_TERRAFORM" = "true" ]; then \
+    apt-get update; \
     apt-get install --no-install-recommends -y lsb-release; \
     curl -sSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg; \
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list; \
     apt-get update; \
     apt-get install --no-install-recommends -y "terraform=${TERRAFORM_VERSION}-*"; \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*; \
+    fi
 
 # Install Google Cloud CLI
-RUN apt-get update; \
+RUN if [ "$INSTALL_GCLOUD" = "true" ]; then \
+    apt-get update; \
     apt-get install --no-install-recommends -y apt-transport-https ca-certificates gnupg curl; \
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \
     apt-get update; \
     apt-get install --no-install-recommends -y "google-cloud-cli"; \
-    rm -rf /var/lib/apt/lists/*
-
-# Install Hatch
-RUN ARCHITECTURE=$(if [ "$TARGETPLATFORM" = "linux/amd64" ]; then echo "x86_64"; elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then echo "aarch64"; else echo "unsupported"; fi); \
-    if [ "$ARCHITECTURE" = "unsupported" ]; then echo "Unsupported architecture: $TARGETPLATFORM"; exit 1; fi; \
-    curl -sSLO "https://github.com/pypa/hatch/releases/download/hatch-v${HATCH_VERSION}/hatch-${HATCH_VERSION}-${ARCHITECTURE}-unknown-linux-gnu.tar.gz"; \
-    tar -xzf "hatch-${HATCH_VERSION}-${ARCHITECTURE}-unknown-linux-gnu.tar.gz"; \
-    mv "hatch-${HATCH_VERSION}-${ARCHITECTURE}-unknown-linux-gnu" /usr/local/bin/hatch; \
-    chmod +x /usr/local/bin/hatch; \
-    hatch --version; \
-    rm -rf "hatch-${HATCH_VERSION}-${ARCHITECTURE}-unknown-linux-gnu*"
+    rm -rf /var/lib/apt/lists/*; \
+    fi
 
 # Install hadolint
-RUN ARCHITECTURE=$(if [ "$TARGETPLATFORM" = "linux/amd64" ]; then echo "x86_64"; elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then echo "arm64"; else echo "unsupported"; fi); \
+RUN if [ "$INSTALL_HADOLINT" = "true" ]; then \
+    ARCHITECTURE=$(if [ "$TARGETPLATFORM" = "linux/amd64" ]; then echo "x86_64"; elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then echo "arm64"; else echo "unsupported"; fi); \
     if [ "$ARCHITECTURE" = "unsupported" ]; then echo "Unsupported architecture: $TARGETPLATFORM"; exit 1; fi; \
     curl -o /usr/local/bin/hadolint -sSLO "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-${ARCHITECTURE}"; \
-    chmod +x /usr/local/bin/hadolint
+    chmod +x /usr/local/bin/hadolint; \
+    fi
 
 # Install Docker
 # /var/run/docker.sock must be mounted to the container to allow Docker-in-Docker
-RUN curl -fsSL https://get.docker.com -o get-docker.sh; sh get-docker.sh
+RUN if [ "$INSTALL_DOCKER" = "true" ]; then \
+    curl -fsSL https://get.docker.com -o get-docker.sh; sh get-docker.sh; \
+    fi
 
 # TODO: Fixes locale issue related to getML 1.4.0. -> Remove once fixed with 1.5.0
 RUN apt-get update; \
@@ -90,14 +117,6 @@ RUN apt-get update; \
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
-
-
-# Persist bash history
-# https://code.visualstudio.com/remote/advancedcontainers/persist-bash-history
-RUN mkdir /commandhistory; \
-    touch /commandhistory/.bash_history; \
-    chown -R "$USERNAME" /commandhistory; \
-    chmod -R 755 /commandhistory
 
 COPY ./.devcontainer/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -122,23 +141,23 @@ RUN groupadd --gid $USER_GID $USERNAME; \
     echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME; \
     chmod 0440 /etc/sudoers.d/$USERNAME
 
-RUN groupadd -f docker; \
-    usermod -aG docker $USERNAME; \
-    newgrp docker
-
-USER $USERNAME
+# TODO: Might be useful if reverting to non-root user, keep for now
+# USER $USERNAME
 
 # Create the config directory with the correct permissions before switching to the non-root user
-RUN mkdir -p /home/$USERNAME/.config/hatch; \
-    chown -R $USERNAME:$USERNAME /home/$USERNAME/.config; \
-    hatch --version
+# RUN mkdir -p ~/.config/hatch; \
+#     hatch --version
 
 # Persist bash history
 # https://code.visualstudio.com/remote/advancedcontainers/persist-bash-history
-RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history"; \
-    echo "$SNIPPET" >> "/home/$USERNAME/.bashrc"
+# RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/home/$USERNAME/commandhistory/.bash_history" \
+#     && mkdir ~/commandhistory \
+#     && touch ~/commandhistory/.bash_history \
+#     && chown -R $USERNAME ~/commandhistory \
+#     && echo "$SNIPPET" >> "/home/$USERNAME/.bashrc"
 
-
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+    && echo "$SNIPPET" >> "/root/.bashrc"
 #----------------------
 # Stage 3: build
 #----------------------
