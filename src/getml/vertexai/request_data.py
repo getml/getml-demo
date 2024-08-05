@@ -1,22 +1,44 @@
+"""
+This module provides utility functions for managing and using getML models with Google AI Platform.
+It includes functionalities for running the getML engine, creating star schemas, converting data to JSON,
+and loading configuration files.
+
+Functions:
+    _run_getml_engine(project: str) -> None:
+        Launches the getML engine and sets the project.
+
+    get_star_schema_testset(project: str) -> getml.data.StarSchema:
+        Loads the Loans dataset and creates a star schema of the test set.
+
+    convert_starschema_to_json(star_schema: getml.data.StarSchema, save_to_path: str = "./prediction/request_test.json", limit: int = 10) -> str:
+        Converts and serializes the `population` table of the `star_schema.test` data to JSON format.
+
+    load_json_from_file(file_path: str = "./prediction/request_test.json") -> str:
+        Loads JSON data from a specified file.
+
+    create_test_request(save_to_path: str = "./prediction/request_test.json") -> str:
+        Creates a test request JSON file from the star schema test set and saves it to a specified path.
+"""
+
 import json
 import getml
 from getml.vertexai import Config
-
-
-def _run_getml_engine(project: str):
-    getml.engine.launch(allow_remote_ips=True)
-    getml.engine.set_project(project)
 
 
 def get_star_schema_testset(project: str) -> getml.data.StarSchema:
     """
     Load Loans dataset and create a star schema of the test set.
 
-    returns: StarSchema object that contains the population and peripheral tables.
+    Args:
+        project (str): The name of the getML project.
+
+    Returns:
+        StarSchema object that contains the population and peripheral tables.
     """
 
-    # We need a running getML engine
-    _run_getml_engine(project)
+    # Launch getML engine
+    getml.engine.launch(allow_remote_ips=True)
+    getml.engine.set_project(project)
 
     # Load data
     population_train, population_test, order, trans, meta = getml.datasets.load_loans(
@@ -28,6 +50,7 @@ def get_star_schema_testset(project: str) -> getml.data.StarSchema:
         train=population_train, test=population_test, alias="population"
     )
 
+    # Join tables
     star_schema.join(
         trans,
         on="account_id",
@@ -54,6 +77,14 @@ def convert_starschema_to_json(
 ) -> str:
     """
     Convert and serialize the `population` table of the `star_schema.test` data to JSON format.
+
+    Args:
+        star_schema (getml.data.StarSchema): The star schema object containing the test data.
+        save_to_path (str): The path to save the request JSON file.
+        limit (int): The number of rows to include in the JSON data.
+
+    Returns:
+        str: The request JSON data (serialized).
     """
     data_test_request = star_schema.population.to_arrow()[:limit].to_pydict()
 
@@ -73,6 +104,15 @@ def load_json_from_file(file_path: str = "./prediction/request_test.json") -> st
 
 
 def create_test_request(save_to_path: str = "./prediction/request_test.json") -> str:
+    """
+    Creates a test request JSON file from the star schema test set and saves it to a specified path.
+
+    Args:
+        save_to_path (str): The path to save the request JSON file.
+
+    Returns:
+        str: The request JSON data (serialized).
+    """
     cfg = Config.load("config.yaml")
 
     star_schema_testset = get_star_schema_testset(cfg.GETML_PROJECT_NAME)

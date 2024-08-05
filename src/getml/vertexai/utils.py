@@ -1,23 +1,34 @@
 """
-This module contains utility functions and a sample method to make predictions using Google AI Platform.
-It provides functionalities to generate unique identifiers, determine the storage path based on the runtime
-environment, and predict using a custom-trained model on AI Platform.
+This module contains utility functions and methods to interact with Google AI Platform and manage local prediction services using Docker.
+It provides functionalities to generate unique identifiers, run shell commands, determine the Docker daemon path,
+and open IAM permissions page for Google Cloud projects.
 
 Functions:
     get_unique_id() -> str:
         Generates a unique identifier based on the current date and time.
 
-    get_path_bucket_folder(bucket_name=GCP_BUCKET_NAME) -> str:
-        Determines and returns the path to the Google Cloud Storage (GCS) bucket folder
-        based on the runtime environment (Google Cloud or local).
+    cmd_to_run_local_endpoint(cfg: Config) -> None:
+        Prints the commands to run the Docker container for the prediction service
+        and make a POST request to the local endpoint.
 
+    open_iam_permissions(project: str) -> None:
+        Opens the IAM permissions page for the specified Google Cloud project in a new browser window.
+
+    run_shell_cmd(cmd: list[str]) -> str:
+        Runs a command in the shell and returns the output. Prints an error message if the command fails.
+
+    get_docker_daemon_path() -> str:
+        Determines and returns the path to the Docker daemon.
 """
 
 import os
+import json
+from typing import TYPE_CHECKING
+import subprocess
 from datetime import datetime
 
-
-from .config import Config
+if TYPE_CHECKING:
+    from getml.vertexai import Config
 
 
 def get_unique_id() -> str:
@@ -27,10 +38,15 @@ def get_unique_id() -> str:
     return datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
 
-def cmd_to_run_local_endpoint(cfg: Config) -> None:
+def cmd_to_run_local_endpoint(cfg: "Config") -> None:
     """
     Prints the commands to run the Docker container for the prediction service
-    and make a POST request to the local endpoint."""
+    and make a POST request to the local endpoint.
+
+    Args:
+        cfg (Config): The configuration object containing details such as
+                      BUCKET_URI, BUCKET_DIR_MODEL, DOCKER_IMAGE_URI_PRED, etc.
+    """
 
     path_service_account_json = f"{os.getcwd()}/service_account.json"
 
@@ -57,9 +73,18 @@ curl -X POST \\
 """)
 
 
-def window_open(url):
+def open_iam_permissions(project: str) -> None:
+    """
+    Opens the IAM permissions page for the specified Google Cloud project in a new browser window.
+
+    Args:
+        project (str): The Google Cloud project ID.
+    """
+
+    url = f"https://console.cloud.google.com/iam-admin/iam?project={project}"
+
     try:
-        import IPython
+        import IPython  # type: ignore
 
     except ImportError:
         print("Cannot open {url} in a new window.")
@@ -70,7 +95,42 @@ def window_open(url):
         )
 
 
-def open_iam_permissions(project: str) -> None:
-    link = f"https://console.cloud.google.com/iam-admin/iam?project={project}"
+def run_shell_cmd(cmd: list[str]) -> str:
+    """
+    Runs a command in the shell.
 
-    window_open(link)
+    Args:
+        cmd (list[str]): The command to run.
+
+    Example:
+        run_cmd(["ls", "-l"])
+
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit code.
+    """
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.returncode != 0:
+        print(f"Error: {result.stderr}")
+        return ""
+    else:
+        return result.stdout.strip()
+
+
+def get_docker_daemon_path() -> str:
+    """
+    Returns:
+        str: The path to the Docker daemon.
+    """
+
+    deamon_path = ""
+    docker_context = run_shell_cmd(["docker", "context", "ls", "--format", "json"])
+
+    for context in docker_context.strip().split("\n"):
+        context_json = json.loads(context)
+        if context_json.get("Current", False):
+            deamon_path = context_json.get("DockerEndpoint", "")
+            break
+
+    return deamon_path

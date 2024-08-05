@@ -111,7 +111,7 @@ getml_score = pipe.score(star_schema.test)
 # # Save model
 # ***********************************************************
 
-target_dir = Path(f"{get_path_bucket_folder()}/model_artifact")
+target_dir = Path(f"{get_path_bucket_folder()}/{cfg.BUCKET_DIR_MODEL}")
 target_dir.mkdir(parents=True, exist_ok=True)
 
 getml.project.data_frames.save()
@@ -131,7 +131,7 @@ if LOG_METRICS:
 
     aiplatform.start_run(f"run-{get_unique_id()}")
 
-    hyperparams = {
+    hyperparams: dict[str, float | int | str] = {
         "data_model": "star_schema",
         "feature_selector": "XGBoostClassifier",
         "feature_learners": "fast_prop",
@@ -140,10 +140,11 @@ if LOG_METRICS:
         "predictor": "XGBoostClassifier",
         "target": "default",  # litereally the target column "default"
     }
+
     aiplatform.log_params(hyperparams)
 
     # Log system.Metrics
-    metrics = {
+    metrics: dict[str, float | int | str] = {
         "accuracy_train": getml_score[0].accuracy,
         "accuracy_test": getml_score[1].accuracy,
         "auc_train": getml_score[0].auc,

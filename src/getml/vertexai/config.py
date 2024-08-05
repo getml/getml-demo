@@ -19,8 +19,9 @@ Usage example:
 """
 
 import os
-from dataclasses import dataclass, field
-import yaml
+import sys
+from dataclasses import dataclass
+import yaml  # type: ignore
 from getml.vertexai.utils_gcp import get_account_email
 
 IS_WORKBENCH_ENV = "GOOGLE_VM_CONFIG_LOCK_FILE" in os.environ
@@ -28,14 +29,14 @@ IS_WORKBENCH_ENV = "GOOGLE_VM_CONFIG_LOCK_FILE" in os.environ
 
 @dataclass
 class Config:
-    GETML_PROJECT_NAME: str = field(init="")
-    GCP_PROJECT_NAME: str = field(init="")
-    REGION: str = field(init="")
-    SERVICE_ACCOUNT_NAME: str = field(init="")
-    BUCKET_NAME: str = field(init="")
-    BUCKET_DIR_MODEL: str = field(init="")
-    BUCKET_DIR_DATASET: str = field(init="")
-    DOCKER_REPOSITORY: str = field(init="")
+    GETML_PROJECT_NAME: str = os.environ.get("GETML_PROJECT_NAME", "")
+    GCP_PROJECT_NAME: str = os.environ.get("GCP_PROJECT_NAME", "")
+    REGION: str = os.environ.get("REGION", "")
+    SERVICE_ACCOUNT_NAME: str = os.environ.get("SERVICE_ACCOUNT_NAME", "")
+    BUCKET_NAME: str = os.environ.get("BUCKET_NAME", "")
+    BUCKET_DIR_MODEL: str = os.environ.get("BUCKET_DIR_MODEL", "")
+    BUCKET_DIR_DATASET: str = os.environ.get("BUCKET_DIR_DATASET", "")
+    DOCKER_REPOSITORY: str = os.environ.get("DOCKER_REPOSITORY", "")
 
     def __init__(self, config: dict[str, str]):
         for key, value in config.items():
@@ -107,9 +108,20 @@ class Config:
         return cls(config)
 
     def _check_all_fields_set(self):
+        """
+        Checks if all configuration fields have been set with a value.
+        If any field is not set, we exit.
+        """
+        keys_not_set = []
+
         for key, value in self.__dict__.items():
             if value is None or value == "":
-                print(f"WARNING: Configuration field '{key}' is not set.")
+                keys_not_set.append(key)
+
+        if keys_not_set:
+            sys.exit(
+                f"Configuration field(s) '{keys_not_set}' not set. Please set all required fields."
+            )
 
     def print(self, field_names: list[str]):
         """
@@ -124,7 +136,7 @@ class Config:
                 print(f"{field_name + ':':<30}{value}")
         print("")
 
-    def print_links(self, link_types: list[str], model_id: str = None):
+    def print_links(self, link_types: list[str], model_id: str = ""):
         """
         Prints console links for specified Google Cloud resources based on the provided link types.
 

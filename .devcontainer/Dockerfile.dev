@@ -46,9 +46,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Can help in identifying errors early and preventing the continuation of scripts with undetected issues.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install jq
+# Install jq and build-essentials
 RUN apt-get update; \
-    apt-get install --no-install-recommends -y jq; \
+    apt-get install --no-install-recommends -y jq build-essential; \
     rm -rf /var/lib/apt/lists/*
 
 # Set PATH for pipx-installed packages

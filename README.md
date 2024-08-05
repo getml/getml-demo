@@ -1,4 +1,4 @@
-# getML on Vertex AI
+# Playbook: getML on Vertex AI
 
 ### Requirements
 

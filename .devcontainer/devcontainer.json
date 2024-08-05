@@ -9,7 +9,7 @@
 		"args": {
 			"PROJECT_NAME": "${localWorkspaceFolderBasename}",
 			"USERNAME": "vscode",
-			"INSTALL_TERRAFORM": "true",
+			"INSTALL_TERRAFORM": "false",
 			"INSTALL_GCLOUD": "true",
 			"INSTALL_HADOLINT": "true",
 			"INSTALL_DOCKER": "true"
