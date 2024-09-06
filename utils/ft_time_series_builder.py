@@ -96,6 +96,7 @@ def _roll_data_frame(data_frame, column_id, time_stamp, horizon, memory):
 def _hide_warnings(func):
     def wrapper(*args, **kwargs):
         with warnings.catch_warnings():
+            warnings.simplefilter(action="ignore", category=FutureWarning)
             warnings.filterwarnings(
                 'ignore',
                 category=RuntimeWarning,
