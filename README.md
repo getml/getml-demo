@@ -8,7 +8,7 @@
 </p>
 
 <p align="center" style="text-align: center;">
-        <a href="https://getml.com/contact" target="_blank">
+        <a href="https://getml.com/latest/contact" target="_blank">
         <img src="https://img.shields.io/badge/schedule-a_meeting-blueviolet.svg" /></a>
         <a href="mailto:hello@getml.com" target="_blank">
         <img src="https://img.shields.io/badge/contact-us_by_mail-orange.svg" /></a>
@@ -20,7 +20,7 @@
 
 # Introduction
 
-This repository contains different [Jupyter Notebooks](https://jupyter.org/) to demonstrate the capabilities of [getML](https://www.getml.com/) in the realm of machine learning on relational data-sets in various domains. getML and its feature engineering algorithms ([FastProp](https://docs.getml.com/latest/user_guide/feature_engineering/feature_engineering.html#fastprop), [Multirel](https://docs.getml.com/latest/user_guide/feature_engineering/feature_engineering.html#multirel), [Relboost](https://docs.getml.com/latest/user_guide/feature_engineering/feature_engineering.html#relboost), [RelMT](https://docs.getml.com/latest/user_guide/feature_engineering/feature_engineering.html#relmt)), its [predictors](https://docs.getml.com/latest/user_guide/predicting/predicting.html#using-getml) (LinearRegression, LogisticRegression, XGBoostClassifier, XGBoostRegressor) and its [hyperparameter optimizer](https://docs.getml.com/latest/user_guide/hyperopt/hyperopt.html#hyperparameter-optimization) (RandomSearch, LatinHypercubeSearch, GaussianHyperparameterSearch), are benchmarked against competing tools in similar categories, like [featuretools](https://www.featuretools.com/), [tsfresh](https://tsfresh.com/), [prophet](https://facebook.github.io/prophet/). While [FastProp](https://docs.getml.com/latest/user_guide/feature_engineering/feature_engineering.html#fastprop) usually outperforms the competition in terms of runtime and resource requirements, the more sophisticated algorithms ([Multirel](https://docs.getml.com/latest/user_guide/feature_engineering/feature_engineering.html#multirel), [Relboost](https://docs.getml.com/latest/user_guide/feature_engineering/feature_engineering.html#relboost), [RelMT](https://docs.getml.com/latest/user_guide/feature_engineering/feature_engineering.html#relmt)), which are part of the [professional and enterprise feature-sets](https://www.getml.com/pricing), can lead to higher accuracy with lower resource requirements still then the competition. The demonstrations are done on publicly available data-sets, which are standardly used for such comparisons.
+This repository contains different [Jupyter Notebooks](https://jupyter.org) to demonstrate the capabilities of [getML](https://www.getml.com) in the realm of machine learning on relational data-sets in various domains. getML and its feature engineering algorithms ([FastProp](https://getml.com/latest/user_guide/concepts/feature_engineering/#feature-engineering-algorithms-fastprop), [Multirel](https://getml.com/latest/user_guide/concepts/feature_engineering/#feature-engineering-algorithms-multirel), [Relboost](https://getml.com/latest/user_guide/concepts/feature_engineering/#feature-engineering-algorithms-relboost), [RelMT](https://getml.com/latest/user_guide/concepts/feature_engineering/#feature-engineering-algorithms-relmt)), its [predictors](https://getml.com/latest/user_guide/concepts/predicting#using-getml) (LinearRegression, LogisticRegression, XGBoostClassifier, XGBoostRegressor) and its [hyperparameter optimizer](https://getml.com/latest/user_guide/concepts/hyperopt#hyperparameter-optimization) (RandomSearch, LatinHypercubeSearch, GaussianHyperparameterSearch), are benchmarked against competing tools in similar categories, like [featuretools](https://www.featuretools.com/), [tsfresh](https://tsfresh.com/), [prophet](https://facebook.github.io/prophet/). While [FastProp](https://getml.com/latest/user_guide/concepts/feature_engineering/#feature-engineering-algorithms-fastprop) usually outperforms the competition in terms of runtime and resource requirements, the more sophisticated algorithms ([Multirel](https://getml.com/latest/user_guide/concepts/feature_engineering/#feature-engineering-algorithms-multirel), [Relboost](https://getml.com/latest/user_guide/concepts/feature_engineering/#feature-engineering-algorithms-relboost), [RelMT](https://getml.com/latest/user_guide/concepts/feature_engineering/#feature-engineering-algorithms-relmt)), which are part of the [professional and enterprise feature-sets](https://getml.com/latest/enterprise), can lead to higher accuracy with lower resource requirements still then the competition. The demonstrations are done on publicly available data-sets, which are standardly used for such comparisons.
 
 # Table of Contents
 
@@ -77,18 +77,18 @@ http://localhost:1709/#/token/token
 ```
 
 > [!NOTE]  
-> Using alternatives to [Docker Desktop](https://www.docker.com/products/docker-desktop/) like  
-> * [Podman](https://podman.io/),  
-> * [Podman Desktop](https://podman-desktop.io/) or  
-> * [Rancher Desktop](https://rancherdesktop.io/) with a container engine like dockerd(moby) or containerd(nerdctl)
+> Using alternatives to [Docker Desktop](https://www.docker.com/products/docker-desktop) like  
+> * [Podman](https://podman.io),  
+> * [Podman Desktop](https://podman-desktop.io) or  
+> * [Rancher Desktop](https://rancherdesktop.io) with a container engine like dockerd(moby) or containerd(nerdctl)
 > 
 > allows bind-mounting the notebooks in a user-writeable way (this might need to include `userns_mode: keep-id`) instead of having to `COPY` them in. In combination with volume-binding `/home/getml/.getML/logs` and `/home/getml/.getML/projects`, runs and changes can be persisted across containers.
 
 ### On the Machine (Linux/x64 & arm64)
 
-Alternatively, getML and the notebooks can be run natively on the local Linux machine by having certain software installed, like Python and some Python libraries, Jupyter-Lab and the getML engine. The [getML Python library](https://github.com/getml/getml-community/) provides an engine version without [enterprise features](https://www.getml.com/pricing). But as those features are shown in the demonstration notebooks, the [trail of the enterprise version](https://www.getml.com/download) can be used for those cases.
+Alternatively, getML and the notebooks can be run natively on the local Linux machine by having certain software installed, like Python and some Python libraries, Jupyter-Lab and the getML engine. The [getML Python library](https://github.com/getml/getml-community) provides an engine version without [enterprise features](https://getml.com/latest/enterprise). But as those features are shown in the demonstration notebooks, the [trial of the enterprise version](https://getml.com/latest/enterprise/request-trial) can be used for those cases.
 
-The following commands will set up a Python environment with necessary Python libraries and the trail of the getML enterprise version, and Jupyter-Lab
+The following commands will set up a Python environment with necessary Python libraries and the trial of the getML enterprise version, and Jupyter-Lab
 
 ```
 $ git clone https://github.com/getml/getml-demo.git  
@@ -101,7 +101,7 @@ $ jupyter-lab
 ```
 
 > [!TIP]  
-> Install the [trail of the enterprise version](https://www.getml.com/download) via the  [Install getML on Linux guide](https://docs.getml.com/latest/home/installation/linux.html#install-getml-on-linux) to try the enterprise features.
+> Install the [trial of the enterprise version](https://getml.com/latest/enterprise/request-trial) via the  [Install getML on Linux guide](https://getml.com/latest/install/packages/linux#install-getml-on-linux) to try the enterprise features.
 
 With the last command, Jupyter-Lab should automatically open in the browser. If not, look for the following lines in the output and copy-paste it in your browser:
 
