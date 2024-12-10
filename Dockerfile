@@ -30,7 +30,7 @@ RUN \
         export GETML_ARCH="${TARGETARCH}" ;\
     fi; \
     export GETML_VERSION=$(grep -oP '(?<=getml==)\d+\.\d+\.\d+' requirements.txt) ;\
-    export GETML_BUCKET="https://storage.googleapis.com/static.getml.com/download" ;\
+    export GETML_BUCKET="https://go.getml.com/static/demo/download" ;\
     export GETML_ENGINE_FILE="getml-${GETML_VERSION}-${GETML_ARCH}-${TARGETOS}.tar.gz" ;\
     export GETML_ENGINE_URL="${GETML_BUCKET}/${GETML_VERSION}/${GETML_ENGINE_FILE}" ;\
     echo "Downloading getML engine from ${GETML_ENGINE_URL}" ;\
