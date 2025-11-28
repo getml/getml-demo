@@ -1,0 +1,9 @@
+[env]
+SNOWFLAKE_ACCOUNT = "{{ exec(command='op read --account getml.1password.eu \"op://svibqfali56qralxbzg6wanc5i/Snowflake/account\"', cache_key='snowflake_account', duration='1w') }}"
+SNOWFLAKE_USER = "{{ exec(command='op read --account getml.1password.eu \"op://svibqfali56qralxbzg6wanc5i/Snowflake/username\"', cache_key='snowflake_user', duration='1w') }}"
+SNOWFLAKE_PASSWORD = "{{ exec(command='op read --account getml.1password.eu \"op://svibqfali56qralxbzg6wanc5i/Snowflake/password\"', cache_key='snowflake_password', duration='1w') }}"
+
+SNOWFLAKE_ROLE = "ACCOUNTADMIN"
+SNOWFLAKE_WAREHOUSE = "COMPUTE_WH"
+SNOWFLAKE_DATABASE = "JAFFLE_SHOP"
+SNOWFLAKE_SCHEMA = "RAW"

@@ -1,0 +1,56 @@
+name: Python Linting, Formatting, Testing, Coverage
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [master, 42-build-data-preparation-infrastructure-for-feature-store-notebooks]
+    paths:
+      - "integration/snowflake/**"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./integration/snowflake
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13"]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Set up Python ${{ matrix.python-version }} and uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+          cache-dependency-glob: |
+            **/pyproject.toml
+      - name: Install dependencies
+        run: |
+          uv sync \
+            --python ${{ matrix.python-version }} \
+            --group dev
+      - name: Check linting and formatting
+        run: |
+          uv run --active ruff check .
+          uv run --active ruff format --check .
+      - name: Check types
+        run: |
+          uv run --active basedpyright
+      - name: Show TODOs
+        run: |
+          uv run --active ruff check --select FIX . || true
+      - name: Run tests and coverage
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+        run: |-
+          uv run --active pytest \
+            --cov=. \
+            --cov-report=term \
+            -v
