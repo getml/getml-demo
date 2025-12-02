@@ -1,9 +1,10 @@
 """Prepare weekly sales forecasting data for getML - BY STORE.
 
-This script creates a population table with weekly snapshots (Sunday nights)
-per store and calculates the target: total sales for the following week.
+This module creates:
+- weekly_stores table: Store-week combinations with reference_date (Monday week start)
+- population_weekly_by_store_with_target view: Adds target (next week's sales)
 
-Only includes full weeks where the store was open for the entire week.
+reference_date is the Monday (week start) derived from DATE_TRUNC('week', ordered_at).
 
 SQL queries are externalized in the sql/ directory for better maintainability.
 """
@@ -66,22 +67,18 @@ def _analyze_and_display_stores(session: Session) -> None:
 
 
 def _create_weekly_population_table(session: Session) -> list[Row]:
-    """Create population table with Sunday night snapshots per store.
+    """Create weekly_stores table with store-week combinations.
+
+    Creates one row per store per week using reference_date (Monday week start).
 
     Returns:
         List of store information rows.
     """
-    logger.info(
-        "\n2. Creating weekly population table per store (Sunday night snapshots)..."
-    )
-    logger.info("   Only including FULL weeks (store open entire week)...")
+    logger.info("\n2. Creating weekly_stores table (store-week combinations)...")
+    logger.info("   reference_date is Monday (week start) from DATE_TRUNC('week', ...)")
 
-    _ = session.sql(
-        load_sql("preparation/drop_population_weekly_by_store.sql")
-    ).collect()
-    _ = session.sql(
-        load_sql("preparation/create_population_weekly_by_store.sql")
-    ).collect()
+    _ = session.sql(load_sql("preparation/drop_weekly_stores.sql")).collect()
+    _ = session.sql(load_sql("preparation/create_weekly_stores.sql")).collect()
 
     num_snapshots: int = cast(
         "int", session.sql(load_sql("preparation/count_snapshots.sql")).collect()[0][0]
@@ -107,10 +104,9 @@ def _create_weekly_population_table(session: Session) -> list[Row]:
 
 
 def _add_target_column(session: Session) -> None:
-    """Calculate target - total sales for the following week per store."""
-    logger.info("\n3. Calculating target: next week's total sales per store...")
-    _ = session.sql(load_sql("preparation/drop_population_with_target.sql")).collect()
-    _ = session.sql(load_sql("preparation/create_population_with_target.sql")).collect()
+    """Create view with target - total sales for the following week per store."""
+    logger.info("\n3. Creating target view: next week's total sales per store...")
+    _ = session.sql(load_sql("preparation/calculate_target.sql")).collect()
 
 
 def _display_sample_data(session: Session, per_store: list[Row]) -> None:
@@ -126,16 +122,10 @@ def _display_sample_data(session: Session, per_store: list[Row]) -> None:
         )
         samples: list[Row] = session.sql(sample_query).collect()
 
-        logger.info(
-            f"{'ID':<8} {'Snapshot (Sunday)':<20} {'Predict Week':<20} "
-            f"{'Sales $':<15} {'Orders':<10}"
-        )
-        logger.info("-" * 80)
+        logger.info(f"{'ID':<8} {'Week Start':<20} {'Sales $':<15} {'Orders':<10}")
+        logger.info("-" * 60)
         for row in samples:
-            logger.info(
-                f"{row[0]:<8} {row[1]!s:<20} {row[2]!s:<20} "
-                f"${row[3]:<14,.2f} {row[4]:<10,}"
-            )
+            logger.info(f"{row[0]:<8} {row[1]!s:<20} ${row[2]:<14,.2f} {row[3]:<10,}")
 
 
 def _display_store_statistics(session: Session) -> None:
@@ -214,26 +204,19 @@ def _display_recent_snapshots(session: Session, per_store: list[Row]) -> None:
         )
         recent: list[Row] = session.sql(recent_query).collect()
 
-        logger.info(
-            f"{'ID':<8} {'Snapshot (Sunday)':<20} {'Predict Week':<20} "
-            f"{'Sales $':<15} {'Orders':<10}"
-        )
-        logger.info("-" * 80)
+        logger.info(f"{'ID':<8} {'Week Start':<20} {'Sales $':<15} {'Orders':<10}")
+        logger.info("-" * 60)
         for row in recent:
-            logger.info(
-                f"{row[0]:<8} {row[1]!s:<20} {row[2]!s:<20} "
-                f"${row[3]:<14,.2f} {row[4]:<10,}"
-            )
+            logger.info(f"{row[0]:<8} {row[1]!s:<20} ${row[2]:<14,.2f} {row[3]:<10,}")
 
 
 def prepare_weekly_sales_by_store(session: Session) -> None:
-    """Prepare data for getML to predict next week's sales from Sunday night, grouped by store.
+    """Prepare data for getML to predict next week's sales, grouped by store.
 
     Creates:
-    - population_weekly_by_store: Weekly snapshots per store at Sunday 23:59:59
-    - population_weekly_by_store_with_target: Population table with target column
-    - Target: Sum of order_total for the following 7 days for that store
-    - Only includes complete weeks (store was open entire week)
+    - weekly_stores: Table with store-week combinations (reference_date = Monday)
+    - population_weekly_by_store_with_target: View adding target column
+    - Target: Sum of order_total for the 7-day window starting at reference_date
 
     Args:
         session: Active Snowflake Snowpark session
@@ -261,9 +244,11 @@ def prepare_weekly_sales_by_store(session: Session) -> None:
     logger.info("\n" + "=" * 80)
     logger.info("DATA PREPARATION COMPLETE!")
     logger.info("=" * 80)
-    logger.info("\nTables created in PREPARED schema:")
-    logger.info("  - population_weekly_by_store")
-    logger.info("  - population_weekly_by_store_with_target (USE THIS FOR GETML)")
+    logger.info("\nObjects created in PREPARED schema:")
+    logger.info("  - weekly_stores (TABLE)")
+    logger.info(
+        "  - population_weekly_by_store_with_target (VIEW - USE THIS FOR GETML)"
+    )
     logger.info(
         "\nFor getML integration instructions, see: "
         "docs/GETML_WEEKLY_SALES_DATA_PREPARATION.md"

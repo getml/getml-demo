@@ -2,22 +2,30 @@
 
 **This guide explains how to use the prepared weekly sales forecasting data with getML for store-level predictions.**
 
-The data preparation pipeline creates population tables with weekly snapshots (Sunday nights) per store, calculating the target as total sales for the following week. Only full weeks where the store was open for the entire week are included.
+The data preparation pipeline creates:
+
+- `weekly_stores` (TABLE): Store-week combinations with `reference_date` (Monday week start)
+- `population_weekly_by_store_with_target` (VIEW): Adds target column (next week's sales)
 
 ---
 
-## 1. Population Table
+## 1. Population View
 
-**Table name:** `population_weekly_by_store_with_target`
+**View name:** `population_weekly_by_store_with_target`
 
 | Column | Description |
 |--------|-------------|
 | `snapshot_id` | Unique identifier for each prediction point |
 | `store_id` | The store being predicted |
 | `store_name` | Store name (for reference) |
-| `snapshot_time` | The time of prediction (Sunday 23:59:59) |
-| `prediction_week_start` | Start of the week being predicted |
-| `prediction_week_end` | End of the week being predicted |
+| `reference_date` | Monday (week start) from DATE_TRUNC('week', ...) |
+| `year`, `month`, `week_number` | Temporal components |
+| `days_since_open` | Days since store opened |
+| `is_full_week_after_opening` | True if store had a full week of operation before this week |
+| `has_order_activity` | True if store has order data spanning this week |
+| `has_min_history` | True if at least 7 days since store opened |
+| `next_week_sales` | Target: sum of sales for 7-day window starting at reference_date |
+| `next_week_orders` | Number of orders in the target window |
 
 ---
 
@@ -25,17 +33,18 @@ The data preparation pipeline creates population tables with weekly snapshots (S
 
 **Column name:** `next_week_sales`
 
-- This is the sum of sales for the following 7 days **for that specific store**
+- Sum of order_total for the 7-day window: [reference_date, reference_date + 7 days)
 - Unit: dollars (already divided by 100)
 
 ---
 
 ## 3. Time Column
 
-**Column name:** `snapshot_time`
+**Column name:** `reference_date`
 
 - Mark this as `time_stamp` role in getML
-- Ensures no data leakage (only past data used for prediction)
+- Represents Monday 00:00:00 (week start)
+- Ensures no data leakage (only past data used for prediction via `ordered_at < reference_date`)
 
 ---
 
@@ -52,11 +61,11 @@ The data preparation pipeline creates population tables with weekly snapshots (S
 | Table | Join Condition |
 |-------|----------------|
 | `raw_stores` | `store.id = population.store_id` |
-| `raw_orders` | `order.store_id = population.store_id AND order.ordered_at <= snapshot_time` |
+| `raw_orders` | `order.store_id = population.store_id AND order.ordered_at < reference_date` |
 | `raw_customers` | Join through orders |
 | `raw_items` | Join through orders |
 | `raw_products` | Join through items |
-| `raw_tweets` | `tweet.tweeted_at <= snapshot_time` (if relevant to stores) |
+| `raw_tweets` | `tweet.tweeted_at < reference_date` (if relevant to stores) |
 
 ---
 
@@ -74,9 +83,15 @@ population = getml.DataFrame.from_db(
 # Set roles
 population.set_role("snapshot_id", getml.data.roles.join_key)
 population.set_role("store_id", getml.data.roles.join_key)
-population.set_role("snapshot_time", getml.data.roles.time_stamp)
+population.set_role("reference_date", getml.data.roles.time_stamp)
 population.set_role("next_week_sales", getml.data.roles.target)
 population.set_role("store_name", getml.data.roles.categorical)
+
+# Boolean flags can be used as features or for filtering
+population.set_role(
+    ["is_full_week_after_opening", "has_order_activity", "has_min_history"],
+    getml.data.roles.categorical
+)
 
 # Load peripheral tables
 stores = getml.DataFrame.from_db(name="stores", table_name="raw_stores")
@@ -114,3 +129,16 @@ predictions = pipe.predict(container.test)
 - **Feature scope:** Features will be store-specific (that store's history)
 - **Analysis capability:** Can compare store performance, identify store-specific patterns
 - **Training data:** More training examples (6 stores × N weeks instead of just N weeks)
+
+---
+
+## 8. Data Quality Flags
+
+The boolean flags can be used to filter training data:
+
+```python
+# Only use rows with sufficient history
+filtered = population[population["has_min_history"] == True]
+
+# Or use as features - getML can learn from these patterns
+```

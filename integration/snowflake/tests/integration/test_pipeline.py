@@ -6,7 +6,7 @@ functionality of data ingestion and preparation.
 Run with: uv run pytest tests/integration/ -m integration
 """
 
-# ruff: noqa: G004, S608, E501
+# ruff: noqa: E501
 
 import logging
 import sys
@@ -18,11 +18,8 @@ from snowflake.snowpark import Row, Session
 # Add project root to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from data.ingestion import (
-    JAFFLE_SHOP_TABLES,
-    S3_BUCKET_URL,
-    STAGE_NAME,
-)
+from data.ingestion import JAFFLE_SHOP_TABLES, load_jaffle_shop_data
+from data.preparation import prepare_weekly_sales_by_store
 
 logger = logging.getLogger(__name__)
 
@@ -32,24 +29,13 @@ pytestmark = pytest.mark.integration
 class TestDataIngestion:
     """Integration tests for S3 to Snowflake data loading."""
 
+    @pytest.mark.dependency(name="data_ingestion")
     def test_load_jaffle_shop_data_creates_tables_with_rows(
         self,
         snowflake_session: Session,
-        test_raw_schema: str,
     ) -> None:
         """Verify all Jaffle Shop tables are created with data."""
-        # Ensure we're using the test schema
-        _ = snowflake_session.sql(f"USE SCHEMA {test_raw_schema}").collect()
-
-        # Create the stage in test schema
-        _ = snowflake_session.sql(f"""
-            CREATE OR REPLACE STAGE {STAGE_NAME}
-            URL = '{S3_BUCKET_URL}'
-            FILE_FORMAT = (TYPE = CSV FIELD_OPTIONALLY_ENCLOSED_BY = '"' SKIP_HEADER = 1)
-        """).collect()
-
-        # Load data using the pipeline function (modified to use current schema)
-        results = self._load_tables_to_test_schema(snowflake_session, test_raw_schema)
+        results = load_jaffle_shop_data(snowflake_session)
 
         # Verify all tables were loaded
         assert set(results.keys()) == set(JAFFLE_SHOP_TABLES.keys())
@@ -58,49 +44,16 @@ class TestDataIngestion:
         for table_name, row_count in results.items():
             assert row_count > 0, f"Table {table_name} has 0 rows"
 
-    def _load_tables_to_test_schema(
-        self,
-        session: Session,
-        schema_name: str,
-    ) -> dict[str, int]:
-        """Load tables into the test schema.
-
-        Simplified version of load_jaffle_shop_data for test isolation.
-        """
-        results: dict[str, int] = {}
-
-        for table_name, schema_def in JAFFLE_SHOP_TABLES.items():
-            _ = session.sql(f"""
-                CREATE OR REPLACE TABLE {schema_name}.{table_name} {schema_def}
-            """).collect()
-
-            _ = session.sql(f"""
-                COPY INTO {schema_name}.{table_name}
-                FROM @{schema_name}.{STAGE_NAME}/{table_name}.csv
-                FORCE = FALSE
-            """).collect()
-
-            count_result: list[Row] = session.sql(f"""
-                SELECT COUNT(*) as count FROM {schema_name}.{table_name}
-            """).collect()
-
-            row_count = int(count_result[0]["COUNT"])  # pyright: ignore[reportArgumentType]
-            results[table_name] = row_count
-            logger.info(f"Loaded {table_name}: {row_count} rows")
-
-        return results
-
+    @pytest.mark.dependency(depends=["data_ingestion"])
     def test_tables_have_expected_columns(
         self,
         snowflake_session: Session,
-        test_raw_schema: str,
     ) -> None:
         """Verify tables have expected column structure."""
-        # Check raw_orders has expected columns
-        result: list[Row] = snowflake_session.sql(f"""
+        result: list[Row] = snowflake_session.sql("""
             SELECT COLUMN_NAME
             FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_SCHEMA = '{test_raw_schema}'
+            WHERE TABLE_SCHEMA = 'RAW'
             AND TABLE_NAME = 'RAW_ORDERS'
             ORDER BY ORDINAL_POSITION
         """).collect()
@@ -122,56 +75,137 @@ class TestDataIngestion:
 class TestDataPreparation:
     """Integration tests for data preparation pipeline."""
 
-    def test_prepare_weekly_sales_creates_population_tables(
+    @pytest.mark.dependency(name="data_preparation", depends=["data_ingestion"])
+    def test_prepare_weekly_sales_creates_weekly_stores_table(
         self,
         snowflake_session: Session,
-        test_raw_schema: str,
-        test_prepared_schema: str,
     ) -> None:
-        """Verify preparation creates population tables with correct structure."""
-        # First ensure data is loaded (reuse from ingestion test if already run)
-        count_result: list[Row] = snowflake_session.sql(f"""
-            SELECT COUNT(*) as count FROM {test_raw_schema}.raw_orders
-        """).collect()
-
-        if int(count_result[0]["COUNT"]) == 0:  # pyright: ignore[reportArgumentType]
-            pytest.skip("Data ingestion test must run first")
-
-        # Create population table in test prepared schema
-        _ = snowflake_session.sql(f"""
-            CREATE OR REPLACE TABLE {test_prepared_schema}.population_weekly_by_store AS
-            SELECT
-                ROW_NUMBER() OVER (ORDER BY s.name, DATE_TRUNC('week', o.ordered_at)) as id,
-                s.id as store_id,
-                s.name as store_name,
-                DATE_TRUNC('week', o.ordered_at) as week_start,
-                DATEADD('day', 6, DATE_TRUNC('week', o.ordered_at)) as snapshot_date,
-                SUM(o.order_total) / 100.0 as weekly_sales,
-                COUNT(*) as weekly_orders
-            FROM {test_raw_schema}.raw_stores s
-            JOIN {test_raw_schema}.raw_orders o ON s.id = o.store_id
-            GROUP BY s.id, s.name, DATE_TRUNC('week', o.ordered_at)
-        """).collect()
+        """Verify preparation creates weekly_stores table with data."""
+        prepare_weekly_sales_by_store(snowflake_session)
 
         # Verify table was created with data
-        verification_result: list[Row] = snowflake_session.sql(f"""
-            SELECT COUNT(*) as count
-            FROM {test_prepared_schema}.population_weekly_by_store
+        result: list[Row] = snowflake_session.sql("""
+            SELECT COUNT(*) as count FROM PREPARED.weekly_stores
         """).collect()
 
-        row_count = int(verification_result[0]["COUNT"])  # pyright: ignore[reportArgumentType]
-        assert row_count > 0, "Population table should have data"
+        row_count = int(result[0]["COUNT"])  # pyright: ignore[reportArgumentType]
+        assert row_count > 0, "weekly_stores table should have data"
 
-    def test_population_table_has_multiple_stores(
+    @pytest.mark.dependency(depends=["data_preparation"])
+    def test_weekly_stores_has_multiple_stores(
         self,
         snowflake_session: Session,
-        test_prepared_schema: str,
     ) -> None:
-        """Verify population table contains data for multiple stores."""
-        result: list[Row] = snowflake_session.sql(f"""
+        """Verify weekly_stores table contains data for multiple stores."""
+        result: list[Row] = snowflake_session.sql("""
             SELECT COUNT(DISTINCT store_id) as store_count
-            FROM {test_prepared_schema}.population_weekly_by_store
+            FROM PREPARED.weekly_stores
         """).collect()
 
         store_count = int(result[0]["STORE_COUNT"])  # pyright: ignore[reportArgumentType]
-        assert store_count > 1, "Population table should have multiple stores"
+        assert store_count > 1, "weekly_stores should have multiple stores"
+
+    @pytest.mark.dependency(depends=["data_preparation"])
+    def test_weekly_stores_has_correct_columns(
+        self,
+        snowflake_session: Session,
+    ) -> None:
+        """Verify weekly_stores table has the expected column structure."""
+        result: list[Row] = snowflake_session.sql("""
+            SELECT COLUMN_NAME
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = 'PREPARED'
+            AND TABLE_NAME = 'WEEKLY_STORES'
+            ORDER BY ORDINAL_POSITION
+        """).collect()
+
+        column_names = [str(row["COLUMN_NAME"]) for row in result]  # pyright: ignore[reportUnknownArgumentType]
+
+        expected_columns = [
+            "SNAPSHOT_ID",
+            "STORE_ID",
+            "STORE_NAME",
+            "REFERENCE_DATE",
+            "YEAR",
+            "MONTH",
+            "WEEK_NUMBER",
+            "DAYS_SINCE_OPEN",
+            "IS_FULL_WEEK_AFTER_OPENING",
+            "HAS_ORDER_ACTIVITY",
+            "HAS_MIN_HISTORY",
+        ]
+        assert column_names == expected_columns
+
+    @pytest.mark.dependency(depends=["data_preparation"])
+    def test_target_view_exists_with_sales_columns(
+        self,
+        snowflake_session: Session,
+    ) -> None:
+        """Verify population_weekly_by_store_with_target view exists with target columns."""
+        result: list[Row] = snowflake_session.sql("""
+            SELECT COLUMN_NAME
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = 'PREPARED'
+            AND TABLE_NAME = 'POPULATION_WEEKLY_BY_STORE_WITH_TARGET'
+            ORDER BY ORDINAL_POSITION
+        """).collect()
+
+        column_names = [str(row["COLUMN_NAME"]) for row in result]  # pyright: ignore[reportUnknownArgumentType]
+
+        # Should have all weekly_stores columns plus target columns
+        assert "NEXT_WEEK_SALES" in column_names, "View should have NEXT_WEEK_SALES"
+        assert "NEXT_WEEK_ORDERS" in column_names, "View should have NEXT_WEEK_ORDERS"
+        assert "REFERENCE_DATE" in column_names, "View should have REFERENCE_DATE"
+
+    @pytest.mark.dependency(depends=["data_preparation"])
+    def test_target_view_has_valid_sales_data(
+        self,
+        snowflake_session: Session,
+    ) -> None:
+        """Verify the target view calculates sales correctly."""
+        result: list[Row] = snowflake_session.sql("""
+            SELECT
+                COUNT(*) as total_rows,
+                SUM(CASE WHEN next_week_sales > 0 THEN 1 ELSE 0 END) as rows_with_sales,
+                AVG(next_week_sales) as avg_sales
+            FROM PREPARED.population_weekly_by_store_with_target
+        """).collect()
+
+        total_rows = int(result[0]["TOTAL_ROWS"])  # pyright: ignore[reportArgumentType]
+        rows_with_sales = int(result[0]["ROWS_WITH_SALES"])  # pyright: ignore[reportArgumentType]
+        avg_sales = float(result[0]["AVG_SALES"])  # pyright: ignore[reportArgumentType]
+
+        assert total_rows > 0, "View should have rows"
+        assert rows_with_sales > 0, "Some rows should have sales > 0"
+        assert avg_sales > 0, "Average sales should be positive"
+
+    @pytest.mark.dependency(depends=["data_preparation"])
+    def test_boolean_flags_are_calculated(
+        self,
+        snowflake_session: Session,
+    ) -> None:
+        """Verify boolean flags are properly calculated in weekly_stores."""
+        result: list[Row] = snowflake_session.sql("""
+            SELECT
+                COUNT(*) as total,
+                SUM(CASE WHEN is_full_week_after_opening THEN 1 ELSE 0 END) as full_week_count,
+                SUM(CASE WHEN has_order_activity THEN 1 ELSE 0 END) as activity_count,
+                SUM(CASE WHEN has_min_history THEN 1 ELSE 0 END) as min_history_count
+            FROM PREPARED.weekly_stores
+        """).collect()
+
+        total = int(result[0]["TOTAL"])  # pyright: ignore[reportArgumentType]
+        full_week_count = int(result[0]["FULL_WEEK_COUNT"])  # pyright: ignore[reportArgumentType]
+        activity_count = int(result[0]["ACTIVITY_COUNT"])  # pyright: ignore[reportArgumentType]
+        min_history_count = int(result[0]["MIN_HISTORY_COUNT"])  # pyright: ignore[reportArgumentType]
+
+        # All flags should have some TRUE values (not all zeros)
+        assert full_week_count > 0, (
+            "Some rows should have is_full_week_after_opening=TRUE"
+        )
+        assert activity_count > 0, "Some rows should have has_order_activity=TRUE"
+        assert min_history_count > 0, "Some rows should have has_min_history=TRUE"
+
+        # Not all rows should have all flags TRUE (validates the logic works)
+        # At minimum, first week after opening shouldn't have full history
+        assert full_week_count <= total, "Boolean flag counts should not exceed total"

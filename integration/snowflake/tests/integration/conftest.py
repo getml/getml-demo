@@ -1,9 +1,12 @@
 """Fixtures for integration tests requiring real Snowflake connections.
 
 Provides session-scoped fixtures that:
-1. Run cleanup of stale TEST_* schemas before tests
-2. Create isolated schemas with TEST_{uuid} prefix for test isolation
-3. Clean up test schemas after the test session completes
+1. Run cleanup of stale JAFFLE_SHOP_TEST_* databases before tests
+2. Create an isolated test database (JAFFLE_SHOP_TEST_{uuid}) for test isolation
+3. Clean up test database after the test session completes
+
+Tests use the actual RAW and PREPARED schemas within the isolated test database,
+allowing the real ingestion and preparation functions to run without modification.
 """
 
 # ruff: noqa: G004
@@ -24,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from settings import SnowflakeSettings
 from snowflake_session import create_session
-from tests.cleanup_test_schemas import cleanup_test_schemas
+from tests.cleanup_test_resources import cleanup_test_databases
 
 logger = logging.getLogger(__name__)
 
@@ -45,8 +48,8 @@ def _snowflake_credentials_available() -> bool:
 def integration_test_id() -> str:
     """Generate unique identifier for this test session.
 
-    Used to create isolated schemas that don't conflict with
-    parallel test runs.
+    Used to create an isolated test database that doesn't conflict
+    with parallel test runs.
     """
     return uuid.uuid4().hex[:8].upper()
 
@@ -67,60 +70,48 @@ def snowflake_settings() -> SnowflakeSettings:
 
 
 @pytest.fixture(scope="session")
-def snowflake_session(
+def test_database(
     snowflake_settings: SnowflakeSettings,
     integration_test_id: str,
-) -> Generator[Session, None, None]:
-    """Create a Snowflake session for integration tests.
+) -> Generator[str, None, None]:
+    """Create an isolated test database for this test session.
 
-    Performs pre-test cleanup of stale TEST_* schemas, then yields
-    the session for test use. Post-test cleanup removes schemas
-    created during this test session.
+    Creates JAFFLE_SHOP_TEST_{uuid} database that is cleaned up after tests.
+    This provides complete isolation from production data.
+    """
+    db_name = f"JAFFLE_SHOP_TEST_{integration_test_id}"
+
+    with create_session(snowflake_settings) as session:
+        # Pre-test cleanup: remove any stale test databases from previous runs
+        logger.info("Running pre-test cleanup of stale test databases...")
+        dropped = cleanup_test_databases(session)
+        if dropped:
+            logger.info(f"Pre-test cleanup dropped {len(dropped)} stale database(s)")
+
+        # Create the test database
+        logger.info(f"Creating test database: {db_name}")
+        _ = session.sql(f"CREATE DATABASE IF NOT EXISTS {db_name}").collect()
+
+        yield db_name
+
+        # Post-test cleanup: drop the test database
+        logger.info(f"Dropping test database: {db_name}")
+        _ = session.sql(f"DROP DATABASE IF EXISTS {db_name} CASCADE").collect()
+
+
+@pytest.fixture(scope="session")
+def snowflake_session(
+    snowflake_settings: SnowflakeSettings,
+    test_database: str,
+) -> Generator[Session, None, None]:
+    """Create a Snowflake session for integration tests using the test database.
+
+    The session is configured to use the isolated test database where RAW and
+    PREPARED schemas can be created without affecting production data.
     """
     with create_session(snowflake_settings) as session:
-        # Pre-test cleanup: remove any stale TEST_* schemas from previous runs
-        logger.info("Running pre-test cleanup of stale test schemas...")
-        dropped = cleanup_test_schemas(session, snowflake_settings.database)
-        if dropped:
-            logger.info(f"Pre-test cleanup dropped {len(dropped)} stale schema(s)")
+        # Switch to the test database
+        logger.info(f"Using test database: {test_database}")
+        _ = session.sql(f"USE DATABASE {test_database}").collect()
 
         yield session
-
-        # Post-test cleanup: remove schemas created during this test session
-        logger.info(f"Running post-test cleanup for test session {integration_test_id}")
-        _ = cleanup_test_schemas(session, snowflake_settings.database)
-
-
-@pytest.fixture(scope="session")
-def test_raw_schema(
-    snowflake_session: Session,
-    integration_test_id: str,
-) -> str:
-    """Create an isolated RAW schema for testing data ingestion.
-
-    Creates TEST_RAW_{uuid} schema that is cleaned up after tests.
-    """
-    schema_name = f"TEST_RAW_{integration_test_id}"
-
-    logger.info(f"Creating test RAW schema: {schema_name}")
-    _ = snowflake_session.sql(f"CREATE SCHEMA IF NOT EXISTS {schema_name}").collect()
-    _ = snowflake_session.sql(f"USE SCHEMA {schema_name}").collect()
-
-    return schema_name
-
-
-@pytest.fixture(scope="session")
-def test_prepared_schema(
-    snowflake_session: Session,
-    integration_test_id: str,
-) -> str:
-    """Create an isolated PREPARED schema for testing data preparation.
-
-    Creates TEST_PREPARED_{uuid} schema that is cleaned up after tests.
-    """
-    schema_name = f"TEST_PREPARED_{integration_test_id}"
-
-    logger.info(f"Creating test PREPARED schema: {schema_name}")
-    _ = snowflake_session.sql(f"CREATE SCHEMA IF NOT EXISTS {schema_name}").collect()
-
-    return schema_name

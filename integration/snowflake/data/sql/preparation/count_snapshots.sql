@@ -1,2 +1,2 @@
 -- Count total snapshots
-SELECT COUNT(*) FROM PREPARED.population_weekly_by_store
+SELECT COUNT(*) FROM PREPARED.weekly_stores
