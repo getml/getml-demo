@@ -1,6 +1,7 @@
-# Databricks Delta Lake Ingestion
+# Databricks Data Integration
 
-This directory contains scripts to ingest data from GCS into Databricks Delta Lake for use with getML's Databricks Feature Store integration notebook.
+This directory contains modules for ingesting data from GCS into Databricks Delta Lake and preparing population tables for getML feature engineering.
+
 
 ## Prerequisites
 
@@ -60,63 +61,37 @@ You should see your workspace listed.
 
 ## Usage
 
-### Run the Ingestion Script
+### Python API (Recommended)
 
-```bash
-python ingest_to_databricks.py
+Use the modules directly in notebooks or scripts:
+
+```python
+from integration.databricks.data import ingestion, preparation
+
+# Load raw data from GCS to Databricks
+loaded_tables = ingestion.load_from_gcs(
+    bucket="https://static.getml.com/datasets/jaffle_shop/",
+    destination_schema="jaffle_shop"
+)
+print(f"Loaded {len(loaded_tables)} tables")
 ```
 
-This will:
-1. Download 7 parquet files from the GCS bucket (jaffle_shop dataset):
-   - `raw_customers.parquet`
-   - `raw_items.parquet`
-   - `raw_orders.parquet`
-   - `raw_products.parquet`
-   - `raw_stores.parquet`
-   - `raw_supplies.parquet`
-   - `raw_tweets.parquet`
-2. Write each as a Delta table in `workspace.default`:
-   - `workspace.default.raw_customers`
-   - `workspace.default.raw_items`
-   - `workspace.default.raw_orders`
-   - `workspace.default.raw_products`
-   - `workspace.default.raw_stores`
-   - `workspace.default.raw_supplies`
-   - `workspace.default.raw_tweets`
+### Load Specific Tables
 
-### Verify in Databricks
+```python
+from integration.databricks.data import ingestion
 
-After running the script, you can verify the tables in your Databricks workspace:
-
-1. Open your Databricks workspace
-2. Go to **Catalog** in the left sidebar
-3. Navigate to `workspace` > `default`
-4. You should see the 7 tables listed
-
-Or run in a Databricks notebook:
-```sql
-SHOW TABLES IN workspace.default;
-
-SELECT * FROM workspace.default.raw_customers LIMIT 10;
+# Load only the tables you need
+ingestion.load_from_gcs(
+    destination_schema="RAW",
+    tables=["raw_customers", "raw_orders", "raw_items", "raw_products"]
+)
 ```
-
-## Data Source
-
-The parquet files are publicly accessible at:
-- `https://static.getml.com/datasets/jaffle_shop/raw_customers.parquet`
-- `https://static.getml.com/datasets/jaffle_shop/raw_items.parquet`
-- `https://static.getml.com/datasets/jaffle_shop/raw_orders.parquet`
-- `https://static.getml.com/datasets/jaffle_shop/raw_products.parquet`
-- `https://static.getml.com/datasets/jaffle_shop/raw_stores.parquet`
-- `https://static.getml.com/datasets/jaffle_shop/raw_supplies.parquet`
-- `https://static.getml.com/datasets/jaffle_shop/raw_tweets.parquet`
-- `https://static.getml.com/datasets/jaffle_shop/raw_tweets.parquet`
 
 ## Troubleshooting
 
 ### Authentication Errors
 
-If you see authentication errors:
 ```bash
 # Re-authenticate
 databricks auth login --host https://<your-workspace>.cloud.databricks.com
@@ -128,6 +103,7 @@ databricks auth env
 ### Python Version Issues
 
 Databricks serverless requires Python 3.12:
+
 ```bash
 python --version  # Should show 3.12.x
 
@@ -138,9 +114,7 @@ brew install python@3.12  # macOS
 ### Connection Timeout
 
 Free Edition has limited compute resources. If you see timeouts:
-- Wait a few minutes and retry (serverless cold start)
+- Wait a few minutes and retry (serverless cold start can take few seconds or minutes)
 - Check your quota in the Databricks workspace
 
-## Next Steps
 
-After ingestion, you can use these tables in the Databricks Feature Store integration notebook.
