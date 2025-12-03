@@ -150,5 +150,7 @@ dmypy.json
 
 # generated
 *_spark/
+metastore_db/
+spark-warehouse/
 *_pipeline/
 .vscode/

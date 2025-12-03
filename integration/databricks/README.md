@@ -23,21 +23,20 @@ curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.s
 
 More: https://docs.databricks.com/gcp/en/dev-tools/cli/install
 
-### 2. Create Python Virtual Environment
+### 2. Install Dependencies with uv
+
+> [!IMPORTANT]  
+> The `databricks` dependency group uses `databricks-connect`, which **cannot be installed alongside `pyspark`**. These packages are mutually exclusive. If you need local Spark execution (e.g., for notebooks like `imdb.ipynb`), use `uv run --group spark --isolated` instead to run in a temporary isolated environment.
 
 ```bash
-# Navigate to this directory
-cd integration/databricks
+# From the repository root
+cd getml-demo
 
-# Create virtual environment with Python 3.12
-python3.12 -m venv .venv
+# Install uv if not already installed
+pipx install uv
 
-# Activate it
-source .venv/bin/activate  # macOS/Linux
-# .venv\Scripts\activate   # Windows
-
-# Install dependencies
-pip install -r requirements.txt
+# Run jupyter lab after install dependencies included in the databricks group
+$ uv run --group databricks jupyter-lab
 ```
 
 ### 3. Authenticate with Databricks
