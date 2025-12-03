@@ -1,6 +1,6 @@
 -- Create store-week combinations for weekly sales forecasting
 --
--- This table creates the base population for getML: one row per store per week.
+-- This table creates the base data for getML: one row per store per week.
 -- reference_date is the Monday (week start) derived from DATE_TRUNC('week', ordered_at).
 --
 -- Filtering logic:
@@ -11,7 +11,7 @@
 -- - is_full_week_after_opening: Store had a full week of operation before this week
 -- - has_order_activity: Store has order data spanning this week
 -- - has_min_history: At least 7 days since store opened
-CREATE TABLE PREPARED.weekly_stores AS
+CREATE TABLE {target_schema}.weekly_stores AS
 WITH store_activity AS (
     SELECT 
         s.id as store_id,
@@ -22,15 +22,15 @@ WITH store_activity AS (
         MAX(o.ordered_at) as last_order_date,
         DATE_TRUNC('week', MIN(o.ordered_at)) as first_order_week,
         DATE_TRUNC('week', MAX(o.ordered_at)) as last_order_week
-    FROM RAW.raw_stores s
-    LEFT JOIN RAW.raw_orders o ON o.store_id = s.id
+    FROM {source_schema}.raw_stores s
+    LEFT JOIN {source_schema}.raw_orders o ON o.store_id = s.id
     GROUP BY s.id, s.name, s.opened_at
 ),
 
 all_weeks AS (
     SELECT DISTINCT 
         DATE_TRUNC('week', ordered_at) as reference_date
-    FROM RAW.raw_orders
+    FROM {source_schema}.raw_orders
     WHERE ordered_at IS NOT NULL
 ),
 

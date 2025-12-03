@@ -1,2 +1,2 @@
 -- Count total snapshots
-SELECT COUNT(*) FROM PREPARED.weekly_stores
+SELECT COUNT(*) FROM {target_schema}.weekly_stores

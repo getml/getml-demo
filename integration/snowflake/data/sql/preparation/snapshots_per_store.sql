@@ -4,6 +4,6 @@ SELECT
     COUNT(*) as num_snapshots,
     MIN(reference_date) as first_snapshot,
     MAX(reference_date) as last_snapshot
-FROM PREPARED.weekly_stores
+FROM {target_schema}.weekly_stores
 GROUP BY store_name
 ORDER BY first_snapshot

@@ -4,6 +4,10 @@ These tests require real Snowflake credentials and verify end-to-end
 functionality of data ingestion and preparation.
 
 Run with: uv run pytest tests/integration/ -m integration
+
+Required environment variables:
+- SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, etc.
+- GCS_STORAGE_INTEGRATION: Name of the storage integration for GCS access
 """
 
 # ruff: noqa: E501
@@ -18,8 +22,10 @@ from snowflake.snowpark import Row, Session
 # Add project root to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from data.ingestion import JAFFLE_SHOP_TABLES, load_jaffle_shop_data
-from data.preparation import prepare_weekly_sales_by_store
+from data.ingestion import JAFFLE_SHOP_TABLE_NAMES
+from data.preparation import create_weekly_sales_by_store_with_target
+
+from .conftest import StorageConfig, load_jaffle_shop_data
 
 logger = logging.getLogger(__name__)
 
@@ -27,18 +33,19 @@ pytestmark = pytest.mark.integration
 
 
 class TestDataIngestion:
-    """Integration tests for S3 to Snowflake data loading."""
+    """Integration tests for cloud storage to Snowflake data loading."""
 
     @pytest.mark.dependency(name="data_ingestion")
     def test_load_jaffle_shop_data_creates_tables_with_rows(
         self,
         snowflake_session: Session,
+        storage_config: StorageConfig,
     ) -> None:
         """Verify all Jaffle Shop tables are created with data."""
-        results = load_jaffle_shop_data(snowflake_session)
+        results = load_jaffle_shop_data(snowflake_session, storage_config)
 
         # Verify all tables were loaded
-        assert set(results.keys()) == set(JAFFLE_SHOP_TABLES.keys())
+        assert set(results.keys()) == set(JAFFLE_SHOP_TABLE_NAMES)
 
         # Verify all tables have rows
         for table_name, row_count in results.items():
@@ -60,6 +67,7 @@ class TestDataIngestion:
 
         column_names = [str(row["COLUMN_NAME"]) for row in result]  # pyright: ignore[reportUnknownArgumentType]
 
+        # Column names are inferred from Parquet, check key columns exist
         expected_columns = [
             "ID",
             "CUSTOMER",
@@ -69,7 +77,8 @@ class TestDataIngestion:
             "TAX_PAID",
             "ORDER_TOTAL",
         ]
-        assert column_names == expected_columns
+        for col in expected_columns:
+            assert col in column_names, f"Expected column {col} not found"
 
 
 class TestDataPreparation:
@@ -81,7 +90,7 @@ class TestDataPreparation:
         snowflake_session: Session,
     ) -> None:
         """Verify preparation creates weekly_stores table with data."""
-        prepare_weekly_sales_by_store(snowflake_session)
+        create_weekly_sales_by_store_with_target(snowflake_session)
 
         # Verify table was created with data
         result: list[Row] = snowflake_session.sql("""
@@ -141,12 +150,12 @@ class TestDataPreparation:
         self,
         snowflake_session: Session,
     ) -> None:
-        """Verify population_weekly_by_store_with_target view exists with target columns."""
+        """Verify weekly_sales_by_store_with_target view exists with target columns."""
         result: list[Row] = snowflake_session.sql("""
             SELECT COLUMN_NAME
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = 'PREPARED'
-            AND TABLE_NAME = 'POPULATION_WEEKLY_BY_STORE_WITH_TARGET'
+            AND TABLE_NAME = 'WEEKLY_SALES_BY_STORE_WITH_TARGET'
             ORDER BY ORDINAL_POSITION
         """).collect()
 
@@ -168,7 +177,7 @@ class TestDataPreparation:
                 COUNT(*) as total_rows,
                 SUM(CASE WHEN next_week_sales > 0 THEN 1 ELSE 0 END) as rows_with_sales,
                 AVG(next_week_sales) as avg_sales
-            FROM PREPARED.population_weekly_by_store_with_target
+            FROM PREPARED.weekly_sales_by_store_with_target
         """).collect()
 
         total_rows = int(result[0]["TOTAL_ROWS"])  # pyright: ignore[reportArgumentType]

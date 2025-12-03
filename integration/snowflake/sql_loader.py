@@ -1,13 +1,19 @@
-"""Internal SQL file loading utilities.
+"""SQL file loading utilities.
 
 This module provides utilities for loading and formatting SQL queries
-from the sql/ directory. It is intended for internal use within the
-data package only.
+from the data/sql/ directory.
+
+Usage example:
+    from sql_loader import load_sql
+
+    sql = load_sql("preparation/create_schema.sql", schema_name="PREPARED")
 """
+
+from __future__ import annotations
 
 from pathlib import Path
 
-_SQL_DIR = Path(__file__).parent / "sql"
+_SQL_DIR = Path(__file__).parent / "data" / "sql"
 
 
 def load_sql(path: str, **kwargs: str) -> str:

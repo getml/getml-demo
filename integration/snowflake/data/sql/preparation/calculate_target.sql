@@ -6,7 +6,7 @@
 -- Window: [reference_date, reference_date + 7 days)
 -- - reference_date is Monday 00:00:00 (week start)
 -- - Target covers Monday through Sunday of that week
-CREATE OR REPLACE VIEW PREPARED.population_weekly_by_store_with_target AS
+CREATE OR REPLACE VIEW {target_schema}.{table_name} AS
 SELECT 
     ws.snapshot_id,
     ws.store_id,
@@ -22,7 +22,7 @@ SELECT
     COALESCE(
         (
             SELECT SUM(o.order_total) / 100.0
-            FROM RAW.raw_orders o
+            FROM {source_schema}.raw_orders o
             WHERE o.store_id = ws.store_id
               AND o.ordered_at >= ws.reference_date
               AND o.ordered_at < ws.reference_date + INTERVAL '7 days'
@@ -31,10 +31,10 @@ SELECT
     COALESCE(
         (
             SELECT COUNT(*)
-            FROM RAW.raw_orders o
+            FROM {source_schema}.raw_orders o
             WHERE o.store_id = ws.store_id
               AND o.ordered_at >= ws.reference_date
               AND o.ordered_at < ws.reference_date + INTERVAL '7 days'
         ), 0
     ) as next_week_orders
-FROM PREPARED.weekly_stores ws;
+FROM {target_schema}.weekly_stores ws;

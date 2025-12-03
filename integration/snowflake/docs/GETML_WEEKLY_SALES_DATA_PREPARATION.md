@@ -5,13 +5,13 @@
 The data preparation pipeline creates:
 
 - `weekly_stores` (TABLE): Store-week combinations with `reference_date` (Monday week start)
-- `population_weekly_by_store_with_target` (VIEW): Adds target column (next week's sales)
+- `weekly_sales_by_store_with_target` (VIEW): Adds target column (next week's sales)
 
 ---
 
-## 1. Population View
+## 1. Weekly Sales View
 
-**View name:** `population_weekly_by_store_with_target`
+**View name:** `weekly_sales_by_store_with_target`
 
 | Column | Description |
 |--------|-------------|
@@ -52,7 +52,7 @@ The data preparation pipeline creates:
 
 **Column name:** `store_id`
 
-- Links population to store-specific data
+- Links weekly sales data to store-specific data
 
 ---
 
@@ -60,8 +60,8 @@ The data preparation pipeline creates:
 
 | Table | Join Condition |
 |-------|----------------|
-| `raw_stores` | `store.id = population.store_id` |
-| `raw_orders` | `order.store_id = population.store_id AND order.ordered_at < reference_date` |
+| `raw_stores` | `store.id = weekly_sales.store_id` |
+| `raw_orders` | `order.store_id = weekly_sales.store_id AND order.ordered_at < reference_date` |
 | `raw_customers` | Join through orders |
 | `raw_items` | Join through orders |
 | `raw_products` | Join through items |
@@ -74,21 +74,21 @@ The data preparation pipeline creates:
 ```python
 import getml
 
-# Load population (one row per store per week)
-population = getml.DataFrame.from_db(
-    name="population",
-    table_name="population_weekly_by_store_with_target"
+# Load weekly sales data (one row per store per week)
+weekly_sales_by_store = getml.DataFrame.from_db(
+    name="weekly_sales_by_store",
+    table_name="weekly_sales_by_store_with_target"
 )
 
 # Set roles
-population.set_role("snapshot_id", getml.data.roles.join_key)
-population.set_role("store_id", getml.data.roles.join_key)
-population.set_role("reference_date", getml.data.roles.time_stamp)
-population.set_role("next_week_sales", getml.data.roles.target)
-population.set_role("store_name", getml.data.roles.categorical)
+weekly_sales_by_store.set_role("snapshot_id", getml.data.roles.join_key)
+weekly_sales_by_store.set_role("store_id", getml.data.roles.join_key)
+weekly_sales_by_store.set_role("reference_date", getml.data.roles.time_stamp)
+weekly_sales_by_store.set_role("next_week_sales", getml.data.roles.target)
+weekly_sales_by_store.set_role("store_name", getml.data.roles.categorical)
 
 # Boolean flags can be used as features or for filtering
-population.set_role(
+weekly_sales_by_store.set_role(
     ["is_full_week_after_opening", "has_order_activity", "has_min_history"],
     getml.data.roles.categorical
 )
@@ -103,7 +103,7 @@ orders.set_role("store_id", getml.data.roles.join_key)
 orders.set_role("ordered_at", getml.data.roles.time_stamp)
 
 # Define container with store-specific relationships
-container = getml.data.Container(population=population)
+container = getml.data.Container(population=weekly_sales_by_store)
 container.add(
     stores=stores,
     orders=orders,
@@ -138,7 +138,7 @@ The boolean flags can be used to filter training data:
 
 ```python
 # Only use rows with sufficient history
-filtered = population[population["has_min_history"] == True]
+filtered_weekly_sales = weekly_sales_by_store[weekly_sales_by_store["has_min_history"] == True]
 
 # Or use as features - getML can learn from these patterns
 ```
