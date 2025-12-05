@@ -1,0 +1,140 @@
+[project]
+name = "getml-featurestore-integrations"
+version = "0.1.0"
+description = "Integrations and Data Preparation for getML Feature Stores"
+authors = [
+    { name = "Code17 GmbH", email = "hello@code17.io" },
+    { name = "getML", email = "hello@getml.com" },
+]
+maintainers = [
+    { name = "Code17 GmbH", email = "hello@code17.io" },
+    { name = "getML", email = "hello@getml.com" },
+]
+license = { text = "Proprietary" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Private :: Do Not Upload",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+    "fastparquet>=2024.11.0",
+    "httpx>=0.27.0",
+    "ipykernel>=7.1.0",
+    "jafgen>=0.4.14",
+    "pandas>=2.3.3",
+    "pyarrow>=18.0.0",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.12.0",
+    "snowflake-connector-python>=3.17.3",
+    "snowflake-snowpark-python>=1.42.0",
+    "getml>=1.0.0",
+    "snowflake-ml-python>=1.20.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff~=0.12.2",
+    "basedpyright~=1.28.4",
+    "pytest~=8.0.0",
+    "pytest-cov>=6.2.1",
+    "pytest-dependency>=0.6.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "integration: marks tests as integration tests (require Snowflake credentials)",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/getml/getml-demo"
+"Bug Tracker" = "https://github.com/getml/getml-demo/issues"
+"getML" = "https://getml.com"
+"Code17 GmbH" = "https://www.code17.io/"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+reportMissingTypeStubs = false
+reportImplicitStringConcatenation = false
+
+[[tool.pyright.executionEnvironments]]
+root = "tests"
+extraPaths = ["."]
+reportUnusedParameter = false
+
+[build-system]
+requires = ["uv_build>=0.7.21,<0.8.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.format]
+preview = false
+quote-style = "double"
+line-ending = "auto"
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    # Allow for string literals in exceptions
+    "EM",
+    # Allow missing copyright notice at top of files
+    "CPY001",
+    # Allow missing docstrings in public modules
+    "D100",
+    # Allow missing docstrings in public classes
+    "D101",
+    # Allow missing docstrings in public packages
+    "D104",
+    # Allow docstrings without blank line before class docstring
+    "D203",
+    # Allow multi-line docstring summary to start at second line
+    "D213",
+    # Allow first-party imports outside type-checking blocks
+    "TC001",
+    # Allow third-party imports outside type-checking blocks
+    "TC002",
+    # Allow standard library imports outside type-checking blocks
+    "TC003",
+    # Allow TODO comments  
+    "FIX002",
+    # Allow TODO comments without author
+    "TD002",
+    # Allow TODO comments without link to issue
+    "TD003",
+    # Allow specifying long messages outside the exception class
+    "TRY003",
+    # Conflicts with formatter - trailing commas are handled by ruff format
+    "COM812",
+]
+
+fixable = ["ALL"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# S101: Allow for use of the assert keyword
+# PLR2004: Allow "magic value" used in comparison
+"test_*.py" = ["S101", "PLR2004"]
