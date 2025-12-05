@@ -21,6 +21,20 @@ class TestLoadSql:
         assert "CREATE SCHEMA" in content
         assert "PREPARED" in content
 
+    def test_applies_formatting_when_kwargs_provided(self) -> None:
+        """Verify load_sql applies string formatting with provided kwargs."""
+        content: str = load_sql(
+            path="preparation/snapshots_by_store.sql",
+            target_schema="PREPARED",
+            table_name="WEEKLY_SALES",
+            store_name="Test Store",
+            order_direction="DESC",
+            limit="5",
+        )
+
+        assert "Test Store" in content
+        assert "PREPARED.WEEKLY_SALES" in content
+
     def test_returns_raw_content_when_no_kwargs(self) -> None:
         """Verify load_sql returns unmodified content without kwargs."""
         content: str = load_sql(
@@ -37,3 +51,14 @@ class TestLoadSql:
         """Verify FileNotFoundError propagates for nonexistent SQL files."""
         with pytest.raises(FileNotFoundError):
             _ = load_sql(path="nonexistent/missing.sql")
+
+    def test_preserves_placeholders_when_no_kwargs(self) -> None:
+        """Verify load_sql preserves {placeholders} when no kwargs provided."""
+        # snapshots_by_store.sql has {store_name}, {table_name}, etc. placeholders
+        content: str = load_sql(path="preparation/snapshots_by_store.sql")
+
+        # Placeholders should remain in the content
+        assert "{store_name}" in content
+        assert "{table_name}" in content
+        assert "{order_direction}" in content
+        assert "{limit}" in content

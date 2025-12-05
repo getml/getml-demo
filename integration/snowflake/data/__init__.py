@@ -8,12 +8,14 @@ Usage example:
         SnowflakeSettings,
         create_session,
         ingestion,
+        preparation,
     )
 
     settings = SnowflakeSettings.from_env()
 
     with create_session(settings) as session:
         ingestion.load_from_gcs(session, settings=settings)
+        preparation.create_weekly_sales_by_store_with_target(session, settings=settings)
 """
 
 from snowflake.snowpark.exceptions import SnowparkSessionException
@@ -32,15 +34,23 @@ from .ingestion import (
     load_from_gcs,
     load_from_s3,
 )
+from .preparation import (
+    DEFAULT_POPULATION_TABLE_NAME,
+    DataPreparationError,
+    create_weekly_sales_by_store_with_target,
+)
 
 __all__ = [
     "DEFAULT_GCS_BUCKET",
+    "DEFAULT_POPULATION_TABLE_NAME",
     "JAFFLE_SHOP_TABLE_NAMES",
     "BootstrapError",
     "DataIngestionError",
+    "DataPreparationError",
     "SnowflakeSettings",
     "SnowparkSessionException",
     "create_session",
+    "create_weekly_sales_by_store_with_target",
     "ensure_infrastructure",
     "load_from_gcs",
     "load_from_s3",
