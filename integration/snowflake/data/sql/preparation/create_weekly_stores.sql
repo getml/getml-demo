@@ -13,23 +13,23 @@
 -- - has_min_history: At least 7 days since store opened
 CREATE TABLE {target_schema}.weekly_stores AS
 WITH store_activity AS (
-    SELECT 
+    SELECT
         s.id as store_id,
         s.name as store_name,
-        s.opened_at,
-        DATE_TRUNC('week', s.opened_at) + INTERVAL '7 days' as first_full_week,
-        MIN(o.ordered_at) as first_order_date,
-        MAX(o.ordered_at) as last_order_date,
-        DATE_TRUNC('week', MIN(o.ordered_at)) as first_order_week,
-        DATE_TRUNC('week', MAX(o.ordered_at)) as last_order_week
+        TRY_TO_TIMESTAMP(s.opened_at) as opened_at,
+        DATE_TRUNC('week', TRY_TO_TIMESTAMP(s.opened_at)) + INTERVAL '7 days' as first_full_week,
+        MIN(TRY_TO_TIMESTAMP(o.ordered_at)) as first_order_date,
+        MAX(TRY_TO_TIMESTAMP(o.ordered_at)) as last_order_date,
+        DATE_TRUNC('week', MIN(TRY_TO_TIMESTAMP(o.ordered_at))) as first_order_week,
+        DATE_TRUNC('week', MAX(TRY_TO_TIMESTAMP(o.ordered_at))) as last_order_week
     FROM {source_schema}.raw_stores s
     LEFT JOIN {source_schema}.raw_orders o ON o.store_id = s.id
-    GROUP BY s.id, s.name, s.opened_at
+    GROUP BY s.id, s.name, TRY_TO_TIMESTAMP(s.opened_at)
 ),
 
 all_weeks AS (
-    SELECT DISTINCT 
-        DATE_TRUNC('week', ordered_at) as reference_date
+    SELECT DISTINCT
+        DATE_TRUNC('week', TRY_TO_TIMESTAMP(ordered_at)) as reference_date
     FROM {source_schema}.raw_orders
     WHERE ordered_at IS NOT NULL
 ),

@@ -7,12 +7,10 @@ Provides session-scoped fixtures that:
 4. Clean up test database after the test session completes
 
 Storage Configuration:
-- GCS: Set GCS_STORAGE_INTEGRATION to the name of a storage integration
-  with access to gs://static.getml.com/datasets/jaffle_shop/
+- GCS (default): Uses HTTPS to fetch files from gs://static.getml.com/datasets/jaffle_shop/
+  No credentials or storage integration required.
 - S3: Set S3_BUCKET_URL to a public S3 bucket with Parquet files
   (e.g., s3://your-bucket/jaffle_shop/)
-
-If neither is set, tests will be skipped.
 """
 
 # ruff: noqa: G004
@@ -33,9 +31,13 @@ from snowflake.snowpark import Session
 # Add project root to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from data.ingestion import DEFAULT_GCS_BUCKET, load_from_gcs, load_from_s3
-from settings import SnowflakeSettings
-from snowflake_session import create_session
+from data import (
+    DEFAULT_GCS_BUCKET,
+    SnowflakeSettings,
+    create_session,
+    load_from_gcs,
+    load_from_s3,
+)
 from tests.cleanup_test_resources import cleanup_test_databases
 
 logger = logging.getLogger(__name__)
@@ -58,7 +60,6 @@ class StorageConfig:
 
     provider: CloudProvider
     bucket_url: str
-    storage_integration: str | None = None
 
 
 def load_jaffle_shop_data(
@@ -70,13 +71,7 @@ def load_jaffle_shop_data(
     Dispatches to load_from_gcs or load_from_s3 based on the config's provider.
     """
     if config.provider == CloudProvider.GCS:
-        if config.storage_integration is None:
-            raise ValueError("GCS provider requires storage_integration")
-        return load_from_gcs(
-            session,
-            storage_integration=config.storage_integration,
-            bucket=config.bucket_url,
-        )
+        return load_from_gcs(session, bucket=config.bucket_url)
     return load_from_s3(session, bucket=config.bucket_url)
 
 
@@ -92,24 +87,16 @@ def _snowflake_credentials_available() -> bool:
     return all(os.environ.get(var) for var in required_vars)
 
 
-def _get_storage_config() -> StorageConfig | None:
+def _get_storage_config() -> StorageConfig:
     """Build StorageConfig from environment variables.
 
     Priority:
-    1. GCS with storage integration (GCS_STORAGE_INTEGRATION)
-    2. S3 public bucket (S3_BUCKET_URL)
+    1. S3 public bucket if S3_BUCKET_URL is set
+    2. GCS (default) - uses HTTPS, no credentials required
 
     Returns:
-        StorageConfig if configured, None otherwise.
+        StorageConfig with appropriate provider and bucket URL.
     """
-    gcs_integration = os.environ.get("GCS_STORAGE_INTEGRATION")
-    if gcs_integration:
-        return StorageConfig(
-            provider=CloudProvider.GCS,
-            bucket_url=DEFAULT_GCS_BUCKET,
-            storage_integration=gcs_integration,
-        )
-
     s3_bucket_url = os.environ.get("S3_BUCKET_URL")
     if s3_bucket_url:
         return StorageConfig(
@@ -117,7 +104,11 @@ def _get_storage_config() -> StorageConfig | None:
             bucket_url=s3_bucket_url,
         )
 
-    return None
+    # Default: GCS via HTTPS (no credentials required)
+    return StorageConfig(
+        provider=CloudProvider.GCS,
+        bucket_url=DEFAULT_GCS_BUCKET,
+    )
 
 
 @pytest.fixture(scope="session")
@@ -149,22 +140,10 @@ def snowflake_settings() -> SnowflakeSettings:
 def storage_config() -> StorageConfig:
     """Create StorageConfig for cloud storage access.
 
-    Supports two configuration methods via environment variables:
-    1. GCS: Set GCS_STORAGE_INTEGRATION to use gs://static.getml.com/datasets/jaffle_shop/
-    2. S3: Set S3_BUCKET_URL to a public S3 bucket with Parquet files
-
-    Skips tests if neither is configured.
+    By default, uses GCS which fetches files via HTTPS - no credentials needed.
+    To use S3 instead, set S3_BUCKET_URL environment variable.
     """
-    config = _get_storage_config()
-    if config is None:
-        pytest.skip(
-            "No storage configuration available. Set one of:\n"
-            "  - GCS_STORAGE_INTEGRATION: Name of Snowflake storage integration "
-            "for gs://static.getml.com/datasets/jaffle_shop/\n"
-            "  - S3_BUCKET_URL: Public S3 bucket URL with Parquet files "
-            "(e.g., s3://your-bucket/jaffle_shop/)"
-        )
-    return config
+    return _get_storage_config()
 
 
 @pytest.fixture(scope="session")

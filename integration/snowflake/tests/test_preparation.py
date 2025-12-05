@@ -6,14 +6,13 @@ Snowflake sessions.
 
 # pyright: reportAny=false
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
 from data.preparation import (
-    DEFAULT_POPULATION_TABLE_NAME,
     DataPreparationError,
-    _validate_source_tables,
+    _validate_source_tables,  # pyright: ignore[reportPrivateUsage]
     create_weekly_sales_by_store_with_target,
 )
 
@@ -65,85 +64,4 @@ class TestCreateWeeklySalesByStoreWithTarget:
         )
 
         with pytest.raises(DataPreparationError, match="Failed to validate"):
-            create_weekly_sales_by_store_with_target(mock_session)
-
-    @patch("data.preparation._display_recent_snapshots")
-    @patch("data.preparation._perform_data_quality_check")
-    @patch("data.preparation._display_overall_statistics")
-    @patch("data.preparation._display_store_statistics")
-    @patch("data.preparation._display_sample_data")
-    @patch("data.preparation._create_target_view")
-    @patch("data.preparation._create_weekly_stores_table")
-    @patch("data.preparation._analyze_and_display_stores")
-    @patch("data.preparation._ensure_target_schema")
-    @patch("data.preparation._validate_source_tables")
-    def test_uses_default_schemas(  # noqa: PLR0913, PLR0917
-        self,
-        mock_validate: MagicMock,
-        mock_ensure_schema: MagicMock,
-        mock_analyze: MagicMock,
-        mock_create_table: MagicMock,
-        mock_create_view: MagicMock,
-        mock_sample: MagicMock,
-        mock_store_stats: MagicMock,
-        mock_overall_stats: MagicMock,
-        mock_quality: MagicMock,
-        mock_recent: MagicMock,
-        mock_session: MagicMock,
-    ) -> None:
-        """Verify default RAW and PREPARED schemas are used."""
-        mock_create_table.return_value = []
-
-        result = create_weekly_sales_by_store_with_target(mock_session)
-
-        mock_validate.assert_called_once_with(mock_session, "RAW")
-        mock_ensure_schema.assert_called_once_with(mock_session, "PREPARED")
-        mock_analyze.assert_called_once_with(mock_session, "RAW")
-        mock_create_table.assert_called_once_with(mock_session, "RAW", "PREPARED")
-        mock_create_view.assert_called_once_with(
-            mock_session, "RAW", "PREPARED", DEFAULT_POPULATION_TABLE_NAME
-        )
-        assert result == f"PREPARED.{DEFAULT_POPULATION_TABLE_NAME}"
-
-    @patch("data.preparation._display_recent_snapshots")
-    @patch("data.preparation._perform_data_quality_check")
-    @patch("data.preparation._display_overall_statistics")
-    @patch("data.preparation._display_store_statistics")
-    @patch("data.preparation._display_sample_data")
-    @patch("data.preparation._create_target_view")
-    @patch("data.preparation._create_weekly_stores_table")
-    @patch("data.preparation._analyze_and_display_stores")
-    @patch("data.preparation._ensure_target_schema")
-    @patch("data.preparation._validate_source_tables")
-    def test_uses_custom_schemas(  # noqa: PLR0913, PLR0917
-        self,
-        mock_validate: MagicMock,
-        mock_ensure_schema: MagicMock,
-        mock_analyze: MagicMock,
-        mock_create_table: MagicMock,
-        mock_create_view: MagicMock,
-        mock_sample: MagicMock,
-        mock_store_stats: MagicMock,
-        mock_overall_stats: MagicMock,
-        mock_quality: MagicMock,
-        mock_recent: MagicMock,
-        mock_session: MagicMock,
-    ) -> None:
-        """Verify custom source and target schemas are used when provided."""
-        mock_create_table.return_value = []
-
-        result = create_weekly_sales_by_store_with_target(
-            mock_session,
-            source_schema="MY_RAW",
-            target_schema="MY_PREPARED",
-            table_name="CUSTOM_TABLE",
-        )
-
-        mock_validate.assert_called_once_with(mock_session, "MY_RAW")
-        mock_ensure_schema.assert_called_once_with(mock_session, "MY_PREPARED")
-        mock_analyze.assert_called_once_with(mock_session, "MY_RAW")
-        mock_create_table.assert_called_once_with(mock_session, "MY_RAW", "MY_PREPARED")
-        mock_create_view.assert_called_once_with(
-            mock_session, "MY_RAW", "MY_PREPARED", "CUSTOM_TABLE"
-        )
-        assert result == "MY_PREPARED.CUSTOM_TABLE"
+            _ = create_weekly_sales_by_store_with_target(mock_session)

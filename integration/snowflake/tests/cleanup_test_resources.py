@@ -87,8 +87,7 @@ def main() -> None:
     """Run cleanup as standalone script."""
     sys.path.insert(0, str(Path(__file__).parent.parent))
 
-    from settings import SnowflakeSettings
-    from snowflake_session import create_session
+    from data import SnowflakeSettings, create_session
 
     logging.basicConfig(
         level=logging.INFO,

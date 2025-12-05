@@ -6,21 +6,27 @@ This module creates:
 
 reference_date is the Monday (week start) derived from DATE_TRUNC('week', ordered_at).
 
+When settings are provided, the module auto-bootstraps required infrastructure
+(warehouse and database) if they don't exist.
+
 SQL queries are externalized in the sql/ directory for better maintainability.
 
 Usage example:
-    from settings import SnowflakeSettings
-    from snowflake_session import create_session
-    from data import create_weekly_sales_by_store_with_target
+    from data import (
+        SnowflakeSettings,
+        create_session,
+        create_weekly_sales_by_store_with_target,
+    )
 
-    with create_session(SnowflakeSettings.from_env()) as session:
+    settings = SnowflakeSettings.from_env()
+    with create_session(settings) as session:
+        # Auto-bootstraps warehouse + database when settings are provided
         population_table = create_weekly_sales_by_store_with_target(
             session,
+            settings=settings,
             source_schema="RAW",
             target_schema="PREPARED",
-            table_name="WEEKLY_SALES_BY_STORE_WITH_TARGET",
         )
-        # population_table = "PREPARED.WEEKLY_SALES_BY_STORE_WITH_TARGET"
         arrow_table = session.table(population_table).to_arrow()
 """
 
@@ -31,7 +37,9 @@ from typing import cast
 
 from snowflake.snowpark import Row, Session
 
-from sql_loader import load_sql
+from ._bootstrap import ensure_infrastructure
+from ._settings import SnowflakeSettings
+from ._sql_loader import load_sql
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -50,6 +58,7 @@ DEFAULT_POPULATION_TABLE_NAME = "WEEKLY_SALES_BY_STORE_WITH_TARGET"
 
 def create_weekly_sales_by_store_with_target(
     session: Session,
+    settings: SnowflakeSettings | None = None,
     source_schema: str = "RAW",
     target_schema: str = "PREPARED",
     table_name: str = DEFAULT_POPULATION_TABLE_NAME,
@@ -61,8 +70,13 @@ def create_weekly_sales_by_store_with_target(
     - Population view with target column (configurable name via table_name)
     - Target: Sum of order_total for the 7-day window starting at reference_date
 
+    When settings are provided, auto-bootstraps the warehouse and database
+    if they don't exist.
+
     Args:
         session: Active Snowflake Snowpark session.
+        settings: Optional settings for auto-bootstrapping warehouse and database.
+            When provided, ensures infrastructure exists before preparing data.
         source_schema: Schema containing raw_stores and raw_orders tables.
         target_schema: Schema where prepared tables/views will be created.
         table_name: Name of the population view to create.
@@ -72,7 +86,15 @@ def create_weekly_sales_by_store_with_target(
 
     Raises:
         DataPreparationError: If source tables are missing or preparation fails.
+        BootstrapError: If auto-bootstrap fails due to insufficient privileges.
     """
+    if settings is not None:
+        ensure_infrastructure(session, settings)
+        if settings.warehouse:
+            session.use_warehouse(settings.warehouse)
+        if settings.database:
+            session.use_database(settings.database)
+
     _validate_source_tables(session, source_schema)
     _ensure_target_schema(session, target_schema)
 
@@ -144,7 +166,7 @@ def _validate_source_tables(session: Session, source_schema: str) -> None:
 def _ensure_target_schema(session: Session, target_schema: str) -> None:
     """Create target schema if it doesn't exist."""
     logger.info(f"Creating {target_schema} schema if not exists...")
-    sql: str = load_sql("preparation/create_schema.sql", schema_name=target_schema)
+    sql: str = load_sql("common/create_schema.sql", schema_name=target_schema)
     _ = session.sql(query=sql).collect()
     logger.info(f"✓ {target_schema} schema ready")
 
@@ -197,39 +219,28 @@ def _create_weekly_stores_table(
         )
     ).collect()
 
-    num_snapshots: int = cast(
-        "int",
-        session.sql(
-            query=load_sql(
-                path="preparation/count_snapshots.sql",
-                target_schema=target_schema,
-            )
-        ).collect()[0][0],
-    )
-    num_stores: int = cast(
-        "int",
-        session.sql(
-            query=load_sql(
-                path="preparation/count_stores.sql",
-                target_schema=target_schema,
-            )
-        ).collect()[0][0],
-    )
-    logger.info(
-        f"   Created {num_snapshots:,} weekly snapshots across {num_stores} stores"
-    )
-
-    per_store: list[Row] = session.sql(
+    # Get summary in single query: totals + per-store breakdown
+    summary: list[Row] = session.sql(
         query=load_sql(
-            path="preparation/snapshots_per_store.sql",
+            path="preparation/weekly_stores_summary.sql",
             target_schema=target_schema,
         )
     ).collect()
 
+    # First row contains totals (same for all rows due to CROSS JOIN)
+    num_snapshots: int = cast("int", summary[0][0])
+    num_stores: int = cast("int", summary[0][1])
+    logger.info(
+        f"   Created {num_snapshots:,} weekly snapshots across {num_stores} stores"
+    )
+
+    # Extract per-store data (columns 2-5: store_name, num_snapshots, first, last)
+    per_store: list[Row] = summary
+
     logger.info(f"\n   {'Store':<30} {'Snapshots':<12} {'First':<20} {'Last':<20}")
     logger.info("   " + "-" * 80)
     for row in per_store:
-        logger.info(f"   {row[0]:<30} {row[1]:<12,} {row[2]!s:<20} {row[3]!s:<20}")
+        logger.info(f"   {row[2]:<30} {row[3]:<12,} {row[4]!s:<20} {row[5]!s:<20}")
 
     return per_store
 
@@ -271,13 +282,15 @@ def _display_sample_data(
     logger.debug("-" * 120)
 
     for store_info in per_store[:3]:
-        store_name: str = cast("str", store_info[0])
+        store_name: str = cast("str", store_info[2])
         logger.debug(f"\n{store_name}:")
         sample_query: str = load_sql(
-            path="preparation/sample_data_by_store.sql",
+            path="preparation/snapshots_by_store.sql",
             target_schema=target_schema,
             store_name=store_name,
             table_name=table_name,
+            order_direction="",
+            limit="5",
         )
         samples: list[Row] = session.sql(sample_query).collect()
 
@@ -403,13 +416,15 @@ def _display_recent_snapshots(
     logger.debug("-" * 120)
 
     for store_info in per_store[:3]:
-        store_name: str = cast("str", store_info[0])
+        store_name: str = cast("str", store_info[2])
         logger.debug(f"\n{store_name}:")
         recent_query: str = load_sql(
-            path="preparation/recent_snapshots_by_store.sql",
+            path="preparation/snapshots_by_store.sql",
             target_schema=target_schema,
             store_name=store_name,
             table_name=table_name,
+            order_direction="DESC",
+            limit="3",
         )
         recent: list[Row] = session.sql(recent_query).collect()
 
@@ -428,9 +443,11 @@ if __name__ == "__main__":
     logger.info("This module requires a Snowflake session to be passed.")
     logger.info("Example usage:")
     logger.info("""
-    from settings import SnowflakeSettings
-    from snowflake_session import create_session
-    from data import create_weekly_sales_by_store_with_target
+    from data import (
+        SnowflakeSettings,
+        create_session,
+        create_weekly_sales_by_store_with_target,
+    )
 
     settings = SnowflakeSettings.from_env()
 

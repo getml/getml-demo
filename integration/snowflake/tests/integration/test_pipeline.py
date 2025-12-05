@@ -90,7 +90,7 @@ class TestDataPreparation:
         snowflake_session: Session,
     ) -> None:
         """Verify preparation creates weekly_stores table with data."""
-        create_weekly_sales_by_store_with_target(snowflake_session)
+        _ = create_weekly_sales_by_store_with_target(snowflake_session)
 
         # Verify table was created with data
         result: list[Row] = snowflake_session.sql("""

@@ -1,4 +1,3 @@
--- Create Snowflake warehouse with specified configuration
 CREATE WAREHOUSE IF NOT EXISTS {warehouse_name}
 WITH
     WAREHOUSE_SIZE = '{warehouse_size}'
