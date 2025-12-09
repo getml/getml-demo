@@ -20,7 +20,7 @@ from __future__ import annotations
 import logging
 import sys
 
-from data import ingestion
+from integration.databricks.data import ingestion
 
 logging.basicConfig(
     level=logging.INFO,
