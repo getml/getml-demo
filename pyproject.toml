@@ -23,10 +23,7 @@ spark = [
 ]
 
 databricks = [
-    "databricks-connect~=17.2.4",
-    "pandas~=2.3.3",
-    "pandas-stubs~=2.3.3",
-    "pyarrow~=16.1.0",
+    "databricks-connect~=17.3.2",
     "requests~=2.32.5",
 ]
 
