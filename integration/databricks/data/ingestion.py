@@ -27,16 +27,15 @@ from __future__ import annotations
 from io import BytesIO
 import logging
 import os
+import re
 from collections.abc import Sequence
-
-
-from dataclasses import dataclass
-from typing import Final
+from typing import Annotated, ClassVar, Final
 
 import requests
 from databricks.connect import DatabricksSession
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.catalog import VolumeType
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field
 from pyspark.sql import SparkSession
 
 logger = logging.getLogger(__name__)
@@ -59,20 +58,63 @@ JAFFLE_SHOP_TABLES: Final[tuple[str, ...]] = (
     "raw_tweets",
 )
 
+_IDENTIFIER_PATTERN: Final[re.Pattern[str]] = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 
-@dataclass(frozen=True)
-class TableConfig:
+
+def _validate_sql_identifier(value: str) -> str:
+    """
+    Validate SQL identifier to prevent injection attacks.
+
+    Args:
+        value: Identifier to validate.
+
+    Returns:
+        The validated identifier.
+
+    Raises:
+        ValueError: If identifier contains invalid characters.
+    """
+    if not _IDENTIFIER_PATTERN.fullmatch(value):
+        msg = (
+            f"Invalid SQL identifier {value!r}. "
+            f"Must match pattern: {_IDENTIFIER_PATTERN.pattern!r}"
+        )
+        raise ValueError(msg)
+
+    return value
+
+
+# Type alias for validated SQL identifiers (parse-don't-validate)
+SqlIdentifier = Annotated[str, AfterValidator(_validate_sql_identifier)]
+
+
+class SchemaLocation(BaseModel):
+    """Location identifier for a Databricks schema."""
+
+    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
+
+    catalog: SqlIdentifier
+    schema_: SqlIdentifier = Field(alias="schema")
+
+    @property
+    def qualified_name(self) -> str:
+        """Return fully qualified schema name."""
+        return f"{self.catalog}.{self.schema_}"
+
+
+class TableConfig(BaseModel):
     """Configuration for a Delta table to be created."""
 
+    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)  # type: ignore[assignment]
+
     source_url: str
-    table_name: str
-    catalog: str
-    schema: str
+    table_name: SqlIdentifier
+    location: SchemaLocation
 
     @property
     def full_table_name(self) -> str:
         """Return fully qualified table name."""
-        return f"{self.catalog}.{self.schema}.{self.table_name}"
+        return f"{self.location.catalog}.{self.location.schema_}.{self.table_name}"
 
 
 def _stream_from_url_to_volume(
@@ -88,18 +130,18 @@ def _stream_from_url_to_volume(
 
 
 def _ensure_volume_exists(
-    workspace: WorkspaceClient, catalog: str, schema: str, volume_name: str
+    workspace: WorkspaceClient, schema_location: SchemaLocation, volume_name: str
 ) -> None:
     """Ensure the staging volume exists."""
-    full_name = f"{catalog}.{schema}.{volume_name}"
+    full_name = f"{schema_location.qualified_name}.{volume_name}"
     logger.info(f"Ensuring volume exists: {full_name}")
     try:
         _ = workspace.volumes.read(full_name)
     except Exception:
         logger.info(f"Volume {full_name} not found, creating...")
         _ = workspace.volumes.create(
-            catalog_name=catalog,
-            schema_name=schema,
+            catalog_name=schema_location.catalog,
+            schema_name=schema_location.schema_,
             name=volume_name,
             volume_type=VolumeType.MANAGED,
         )
@@ -164,25 +206,26 @@ def _write_to_delta(
     logger.info(f"Successfully wrote to {config.full_table_name}")
 
 
-def _ensure_schema_exists(spark: SparkSession, catalog: str, schema: str) -> None:
+def _ensure_schema_exists(spark: SparkSession, schema_location: SchemaLocation) -> None:
     """Ensure the target schema exists, create if necessary."""
-    logger.info(f"Ensuring schema exists: {catalog}.{schema}")
-    _ = spark.sql(f"CREATE SCHEMA IF NOT EXISTS {catalog}.{schema}")  # pyright: ignore[reportUnknownMemberType]
+    logger.info(f"Ensuring schema exists: {schema_location.qualified_name}")
+    _ = spark.sql(  # pyright: ignore[reportUnknownMemberType]
+        "CREATE SCHEMA IF NOT EXISTS IDENTIFIER(:full_schema_name)",
+        args={"full_schema_name": schema_location.qualified_name},
+    )
 
 
 def _build_table_configs(
     bucket: str,
     table_names: Sequence[str],
-    catalog: str,
-    schema: str,
+    location: SchemaLocation,
 ) -> list[TableConfig]:
     """Build TableConfig objects for all tables to be loaded."""
     return [
         TableConfig(
             source_url=f"{bucket.rstrip('/')}/{name}.parquet",
             table_name=name,
-            catalog=catalog,
-            schema=schema,
+            location=location,
         )
         for name in table_names
     ]
@@ -260,28 +303,26 @@ def load_from_gcs(
     """
     table_names = list(tables) if tables else list(JAFFLE_SHOP_TABLES)
 
+    location = SchemaLocation(catalog=destination_catalog, schema=destination_schema)
+    table_configs = _build_table_configs(bucket, table_names, location)
+
     logger.info(f"Loading {len(table_names)} tables from {bucket}")
-    logger.info(f"Destination: {destination_catalog}.{destination_schema}")
+    logger.info(f"Destination: {location.qualified_name}")
 
     if spark is None:
         spark = _create_spark_session(profile=profile)
 
-    _ensure_schema_exists(spark, destination_catalog, destination_schema)
+    _ensure_schema_exists(spark, location)
 
     if workspace is None:
         workspace = WorkspaceClient()
 
-    _ensure_volume_exists(
-        workspace, destination_catalog, destination_schema, STAGING_VOLUME
-    )
-
-    table_configs = _build_table_configs(
-        bucket, table_names, destination_catalog, destination_schema
-    )
+    _ensure_volume_exists(workspace, location, STAGING_VOLUME)
 
     loaded_tables: list[str] = []
     for config in table_configs:
-        volume_path = f"/Volumes/{destination_catalog}/{destination_schema}/{STAGING_VOLUME}/{config.table_name}.parquet"
+        volume_path = f"/Volumes/{location.catalog}/{location.schema_}/{STAGING_VOLUME}"
+        f"/{config.table_name}.parquet"
 
         if _process_single_table(workspace, spark, config, volume_path):
             loaded_tables.append(config.table_name)
@@ -308,8 +349,16 @@ def list_tables(
     Returns:
         List of table names.
     """
+    schema_location = SchemaLocation(
+        catalog=catalog,
+        schema=schema,
+    )
+
     if spark is None:
         spark = _create_spark_session(profile=profile)
 
-    rows = spark.sql(f"SHOW TABLES IN {catalog}.{schema}").collect()  # pyright: ignore[reportUnknownMemberType]
+    rows = spark.sql(  # pyright: ignore[reportUnknownMemberType]
+        "SHOW TABLES IN IDENTIFIER(:full_schema_name)",
+        args={"full_schema_name": schema_location.qualified_name},
+    ).collect()
     return [row.tableName for row in rows]  # pyright: ignore[reportAny]
