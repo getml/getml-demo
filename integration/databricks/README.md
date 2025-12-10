@@ -5,7 +5,6 @@ This directory contains modules for ingesting data from GCS into Databricks Delt
 
 ## Prerequisites
 
-- **Python 3.12** 
 - **Databricks Free Edition account** (or higher tier)
 - **Databricks CLI** installed
 
@@ -45,10 +44,10 @@ $ uv run --group databricks jupyter-lab
 # Get your workspace URL from your Databricks Free Edition account
 # It looks like: https://<workspace-id>.cloud.databricks.com
 
-databricks auth login --host https://<your-workspace>.cloud.databricks.com
+databricks auth login --host https://<your-workspace>.cloud.databricks.com --profile DEFAULT
 ```
 
-This will open a browser for OAuth authentication. After successful login, your credentials are cached locally.
+This will open a browser for OAuth authentication. After successful login, `DEFAULT` profile is stored in ~/.databrickscfg.
 
 ### 4. Verify Authentication
 
@@ -65,7 +64,7 @@ You should see your workspace listed.
 Use the modules directly in notebooks or scripts:
 
 ```python
-from integration.databricks.data import ingestion, preparation
+from integration.databricks.data import ingestion
 
 # Load raw data from GCS to Databricks
 loaded_tables = ingestion.load_from_gcs(
@@ -87,6 +86,23 @@ ingestion.load_from_gcs(
 )
 ```
 
+### Configure the Databricks profile (optional)
+
+The above steps created `DEFAULT` profile for Databricks authentication. The ingestion 
+module also defaults to `DEFAULT` profile. The authentication should work smoothly for 
+a single profile.
+
+If you have multiple profiles (e.g for different Databricks hosts), you can set  
+`DATABRICKS_CONFIG_PROFILE` environment variable in  `.mise.local.toml` (gitignored) to 
+pin a specific profile to be used for this project:
+
+```toml
+[env]
+DATABRICKS_CONFIG_PROFILE = "Code17"
+```
+
+In this example, `Code17` profile will be used instead of `DEFAULT` one.
+
 ## Troubleshooting
 
 ### Authentication Errors
@@ -97,17 +113,6 @@ databricks auth login --host https://<your-workspace>.cloud.databricks.com
 
 # Check your profile
 databricks auth env
-```
-
-### Python Version Issues
-
-Databricks serverless requires Python 3.12:
-
-```bash
-python --version  # Should show 3.12.x
-
-# If not, install Python 3.12 and recreate venv
-brew install python@3.12  # macOS
 ```
 
 ### Connection Timeout

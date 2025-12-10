@@ -130,6 +130,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Environments variables file
+.mise.local.toml
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -154,3 +157,4 @@ metastore_db/
 spark-warehouse/
 *_pipeline/
 .vscode/
+

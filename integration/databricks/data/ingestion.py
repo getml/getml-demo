@@ -138,7 +138,8 @@ def _create_spark_session(profile: str | None = None) -> SparkSession:
     except Exception as e:
         logger.error(f"Failed to create Databricks session: {e}")
         logger.error(
-            "Make sure you've authenticated with: databricks auth login --host <workspace-url>"
+            "Make sure you've authenticated with: databricks auth login --host "
+            + "<workspace-url>  --profile <profile-name>"
         )
         logger.error(
             "If using a named profile, set DATABRICKS_CONFIG_PROFILE=<profile-name>"
@@ -229,7 +230,7 @@ def load_from_gcs(
     destination_catalog: str = DEFAULT_CATALOG,
     tables: Sequence[str] | None = None,
     spark: SparkSession | None = None,
-    profile: str | None = None,
+    profile: str = DEFAULT_PROFILE,
     workspace: WorkspaceClient | None = None,
 ) -> list[str]:
     """
