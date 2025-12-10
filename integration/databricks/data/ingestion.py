@@ -197,9 +197,9 @@ def _write_to_delta(
     """Write a parquet file from Volume to Delta Lake as a managed table."""
     logger.info(f"Writing to Delta table: {config.full_table_name} from {source_path}")
 
-    sdf = spark.read.parquet(source_path)
+    spark_dataframe = spark.read.parquet(source_path)
 
-    sdf.write.format("delta").mode("overwrite").option(
+    spark_dataframe.write.format("delta").mode("overwrite").option(
         "overwriteSchema", "true"
     ).saveAsTable(config.full_table_name)
 
