@@ -321,8 +321,10 @@ def load_from_gcs(
 
     loaded_tables: list[str] = []
     for config in table_configs:
-        volume_path = f"/Volumes/{location.catalog}/{location.schema_}/{STAGING_VOLUME}"
-        f"/{config.table_name}.parquet"
+        volume_path = (
+            f"/Volumes/{location.catalog}/{location.schema_}/{STAGING_VOLUME}"
+            f"/{config.table_name}.parquet"
+        )
 
         if _process_single_table(workspace, spark, config, volume_path):
             loaded_tables.append(config.table_name)
