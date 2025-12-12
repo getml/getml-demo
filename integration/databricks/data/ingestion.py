@@ -22,11 +22,16 @@ Example:
     )
 """
 
-from __future__ import annotations
+# ruff: noqa: E402
+
+import os
+
+# suppress INFO/WARNING from absl/glog
+_ = os.environ.setdefault("GLOG_minloglevel", "3")
+_ = os.environ.setdefault("GRPC_VERBOSITY", "ERROR")
 
 from io import BytesIO
 import logging
-import os
 import re
 from collections.abc import Sequence
 from typing import Annotated, ClassVar, Final
