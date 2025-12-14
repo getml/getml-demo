@@ -10,4 +10,4 @@ SELECT
 FROM {source_schema}.raw_stores s
 LEFT JOIN {source_schema}.raw_orders o ON o.store_id = s.id
 GROUP BY s.id, s.name, s.opened_at
-ORDER BY TRY_TO_TIMESTAMP(s.opened_at)
+ORDER BY TRY_TO_TIMESTAMP(s.opened_at);

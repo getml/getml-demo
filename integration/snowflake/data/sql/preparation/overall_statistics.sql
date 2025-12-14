@@ -5,4 +5,4 @@ SELECT
     AVG(next_week_sales) as avg_weekly_sales,
     SUM(next_week_sales) as total_sales,
     SUM(next_week_orders) as total_orders
-FROM {target_schema}.{table_name}
+FROM {target_schema}.{table_name};

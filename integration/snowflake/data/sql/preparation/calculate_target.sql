@@ -36,4 +36,4 @@ SELECT
 FROM {target_schema}.weekly_stores ws
 LEFT JOIN weekly_order_totals wot
     ON wot.store_id = ws.store_id
-    AND wot.week_start = ws.reference_date
+    AND wot.week_start = ws.reference_date;
