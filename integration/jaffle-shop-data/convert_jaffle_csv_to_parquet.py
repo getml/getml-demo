@@ -17,11 +17,11 @@ JAFFLE_CSV_DATA_PATH = Path("jaffle-data")
 if not JAFFLE_CSV_DATA_PATH.exists():
     raise FileNotFoundError(
         f"Jaffle CSV data path {JAFFLE_CSV_DATA_PATH} does not exist."
-        " Please run `jafgen` to generate CSVs."
+        " Please run `pipx run jafgen 6` to generate CSVs. (6 years)"
     )
 
-JAFFLE_PARQUET_DATA_PATH = JAFFLE_CSV_DATA_PATH / "parquet"
-Path.mkdir(JAFFLE_PARQUET_DATA_PATH, exist_ok=True)
+JAFFLE_PARQUET_DATA_PATH: Path = JAFFLE_CSV_DATA_PATH / "parquet"
+JAFFLE_PARQUET_DATA_PATH.mkdir(parents=True, exist_ok=True)
 
 
 for name in NAMES:
@@ -29,11 +29,9 @@ for name in NAMES:
     parquet_filepath = JAFFLE_PARQUET_DATA_PATH / f"{name}.parquet"
     print(f"Loading {csv_filepath}...")
 
-    # 1. Read CSV into memory
     df: pd.DataFrame = pd.read_csv(csv_filepath)
 
-    # 2. Write DataFrame to Parquet
-    # 'index=False' prevents pandas from adding an extra index column
+    # 'index=False' prevents adding an extra index column
     df.to_parquet(parquet_filepath, index=False)
 
     print(f"Converted {name} to parquet format at {parquet_filepath}.")
