@@ -57,36 +57,8 @@ databricks auth profiles
 
 You should see your workspace listed.
 
-## Usage
 
-### Python API (Recommended)
-
-Use the modules directly in notebooks or scripts:
-
-```python
-from integration.databricks.data import ingestion
-
-# Load raw data from GCS to Databricks
-loaded_tables = ingestion.load_from_gcs(
-    bucket="https://static.getml.com/datasets/jaffle_shop/",
-    destination_schema="jaffle_shop"
-)
-print(f"Loaded {len(loaded_tables)} tables")
-```
-
-### Load Specific Tables
-
-```python
-from integration.databricks.data import ingestion
-
-# Load only the tables you need
-ingestion.load_from_gcs(
-    destination_schema="RAW",
-    tables=["raw_customers", "raw_orders", "raw_items", "raw_products"]
-)
-```
-
-### Configure the Databricks profile (optional)
+### 5. Configure the Databricks profile (optional)
 
 The above steps created `DEFAULT` profile for Databricks authentication. The ingestion 
 module also defaults to `DEFAULT` profile. The authentication should work smoothly for 
@@ -102,6 +74,97 @@ DATABRICKS_CONFIG_PROFILE = "Code17"
 ```
 
 In this example, `Code17` profile will be used instead of `DEFAULT` one.
+
+
+## Usage
+
+### Complete Workflow (Ingestion + Preparation)
+
+For a complete end-to-end workflow that loads raw data and prepares it for getML:
+
+```bash
+# From repository root
+uv run --group databricks python -m integration.databricks.prepare_jaffle_shop_data_for_databricks
+```
+
+Or in Python:
+
+```python
+from databricks.connect import DatabricksSession
+from integration.databricks.data import ingestion, preparation
+
+# Create Spark session
+spark = DatabricksSession.builder.serverless().getOrCreate()
+
+# Step 1: Load raw data from GCS
+loaded_tables = ingestion.load_from_gcs(
+    spark=spark,
+    bucket="https://static.getml.com/datasets/jaffle_shop/",
+    destination_catalog="workspace",
+    destination_schema="raw",
+)
+
+# Step 2: Prepare weekly sales forecasting data
+population_table = preparation.create_weekly_sales_by_store_with_target(
+    spark,
+    source_catalog="workspace",
+    source_schema="raw",
+    target_catalog="workspace",
+    target_schema="prepared",
+)
+
+print(f"Population table ready: {population_table}")
+```
+
+### Python API: Ingestion Only
+
+Load raw data from GCS to Databricks:
+
+```python
+from integration.databricks.data import ingestion
+
+# Load all jaffle_shop tables
+loaded_tables = ingestion.load_from_gcs(
+    bucket="https://static.getml.com/datasets/jaffle_shop/",
+    destination_schema="raw"
+)
+print(f"Loaded {len(loaded_tables)} tables")
+
+# Or load specific tables
+ingestion.load_from_gcs(
+    destination_schema="raw",
+    tables=["raw_customers", "raw_orders", "raw_items", "raw_products"]
+)
+```
+
+### Python API: Preparation Only
+
+Create weekly sales forecasting population table from existing raw data:
+
+```python
+from databricks.connect import DatabricksSession
+from integration.databricks.data import preparation
+
+spark = DatabricksSession.builder.serverless().getOrCreate()
+
+# Create population table with target variable
+population_table = preparation.create_weekly_sales_by_store_with_target(
+    spark,
+    source_catalog="workspace",
+    source_schema="raw",
+    target_catalog="workspace",
+    target_schema="prepared",
+    table_name="weekly_sales_by_store_with_target",
+)
+
+# Use the prepared data
+df = spark.table(population_table)
+df.show()
+```
+
+This creates:
+- `weekly_stores` table: Store-week combinations with reference dates (Monday week starts)
+- Population view with `next_week_sales` target variable for forecasting
 
 ## Troubleshooting
 

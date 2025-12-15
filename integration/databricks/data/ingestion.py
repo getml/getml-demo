@@ -26,13 +26,11 @@ from __future__ import annotations
 
 import logging
 import os
-import re
-from collections.abc import Sequence
 from io import BytesIO
-from typing import Annotated, ClassVar, Final
+from collections.abc import Sequence
+from typing import Final
 
 import requests
-from pydantic import AfterValidator, BaseModel, ConfigDict, Field
 
 # ruff: noqa: E402
 
@@ -54,6 +52,12 @@ from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.catalog import VolumeType
 from pyspark.sql import SparkSession
 
+from integration.databricks.data.models import (
+    IngestionTableConfig,
+    SchemaLocation,
+    TableLocation,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -73,63 +77,6 @@ JAFFLE_SHOP_TABLES: Final[tuple[str, ...]] = (
     "raw_supplies",
     "raw_tweets",
 )
-
-_IDENTIFIER_PATTERN: Final[re.Pattern[str]] = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
-
-
-def _validate_sql_identifier(value: str) -> str:
-    """
-    Validate SQL identifier to prevent injection attacks.
-
-    Args:
-        value: Identifier to validate.
-
-    Returns:
-        The validated identifier.
-
-    Raises:
-        ValueError: If identifier contains invalid characters.
-    """
-    if not _IDENTIFIER_PATTERN.fullmatch(value):
-        msg = (
-            f"Invalid SQL identifier {value!r}. "
-            f"Must match pattern: {_IDENTIFIER_PATTERN.pattern!r}"
-        )
-        raise ValueError(msg)
-
-    return value
-
-
-SqlIdentifier = Annotated[str, AfterValidator(_validate_sql_identifier)]
-
-
-class SchemaLocation(BaseModel):
-    """Location identifier for a Databricks schema."""
-
-    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
-
-    catalog: SqlIdentifier
-    schema_: SqlIdentifier = Field(alias="schema")
-
-    @property
-    def qualified_name(self) -> str:
-        """Return fully qualified schema name."""
-        return f"{self.catalog}.{self.schema_}"
-
-
-class TableConfig(BaseModel):
-    """Configuration for a Delta table to be created."""
-
-    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
-
-    source_url: str
-    table_name: SqlIdentifier
-    location: SchemaLocation
-
-    @property
-    def full_table_name(self) -> str:
-        """Return fully qualified table name."""
-        return f"{self.location.catalog}.{self.location.schema_}.{self.table_name}"
 
 
 def _stream_from_url_to_volume(
@@ -209,7 +156,7 @@ def _create_spark_session(profile: str | None = None) -> SparkSession:
 def _write_to_delta(
     spark: SparkSession,
     source_path: str,
-    config: TableConfig,
+    config: IngestionTableConfig,
 ) -> None:
     """Write a parquet file from Volume to Delta Lake as a managed table."""
     logger.info(f"Writing to Delta table: {config.full_table_name} from {source_path}")
@@ -236,13 +183,12 @@ def _build_table_configs(
     bucket: str,
     table_names: Sequence[str],
     location: SchemaLocation,
-) -> list[TableConfig]:
-    """Build TableConfig objects for all tables to be loaded."""
+) -> list[IngestionTableConfig]:
+    """Build IngestionTableConfig objects for all tables to be loaded."""
     return [
-        TableConfig(
+        IngestionTableConfig(
             source_url=f"{bucket.rstrip('/')}/{name}.parquet",
-            table_name=name,
-            location=location,
+            destination=TableLocation(table_name=name, location=location),
         )
         for name in table_names
     ]
@@ -260,7 +206,7 @@ def _cleanup_volume_file(workspace: WorkspaceClient, volume_path: str) -> None:
 def _process_single_table(
     workspace: WorkspaceClient,
     spark: SparkSession,
-    config: TableConfig,
+    config: IngestionTableConfig,
     volume_path: str,
 ) -> bool:
     """Process a single table: download, write to Delta, and cleanup.
@@ -278,7 +224,7 @@ def _process_single_table(
         return False
 
     except Exception as e:
-        logger.error(f"Failed to process {config.table_name}: {e}")
+        logger.error(f"Failed to process {config.destination.table_name}: {e}")
         return False
 
     finally:
@@ -287,8 +233,8 @@ def _process_single_table(
 
 def load_from_gcs(
     bucket: str = DEFAULT_BUCKET,
-    destination_schema: str = DEFAULT_SCHEMA,
     destination_catalog: str = DEFAULT_CATALOG,
+    destination_schema: str = DEFAULT_SCHEMA,
     tables: Sequence[str] | None = None,
     spark: SparkSession | None = None,
     profile: str = DEFAULT_PROFILE,
@@ -302,8 +248,8 @@ def load_from_gcs(
 
     Args:
         bucket: GCS bucket URL (default: jaffle_shop dataset).
-        destination_schema: Target schema name in Databricks.
         destination_catalog: Target catalog name in Databricks.
+        destination_schema: Target schema name in Databricks.
         tables: List of table names to load. If None, loads all jaffle_shop tables.
         spark: Optional existing SparkSession. If None, creates a new one.
         profile: Databricks CLI profile name (optional).
@@ -343,11 +289,11 @@ def load_from_gcs(
         for config in table_configs:
             volume_path = (
                 f"/Volumes/{location.catalog}/{location.schema_}/{STAGING_VOLUME}"
-                f"/{config.table_name}.parquet"
+                f"/{config.destination.table_name}.parquet"
             )
 
             if _process_single_table(workspace, spark, config, volume_path):
-                loaded_tables.append(config.table_name)
+                loaded_tables.append(config.destination.table_name)
 
         logger.info(
             f"Successfully loaded {len(loaded_tables)}/{len(table_names)} tables"
@@ -360,8 +306,8 @@ def load_from_gcs(
 
 
 def list_tables(
-    schema: str = DEFAULT_SCHEMA,
     catalog: str = DEFAULT_CATALOG,
+    schema: str = DEFAULT_SCHEMA,
     spark: SparkSession | None = None,
     profile: str | None = None,
 ) -> list[str]:
