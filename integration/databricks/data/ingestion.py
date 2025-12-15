@@ -122,7 +122,7 @@ class SchemaLocation(BaseModel):
 class TableConfig(BaseModel):
     """Configuration for a Delta table to be created."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)  # type: ignore[assignment]
+    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
 
     source_url: str
     table_name: SqlIdentifier
