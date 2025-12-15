@@ -1,0 +1,16 @@
+[project]
+name = "snowflake-feature-store-notebooks"
+version = "0.1.0"
+description = "Jupyter notebooks for Snowflake Feature Store with getML"
+requires-python = ">=3.12"
+
+dependencies = [
+    "getml>=1.5.1",
+    "ipykernel>=7.1",
+    "python-dotenv>=1.2.1",
+    "snowflake-ml-python>=1.20.0",
+    "snowflake-snowpark-python>=1.42",
+]
+
+[tool.uv]
+package = false
