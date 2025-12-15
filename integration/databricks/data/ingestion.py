@@ -174,11 +174,11 @@ def _create_spark_session(profile: str | None = None) -> SparkSession:
             "DATABRICKS_CONFIG_PROFILE", DEFAULT_PROFILE
         )
 
-        if profile_name:
-            logger.info(f"Using Databricks profile: {profile_name}")
-            os.environ["DATABRICKS_CONFIG_PROFILE"] = profile_name
+        logger.info(f"Using Databricks profile: {profile_name}")
 
-        spark = DatabricksSession.builder.serverless().getOrCreate()
+        spark = (
+            DatabricksSession.builder.profile(profile_name).serverless().getOrCreate()
+        )
 
         logger.info("Successfully connected to Databricks serverless compute")
         return spark
@@ -294,6 +294,7 @@ def load_from_gcs(
         tables: List of table names to load. If None, loads all jaffle_shop tables.
         spark: Optional existing SparkSession. If None, creates a new one.
         profile: Databricks CLI profile name (optional).
+        workspace: Optional existing WorkspaceClient. If None, creates a new one.
 
     Returns:
         List of successfully loaded table names.
@@ -320,7 +321,7 @@ def load_from_gcs(
     _ensure_schema_exists(spark, location)
 
     if workspace is None:
-        workspace = WorkspaceClient()
+        workspace = WorkspaceClient(profile=profile)
 
     _ensure_volume_exists(workspace, location, STAGING_VOLUME)
 
