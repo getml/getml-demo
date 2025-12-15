@@ -1,15 +1,15 @@
-"""Ingest Jaffle Shop data into Snowflake for getML Feature Store integration.
+#!/usr/bin/env python3
+"""Prepare Jaffle Shop data in Snowflake for getML Feature Store integration.
 
-Loads raw Jaffle Shop dataset (Parquet files) from a public GCS bucket into the
-RAW schema in Snowflake. Infrastructure (warehouse, database) is auto-created
-if missing.
+Loads raw data from GCS and creates the weekly sales forecasting population table.
+Infrastructure (warehouse, database) is auto-created if missing.
 
 Prerequisites:
     - Snowflake account with appropriate privileges
     - SNOWFLAKE_* environment variables set for authentication and configuration
 
 Usage:
-    uv run python ingest_jaffle_shop_data.py
+    uv run python prepare_jaffle_shop_data_for_snowflake.py
 """
 
 import logging
@@ -19,13 +19,14 @@ from data import (
     SnowflakeSettings,
     create_session,
     ingestion,
+    preparation,
 )
 
 logger: logging.Logger = logging.getLogger(__name__)
 
 
 def main() -> None:
-    """Ingest Jaffle Shop raw data into Snowflake.
+    """Load and prepare Jaffle Shop data for getML.
 
     Note:
         Set basicConfig.level to logging.DEBUG for more verbose output.
@@ -44,6 +45,14 @@ def main() -> None:
             settings=settings,
             bucket="gcs://static.getml.com/datasets/jaffle_shop",
             destination_schema="RAW",
+        )
+
+        _ = preparation.create_weekly_sales_by_store_with_target(
+            session,
+            settings=settings,
+            source_schema="RAW",
+            target_schema="PREPARED",
+            table_name="WEEKLY_SALES_BY_STORE_WITH_TARGET",
         )
 
 
