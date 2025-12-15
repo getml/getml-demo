@@ -9,4 +9,4 @@ SELECT
     SUM(next_week_orders) as total_orders
 FROM {target_schema}.{table_name}
 GROUP BY store_name
-ORDER BY avg_weekly_sales DESC
+ORDER BY avg_weekly_sales DESC;

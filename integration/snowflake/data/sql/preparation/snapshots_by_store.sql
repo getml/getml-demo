@@ -8,4 +8,4 @@ SELECT
 FROM {target_schema}.{table_name}
 WHERE store_name = '{store_name}'
 ORDER BY reference_date {order_direction}
-LIMIT {limit}
+LIMIT {limit};

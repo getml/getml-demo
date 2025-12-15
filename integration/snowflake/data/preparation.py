@@ -100,7 +100,7 @@ def create_weekly_sales_by_store_with_target(
 
     logger.info("""
 ================================================================================
-PREPARING WEEKLY SALES FORECASTING DATA BY STORE FOR GETML
+PREPARING WEEKLY SALES FORECASTING DATA BY STORE FOR getML
 ================================================================================
 """)
 
@@ -123,10 +123,9 @@ DATA PREPARATION COMPLETE!
 
 Objects created in {target_schema} schema:
   - weekly_stores (TABLE)
-  - {table_name} (VIEW - USE THIS FOR GETML)
+  - {table_name} (VIEW - USE THIS FOR getML)
 
 Population table: {qualified_table_name}
-For getML integration instructions, see: docs/GETML_WEEKLY_SALES_DATA_PREPARATION.md
 """)
 
     return qualified_table_name

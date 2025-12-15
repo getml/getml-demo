@@ -1,0 +1,13 @@
+[project]
+name = "jaffle-shop-parquet-generator"
+version = "0.1.0"
+description = "Convert Jaffle Shop CSV data to Parquet format"
+requires-python = ">=3.12"
+
+dependencies = [
+    "pandas>=2.0.0",
+    "pyarrow>=14.0.0",
+]
+
+[tool.uv]
+package = false

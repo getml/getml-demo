@@ -24,7 +24,6 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-readme = "README.md"
 requires-python = ">=3.12"
 
 dependencies = [
@@ -116,7 +115,7 @@ ignore = [
     "TC002",
     # Allow standard library imports outside type-checking blocks
     "TC003",
-    # Allow TODO comments  
+    # Allow TODO comments
     "FIX002",
     # Allow TODO comments without author
     "TD002",

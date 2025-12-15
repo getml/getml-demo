@@ -24,4 +24,4 @@ SELECT
     p.last_snapshot
 FROM totals t
 CROSS JOIN per_store p
-ORDER BY p.first_snapshot
+ORDER BY p.first_snapshot;
