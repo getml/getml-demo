@@ -52,6 +52,7 @@ DEFAULT_CATALOG: Final[str] = "workspace"
 DEFAULT_SCHEMA: Final[str] = "jaffle_shop"
 DEFAULT_PROFILE: Final[str] = "DEFAULT"
 STAGING_VOLUME: Final[str] = "ingestion_staging"
+DEFAULT_DOWNLOAD_TIMEOUT_SECONDS: Final[int] = 300
 
 JAFFLE_SHOP_TABLES: Final[tuple[str, ...]] = (
     "raw_customers",
@@ -127,7 +128,9 @@ def _stream_from_url_to_volume(
 ) -> None:
     """Stream file from URL directly to Databricks Volume."""
     logger.info(f"Streaming from {url} to volume: {volume_path}")
-    with requests.get(url, stream=True, timeout=120) as response:
+    with requests.get(
+        url, stream=True, timeout=DEFAULT_DOWNLOAD_TIMEOUT_SECONDS
+    ) as response:
         response.raise_for_status()
         _ = workspace.files.upload(
             volume_path, BytesIO(response.raw.read()), overwrite=True
