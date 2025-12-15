@@ -330,28 +330,35 @@ def load_from_gcs(
     logger.info(f"Loading {len(table_names)} tables from {bucket}")
     logger.info(f"Destination: {location.qualified_name}")
 
-    if spark is None:
+    if session_created := spark is None:
         spark = _create_spark_session(profile=profile)
 
-    _ensure_schema_exists(spark, location)
+    try:
+        _ensure_schema_exists(spark, location)
 
-    if workspace is None:
-        workspace = WorkspaceClient(profile=profile)
+        if workspace is None:
+            workspace = WorkspaceClient(profile=profile)
 
-    _ensure_volume_exists(workspace, location, STAGING_VOLUME)
+        _ensure_volume_exists(workspace, location, STAGING_VOLUME)
 
-    loaded_tables: list[str] = []
-    for config in table_configs:
-        volume_path = (
-            f"/Volumes/{location.catalog}/{location.schema_}/{STAGING_VOLUME}"
-            f"/{config.table_name}.parquet"
+        loaded_tables: list[str] = []
+        for config in table_configs:
+            volume_path = (
+                f"/Volumes/{location.catalog}/{location.schema_}/{STAGING_VOLUME}"
+                f"/{config.table_name}.parquet"
+            )
+
+            if _process_single_table(workspace, spark, config, volume_path):
+                loaded_tables.append(config.table_name)
+
+        logger.info(
+            f"Successfully loaded {len(loaded_tables)}/{len(table_names)} tables"
         )
-
-        if _process_single_table(workspace, spark, config, volume_path):
-            loaded_tables.append(config.table_name)
-
-    logger.info(f"Successfully loaded {len(loaded_tables)}/{len(table_names)} tables")
-    return loaded_tables
+        return loaded_tables
+    finally:
+        if session_created:
+            spark.stop()
+            logger.debug("Closed Spark session created by load_from_gcs")
 
 
 def list_tables(
@@ -377,11 +384,16 @@ def list_tables(
         schema=schema,
     )
 
-    if spark is None:
+    if session_created := spark is None:
         spark = _create_spark_session(profile=profile)
 
-    rows = spark.sql(  # pyright: ignore[reportUnknownMemberType]
-        "SHOW TABLES IN IDENTIFIER(:full_schema_name)",
-        args={"full_schema_name": schema_location.qualified_name},
-    ).collect()
-    return [row.tableName for row in rows]  # pyright: ignore[reportAny]
+    try:
+        rows = spark.sql(  # pyright: ignore[reportUnknownMemberType]
+            "SHOW TABLES IN IDENTIFIER(:full_schema_name)",
+            args={"full_schema_name": schema_location.qualified_name},
+        ).collect()
+        return [row.tableName for row in rows]  # pyright: ignore[reportAny]
+    finally:
+        if session_created:
+            spark.stop()
+            logger.debug("Closed Spark session created by list_tables")
