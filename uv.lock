@@ -486,9 +486,9 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 databricks = [
-    { name = "databricks-connect", specifier = "~=17.3.2" },
-    { name = "pydantic", specifier = "~=2.12.5" },
-    { name = "requests", specifier = "~=2.32.5" },
+    { name = "databricks-connect", specifier = "==17.3.2" },
+    { name = "pydantic", specifier = "==2.12.5" },
+    { name = "requests", specifier = "==2.32.5" },
 ]
 spark = [{ name = "pyspark", specifier = "==4.0.1" }]
 
