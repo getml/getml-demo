@@ -22,25 +22,36 @@ Example:
     )
 """
 
-# ruff: noqa: E402
+from __future__ import annotations
 
-import os
-
-# suppress INFO/WARNING from absl/glog
-_ = os.environ.setdefault("GLOG_minloglevel", "3")
-_ = os.environ.setdefault("GRPC_VERBOSITY", "ERROR")
-
-from io import BytesIO
 import logging
+import os
 import re
 from collections.abc import Sequence
+from io import BytesIO
 from typing import Annotated, ClassVar, Final
 
 import requests
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field
+
+# ruff: noqa: E402
+
+
+def _suppress_vendor_logging() -> None:
+    """Suppress verbose logging from databricks vendor libraries.
+
+    Must be called before importing databricks.connect or databricks.sdk.
+    """
+    _ = os.environ.setdefault("GLOG_minloglevel", "3")
+    _ = os.environ.setdefault("GRPC_VERBOSITY", "ERROR")
+
+
+_suppress_vendor_logging()
+
+
 from databricks.connect import DatabricksSession
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.catalog import VolumeType
-from pydantic import AfterValidator, BaseModel, ConfigDict, Field
 from pyspark.sql import SparkSession
 
 logger = logging.getLogger(__name__)
