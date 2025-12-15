@@ -243,6 +243,7 @@ def _cleanup_volume_file(workspace: WorkspaceClient, volume_path: str) -> None:
     """Clean up temporary file from volume, suppressing errors."""
     try:
         workspace.files.delete(volume_path)
+        logger.debug(f"Successfully cleaned up volume file: {volume_path}")
     except Exception as e:
         logger.warning(f"Failed to clean up volume file {volume_path}: {e}")
 
