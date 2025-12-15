@@ -57,7 +57,6 @@ from pyspark.sql import SparkSession
 logger = logging.getLogger(__name__)
 
 
-# Default configuration
 DEFAULT_BUCKET: Final[str] = "https://static.getml.com/datasets/jaffle_shop"
 DEFAULT_CATALOG: Final[str] = "workspace"
 DEFAULT_SCHEMA: Final[str] = "jaffle_shop"
@@ -101,7 +100,6 @@ def _validate_sql_identifier(value: str) -> str:
     return value
 
 
-# Type alias for validated SQL identifiers (parse-don't-validate)
 SqlIdentifier = Annotated[str, AfterValidator(_validate_sql_identifier)]
 
 

@@ -158,3 +158,6 @@ spark-warehouse/
 *_pipeline/
 .vscode/
 
+# LLM files
+AGENTS.md
+.github/copilot-instructions.md
