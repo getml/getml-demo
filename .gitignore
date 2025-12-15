@@ -1,7 +1,7 @@
 **/.DS_Store
 
 # Temp
-preparation/
+/preparation/
 
 # Binder
 .bash_logout
@@ -152,3 +152,9 @@ dmypy.json
 *_spark/
 *_pipeline/
 .vscode/
+
+# LLMs
+copilot-instructions.md
+CLAUDE.md
+.claude
+.mcp.json
