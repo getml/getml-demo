@@ -5,6 +5,8 @@ description = "Jupyter notebooks for Snowflake Feature Store with getML"
 requires-python = ">=3.12"
 
 dependencies = [
+    "getml-interpretations",
+    "getml-io",
     "getml>=1.5.1",
     "ipykernel>=7.1",
     "python-dotenv>=1.2.1",
@@ -14,3 +16,9 @@ dependencies = [
 
 [tool.uv]
 package = false
+
+[tool.uv.sources]
+getml-interpretations = { path = "/home/alex/projects/getml-interpretations" }
+getml-io = { path = "/home/alex/projects/getml-io" }
+
+# https://github.com/snowflakedb/snowflake-ml-python/issues/179
