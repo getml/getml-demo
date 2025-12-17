@@ -31,6 +31,7 @@ This repository contains different [Jupyter Notebooks](https://jupyter.org) to d
   - [Experimenting Locally](#experimenting-locally)
     - [Using Docker](#using-docker)
     - [On the Machine (Linux/x64 \& arm64)](#on-the-machine-linuxx64--arm64)
+      - [Optional: Spark and Databricks Support](#optional-spark-and-databricks-support)
 - [Notebooks](#notebooks)
   - [Overview](#overview)
   - [Descriptions](#descriptions)
@@ -93,12 +94,28 @@ The following commands will set up a Python environment with necessary Python li
 ```
 $ git clone https://github.com/getml/getml-demo.git  
 $ cd getml-demo  
-$ pipx install hatch
-$ hatch env create
-$ hatch shell
-$ pip install -r requirements.txt
-$ jupyter-lab
+$ pipx install uv
+$ uv run jupyter-lab
 ```
+
+#### Optional: Spark and Databricks Support
+
+Some notebooks (e.g., `imdb.ipynb`, `online_retail.ipynb`) demonstrate exporting features to Spark SQL. For these, you need to install additional dependencies:
+
+> [!IMPORTANT]  
+> The `spark` and `databricks` dependency groups are **mutually exclusive** and cannot be installed together. The `--isolated` flag runs the command in a temporary environment without affecting your main installation.
+
+**For local Spark execution** (running Spark locally on your machine):
+```
+$ uv run --group spark --isolated jupyter-lab
+```
+
+**For Databricks integration** (connecting to Databricks compute):
+```
+$ uv run --group databricks jupyter-lab
+```
+
+See [integration/databricks/README.md](integration/databricks/README.md) for Databricks setup instructions.
 
 > [!TIP]  
 > Install the [Enterprise trial version](https://getml.com/latest/enterprise/request-trial) via the  [Install getML on Linux guide](https://getml.com/latest/install/packages/linux#install-getml-on-linux) to try the Enterprise features.
