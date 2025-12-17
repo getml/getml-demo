@@ -466,6 +466,7 @@ databricks = [
     { name = "databricks-connect" },
     { name = "pydantic" },
     { name = "requests" },
+    { name = "sqlglot" },
 ]
 spark = [
     { name = "pyspark" },
@@ -489,6 +490,7 @@ databricks = [
     { name = "databricks-connect", specifier = "==17.3.2" },
     { name = "pydantic", specifier = "==2.12.5" },
     { name = "requests", specifier = "==2.32.5" },
+    { name = "sqlglot", specifier = "==28.4.1" },
 ]
 spark = [{ name = "pyspark", specifier = "==4.0.1" }]
 
@@ -1802,6 +1804,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/6d/e6/21ccce3262dd4889aa3332e5a119a3491a95e8f60939870a3a035aabac0d/soupsieve-2.8.tar.gz", hash = "sha256:e2dd4a40a628cb5f28f6d4b0db8800b8f581b65bb380b97de22ba5ca8d72572f", size = 103472, upload-time = "2025-08-27T15:39:51.78Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/14/a0/bb38d3b76b8cae341dad93a2dd83ab7462e6dbcdd84d43f54ee60a8dc167/soupsieve-2.8-py3-none-any.whl", hash = "sha256:0cc76456a30e20f5d7f2e14a98a4ae2ee4e5abdc7c5ea0aafe795f344bc7984c", size = 36679, upload-time = "2025-08-27T15:39:50.179Z" },
+]
+
+[[package]]
+name = "sqlglot"
+version = "28.4.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/04/84/4ad36c983e054ff6582f7c042ae6c560064201d366cb8ccd71914a89cc38/sqlglot-28.4.1.tar.gz", hash = "sha256:16de5a1708e79aab4e252d55dd1b0762511ff28d4ef65ecc8f2383b963401633", size = 5651480, upload-time = "2025-12-16T22:19:52.601Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2d/bb/dfa9d01fff2c1e955efdda1800e65fefbf517bd2be8621e2c0a6f6c80569/sqlglot-28.4.1-py3-none-any.whl", hash = "sha256:e62083b3835054b72e20b554bf46fbb5190734ed9573372f52654023f082bc34", size = 560091, upload-time = "2025-12-16T22:19:50.725Z" },
 ]
 
 [[package]]
