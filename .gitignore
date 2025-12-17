@@ -130,6 +130,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Environments variables file
+.mise.local.toml
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -150,5 +153,11 @@ dmypy.json
 
 # generated
 *_spark/
+metastore_db/
+spark-warehouse/
 *_pipeline/
 .vscode/
+
+# LLM files
+AGENTS.md
+.github/copilot-instructions.md
