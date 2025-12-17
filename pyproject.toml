@@ -30,6 +30,7 @@ databricks = [
 
 dev = [
     "basedpyright>=1.36.1",
+    "jupytext>=1.18.1",
     "ruff>=0.14.9",
 ]
 
