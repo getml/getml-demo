@@ -35,8 +35,6 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Final
 
-from pyspark.sql import Row
-
 from integration.databricks.data.models import (
     SchemaLocation,
     TableLocation,
@@ -47,10 +45,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 _SQL_DIR = Path(__file__).parent / "sql"
-
-
-class DataPreparationError(Exception):
-    """Raised when data preparation fails."""
 
 
 # =============================================================================
@@ -86,9 +80,6 @@ def create_weekly_sales_by_store_with_target(
 
     Returns:
         Fully qualified table name (e.g., "workspace.prepared.weekly_sales_by_store_with_target").
-
-    Raises:
-        DataPreparationError: If source tables are missing or preparation fails.
 
     Example:
         >>> from integration.databricks.data import preparation
@@ -163,32 +154,15 @@ def _validate_source_tables(
         f"Validating '{schema_location.qualified_name}' schema and required tables..."
     )
 
-    try:
-        for table_name in required_tables:
-            table_location = TableLocation(
-                table_name=table_name,
-                location=schema_location,
-            )
-            result: list[Row] = spark.sql(
-                "SELECT COUNT(*) as count FROM IDENTIFIER(:table_qualified_name) LIMIT 1",
-                args={"table_qualified_name": table_location.qualified_name},
-            ).collect()
-            if not result:
-                msg = (
-                    f"Table {table_location.qualified_name} does not exist or is not "
-                    "accessible. Please run ingestion first."
-                )
-                raise DataPreparationError(msg)
-
-    except Exception as e:
-        if isinstance(e, DataPreparationError):
-            raise
-
-        msg = (
-            f"Failed to validate {schema_location.qualified_name} schema. "
-            f"Ensure data has been loaded. Error: {e}"
+    for table_name in required_tables:
+        table_location = TableLocation(
+            table_name=table_name,
+            location=schema_location,
         )
-        raise DataPreparationError(msg) from e
+        _ = spark.sql(
+            "SELECT 1 FROM IDENTIFIER(:table_qualified_name) LIMIT 1",
+            args={"table_qualified_name": table_location.qualified_name},
+        ).collect()
 
     logger.info(
         f"✓ '{schema_location.qualified_name}' schema validated. It contains "
