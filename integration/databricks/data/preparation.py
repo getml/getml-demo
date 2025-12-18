@@ -199,8 +199,10 @@ def _validate_source_tables(
 def _ensure_target_schema(spark: SparkSession, target_schema: str) -> None:
     """Create target schema if it doesn't exist."""
     logger.info(f"Creating '{target_schema}' schema if not exists...")
-    sql: str = (_SQL_DIR / "common/create_schema.sql").read_text()
+
+    sql: str = "CREATE SCHEMA IF NOT EXISTS IDENTIFIER(:full_schema_name)"
     _ = spark.sql(sql, args={"full_schema_name": target_schema}).collect()
+
     logger.info(f"✓ '{target_schema}' schema ready")
 
 
@@ -222,7 +224,7 @@ def _create_weekly_stores_table(
     logger.info("   reference_date is Monday (week start) from date_trunc('week', ...)")
 
     _ = spark.sql(
-        (_SQL_DIR / "preparation/drop_weekly_stores.sql").read_text(),
+        "DROP TABLE IF EXISTS IDENTIFIER(:table_qualified_name)",
         args={"table_qualified_name": f"{target_schema}.weekly_stores"},
     ).collect()
     _ = spark.sql(
