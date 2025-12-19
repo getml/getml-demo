@@ -139,7 +139,7 @@ def _create_weekly_stores_table(
         args={"table_qualified_name": f"{target_schema}.weekly_stores"},
     ).collect()
     _ = spark.sql(
-        (_SQL_DIR / "preparation/create_weekly_stores.sql").read_text(),
+        (_SQL_DIR / "create_stores_per_week.sql").read_text(),
         args={
             "weekly_stores_table": f"{target_schema}.weekly_stores",
             "stores_table": f"{source_schema}.raw_stores",
@@ -160,7 +160,7 @@ def _create_target_view(
     # Use python string formatting instead of Spark SQL parameters because
     # CREATE VIEW does not support parameter markers for identifiers.
     sql = (
-        (_SQL_DIR / "preparation/calculate_target.sql")
+        (_SQL_DIR / "create_weekly_total_sales_per_store.sql")
         .read_text()
         .format(
             orders_table=f"{source_schema}.raw_orders",
