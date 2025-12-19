@@ -1,28 +1,8 @@
-"""Prepare weekly sales forecasting data for getML - BY STORE.
+"""Prepare weekly sales forecasting data for getML - by store.
 
 This module creates:
 - weekly_stores table: Store-week combinations with reference_date (Monday week start)
 - Population view with target (next week's sales)
-
-reference_date is the Monday (week start) derived from date_trunc('week', ordered_at).
-
-SQL queries are externalized in the sql/ directory for better maintainability.
-
-Example:
-    from integration.databricks.data import preparation
-    from pyspark.sql import SparkSession
-
-    spark = SparkSession.builder.getOrCreate()
-
-    # Creates weekly sales forecasting data
-    population_table = preparation.create_weekly_sales_by_store_with_target(
-        spark,
-        source_schema="workspace.raw",
-        target_schema="workspace.prepared",
-    )
-
-    # Use the population table
-    df = spark.table(population_table)
 """
 
 
@@ -80,20 +60,6 @@ def create_weekly_sales_by_store_with_target(
 
     Returns:
         Fully qualified table name (e.g., "workspace.prepared.weekly_sales_by_store_with_target").
-
-    Example:
-        >>> from integration.databricks.data import preparation
-        >>> from databricks.connect import DatabricksSession
-        >>>
-        >>> spark = DatabricksSession.builder.serverless().getOrCreate()
-        >>> population_table = preparation.create_weekly_sales_by_store_with_target(
-        ...     spark,
-        ...     source_catalog="workspace",
-        ...     source_schema="raw",
-        ...     target_catalog="workspace",
-        ...     target_schema="prepared",
-        ... )
-        >>> df = spark.table(population_table)
     """
     source_location = SchemaLocation(catalog=source_catalog, schema=source_schema)
     target_location = SchemaLocation(catalog=target_catalog, schema=target_schema)
@@ -103,12 +69,6 @@ def create_weekly_sales_by_store_with_target(
 
     _validate_source_tables(spark, source_location)
     _ensure_target_schema(spark, target_location.qualified_name)
-
-    logger.info("""
-================================================================================
-PREPARING WEEKLY SALES FORECASTING DATA BY STORE FOR GETML
-================================================================================
-""")
 
     _create_weekly_stores_table(
         spark, source_location.qualified_name, target_location.qualified_name
@@ -120,28 +80,13 @@ PREPARING WEEKLY SALES FORECASTING DATA BY STORE FOR GETML
         population_table_location.table_name,
     )
 
-    qualified_table_name = (
-        f"{target_location.qualified_name}.{population_table_location.table_name}"
-    )
-
     logger.info(f"""
-================================================================================
-DATA PREPARATION COMPLETE!
-================================================================================
-
-Objects created in '{target_location.qualified_name}' schema:
+Data preparation complete. Objects created in '{target_location.qualified_name}' schema:
 - weekly_stores (Table)
 - {population_table_location.table_name} (View - Use this for getML)
-
-Population table: {qualified_table_name}
 """)
 
-    return qualified_table_name
-
-
-# =============================================================================
-# Validation and Schema Setup
-# =============================================================================
+    return population_table_location.table_name
 
 
 def _validate_source_tables(
@@ -149,7 +94,7 @@ def _validate_source_tables(
     schema_location: SchemaLocation,
     required_tables: list[str] = REQUIRED_SOURCE_TABLES,
 ) -> None:
-    """Validate that source schema exists and contains required tables."""
+    """Validate that source schema contains required tables."""
     logger.info(
         f"Validating '{schema_location.qualified_name}' schema and required tables..."
     )
@@ -171,7 +116,7 @@ def _validate_source_tables(
 
 
 def _ensure_target_schema(spark: SparkSession, target_schema: str) -> None:
-    """Create target schema if it doesn't exist."""
+    """Create target schema if needed."""
     logger.info(f"Creating '{target_schema}' schema if not exists...")
 
     sql: str = "CREATE SCHEMA IF NOT EXISTS IDENTIFIER(:full_schema_name)"
@@ -180,20 +125,12 @@ def _ensure_target_schema(spark: SparkSession, target_schema: str) -> None:
     logger.info(f"✓ '{target_schema}' schema ready")
 
 
-# =============================================================================
-# Data Preparation Pipeline
-# =============================================================================
-
-
 def _create_weekly_stores_table(
     spark: SparkSession,
     source_schema: str,
     target_schema: str,
 ) -> None:
-    """Create weekly_stores table with store-week combinations.
-
-    Creates one row per store per week using reference_date (Monday week start).
-    """
+    """Create weekly_stores table with store-week combinations."""
     logger.info("\n2. Creating weekly_stores table (store-week combinations)...")
     logger.info("   reference_date is Monday (week start) from date_trunc('week', ...)")
 
@@ -217,7 +154,7 @@ def _create_target_view(
     target_schema: str,
     table_name: str,
 ) -> None:
-    """Create view with target - total sales for the following week per store."""
+    """Create view with target variable (next week's sales)."""
     logger.info("\n3. Creating target view: next week's total sales per store...")
 
     # Use python string formatting instead of Spark SQL parameters because
@@ -233,6 +170,3 @@ def _create_target_view(
     )
 
     _ = spark.sql(sql).collect()
-
-
-# =============================================================================
