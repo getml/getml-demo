@@ -6,39 +6,26 @@ All models use Pydantic for validation and are frozen (immutable) by default.
 
 from __future__ import annotations
 
-import re
-from typing import Annotated, ClassVar, Final
+from typing import Annotated, ClassVar
 
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field
+from sqlglot import exp
 
-_IDENTIFIER_PATTERN: Final[re.Pattern[str]] = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 
-
-def _validate_sql_identifier(value: str) -> str:
-    """
-    Validate SQL identifier to prevent injection attacks.
+def _quote_identifier(raw_identifier: str, dialect: str = "databricks") -> str:
+    """Quote SQL identifier using sqlglot.
 
     Args:
-        value: Identifier to validate.
+        raw_identifier: Identifier to quote.
+        dialect: SQL dialect (default: databricks).
 
     Returns:
-        The validated identifier.
-
-    Raises:
-        ValueError: If identifier contains invalid characters.
+        Properly quoted identifier for the target dialect.
     """
-    if not _IDENTIFIER_PATTERN.fullmatch(value):
-        msg = (
-            f"Invalid SQL identifier {value!r}. "
-            f"Must match pattern: {_IDENTIFIER_PATTERN.pattern!r}"
-        )
-        raise ValueError(msg)
-
-    return value
+    return exp.to_identifier(raw_identifier).sql(dialect=dialect)  # pyright: ignore[reportUnknownMemberType]
 
 
-# Type alias for validated SQL identifiers (parse-don't-validate)
-SqlIdentifier = Annotated[str, AfterValidator(_validate_sql_identifier)]
+SqlIdentifier = Annotated[str, AfterValidator(_quote_identifier)]
 
 
 class SchemaLocation(BaseModel):

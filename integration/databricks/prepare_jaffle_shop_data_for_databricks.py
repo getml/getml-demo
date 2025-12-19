@@ -50,23 +50,7 @@ def main() -> None:
     )
 
     logger.info(f"""
-================================================================================
-✓ DATA PREPARATION COMPLETE
-================================================================================
-
-Population table ready for getML: {population_table}
-
-Next steps:
-1. Use this table in your getML notebook:
-   
-   df = spark.table("{population_table}")
-   
-2. The table contains weekly sales forecasting data with:
-   - Store-week combinations as snapshots
-   - Target variable: next_week_sales
-   - Filtering flags for data quality
-
-For more information, see the getML documentation.
+Data preparation complete. Use '{population_table}' table in your getML notebook: df = spark.table("{population_table}")
 """)
 
 
