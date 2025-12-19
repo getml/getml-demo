@@ -27,10 +27,6 @@ logger = logging.getLogger(__name__)
 _SQL_DIR = Path(__file__).parent / "sql"
 
 
-# =============================================================================
-# Public API
-# =============================================================================
-
 REQUIRED_SOURCE_TABLES: Final[list[str]] = ["raw_stores", "raw_orders"]
 DEFAULT_POPULATION_TABLE_NAME: Final[str] = "weekly_sales_by_store_with_target"
 
