@@ -81,9 +81,9 @@ def create_weekly_sales_by_store_with_target(
     )
 
     logger.info(f"""
-Data preparation complete. Objects created in '{target_location.qualified_name}' schema:
+Objects created in '{target_location.qualified_name}' schema:
 - weekly_stores (Table)
-- {population_table_location.table_name} (View - Use this for getML)
+- {population_table_location.table_name} (View)
 """)
 
     return population_table_location.table_name
@@ -96,7 +96,7 @@ def _validate_source_tables(
 ) -> None:
     """Validate that source schema contains required tables."""
     logger.info(
-        f"Validating '{schema_location.qualified_name}' schema and required tables..."
+        f"1. Validating '{schema_location.qualified_name}' schema and required tables..."
     )
 
     for table_name in required_tables:
