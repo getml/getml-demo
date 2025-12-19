@@ -1,0 +1,168 @@
+"""Prepare weekly sales forecasting data for getML - by store.
+
+This module creates:
+- weekly_stores table: Store-week combinations with reference_date (Monday week start)
+- Population view with target (next week's sales)
+"""
+
+
+# pyright: reportAny=none
+# pyright: reportUnknownMemberType=none
+
+from __future__ import annotations
+
+import logging
+from pathlib import Path
+from typing import TYPE_CHECKING, Final
+
+from integration.databricks.data.models import (
+    SchemaLocation,
+    TableLocation,
+)
+
+if TYPE_CHECKING:
+    from pyspark.sql import SparkSession
+
+logger = logging.getLogger(__name__)
+_SQL_DIR = Path(__file__).parent / "sql"
+
+
+REQUIRED_SOURCE_TABLES: Final[list[str]] = ["raw_stores", "raw_orders"]
+DEFAULT_POPULATION_TABLE_NAME: Final[str] = "weekly_sales_by_store_with_target"
+
+
+def create_weekly_sales_by_store_with_target(
+    spark: SparkSession,
+    source_catalog: str = "workspace",
+    source_schema: str = "raw",
+    target_catalog: str = "workspace",
+    target_schema: str = "prepared",
+    table_name: str = DEFAULT_POPULATION_TABLE_NAME,
+) -> str:
+    """Create weekly sales forecasting data for getML, grouped by store.
+
+    Creates:
+    - weekly_stores: Table with store-week combinations (reference_date = Monday)
+    - Population view with target column (configurable name via table_name)
+    - Target: Sum of order_total for the 7-day window starting at reference_date
+
+    Args:
+        spark: Active Spark session.
+        source_catalog: Source catalog name.
+        source_schema: Source schema name.
+        target_catalog: Target catalog name.
+        target_schema: Target schema name.
+        table_name: Name of the population view to create.
+
+    Returns:
+        Fully qualified table name (e.g., "workspace.prepared.weekly_sales_by_store_with_target").
+    """
+    source_location = SchemaLocation(catalog=source_catalog, schema=source_schema)
+    target_location = SchemaLocation(catalog=target_catalog, schema=target_schema)
+    population_table_location = TableLocation(
+        table_name=table_name, location=target_location
+    )
+
+    _validate_source_tables(spark, source_location)
+    _ensure_target_schema(spark, target_location.qualified_name)
+
+    _create_weekly_stores_table(
+        spark, source_location.qualified_name, target_location.qualified_name
+    )
+    _create_target_view(
+        spark,
+        source_location.qualified_name,
+        target_location.qualified_name,
+        population_table_location.table_name,
+    )
+
+    logger.info(f"""
+Objects created in '{target_location.qualified_name}' schema:
+- weekly_stores (Table)
+- {population_table_location.table_name} (View)
+""")
+
+    return population_table_location.table_name
+
+
+def _validate_source_tables(
+    spark: SparkSession,
+    schema_location: SchemaLocation,
+    required_tables: list[str] = REQUIRED_SOURCE_TABLES,
+) -> None:
+    """Validate that source schema contains required tables."""
+    logger.info(
+        f"1. Validating '{schema_location.qualified_name}' schema and required tables..."
+    )
+
+    for table_name in required_tables:
+        table_location = TableLocation(
+            table_name=table_name,
+            location=schema_location,
+        )
+        _ = spark.sql(
+            "SELECT 1 FROM IDENTIFIER(:table_qualified_name) LIMIT 1",
+            args={"table_qualified_name": table_location.qualified_name},
+        ).collect()
+
+    logger.info(
+        f"✓ '{schema_location.qualified_name}' schema validated. It contains "
+        + f"required tables: {required_tables}."
+    )
+
+
+def _ensure_target_schema(spark: SparkSession, target_schema: str) -> None:
+    """Create target schema if needed."""
+    logger.info(f"Creating '{target_schema}' schema if not exists...")
+
+    sql: str = "CREATE SCHEMA IF NOT EXISTS IDENTIFIER(:full_schema_name)"
+    _ = spark.sql(sql, args={"full_schema_name": target_schema}).collect()
+
+    logger.info(f"✓ '{target_schema}' schema ready")
+
+
+def _create_weekly_stores_table(
+    spark: SparkSession,
+    source_schema: str,
+    target_schema: str,
+) -> None:
+    """Create weekly_stores table with store-week combinations."""
+    logger.info("\n2. Creating weekly_stores table (store-week combinations)...")
+    logger.info("   reference_date is Monday (week start) from date_trunc('week', ...)")
+
+    _ = spark.sql(
+        "DROP TABLE IF EXISTS IDENTIFIER(:table_qualified_name)",
+        args={"table_qualified_name": f"{target_schema}.weekly_stores"},
+    ).collect()
+    _ = spark.sql(
+        (_SQL_DIR / "create_stores_per_week.sql").read_text(),
+        args={
+            "weekly_stores_table": f"{target_schema}.weekly_stores",
+            "stores_table": f"{source_schema}.raw_stores",
+            "orders_table": f"{source_schema}.raw_orders",
+        },
+    ).collect()
+
+
+def _create_target_view(
+    spark: SparkSession,
+    source_schema: str,
+    target_schema: str,
+    table_name: str,
+) -> None:
+    """Create view with target variable (next week's sales)."""
+    logger.info("\n3. Creating target view: next week's total sales per store...")
+
+    # Use python string formatting instead of Spark SQL parameters because
+    # CREATE VIEW does not support parameter markers for identifiers.
+    sql = (
+        (_SQL_DIR / "create_weekly_total_sales_per_store.sql")
+        .read_text()
+        .format(
+            orders_table=f"{source_schema}.raw_orders",
+            weekly_stores_table=f"{target_schema}.weekly_stores",
+            population_table=f"{target_schema}.{table_name}",
+        )
+    )
+
+    _ = spark.sql(sql).collect()
