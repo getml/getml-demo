@@ -28,3 +28,12 @@ databricks = [
     "pydantic==2.12.5",
     "sqlglot==28.4.1",
 ]
+
+dev = [
+    "basedpyright>=1.36.1",
+    "jupytext>=1.18.1",
+    "ruff>=0.14.9",
+]
+
+[tool.basedpyright]
+typeCheckingMode = "standard"
