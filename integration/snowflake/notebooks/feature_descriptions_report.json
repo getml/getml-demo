@@ -1,0 +1,734 @@
+{
+  "features": {
+    "feature_1_1": {
+      "name": "feature_1_1",
+      "index": 0,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.001589096137303619,
+      "correlation": -0.007932532921688166,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_1\";\n\nCREATE TABLE \"FEATURE_1_1\" AS\nSELECT AVG( t2.\"subtotal\" ) AS \"feature_1_1\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_2": {
+      "name": "feature_1_2",
+      "index": 1,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00001032021061288272,
+      "correlation": 0.24344268179240802,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_2\";\n\nCREATE TABLE \"FEATURE_1_2\" AS\nSELECT COUNT( DISTINCT t2.\"subtotal\" ) AS \"feature_1_2\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_3": {
+      "name": "feature_1_3",
+      "index": 2,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00017085284007613594,
+      "correlation": 0.965367931424899,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_3\";\n\nCREATE TABLE \"FEATURE_1_3\" AS\nSELECT COUNT( t2.\"subtotal\"  ) - COUNT( DISTINCT t2.\"subtotal\" ) AS \"feature_1_3\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_4": {
+      "name": "feature_1_4",
+      "index": 3,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00006428581261572002,
+      "correlation": -0.02254262515022676,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_4\";\n\nCREATE TABLE \"FEATURE_1_4\" AS\nSELECT FIRST( t2.\"subtotal\", t2.\"ordered_at\" ) AS \"feature_1_4\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_5": {
+      "name": "feature_1_5",
+      "index": 4,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.000024845430781758704,
+      "correlation": -0.1968250921743191,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_5\";\n\nCREATE TABLE \"FEATURE_1_5\" AS\nSELECT LAST( t2.\"subtotal\", t2.\"ordered_at\" ) AS \"feature_1_5\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_6": {
+      "name": "feature_1_6",
+      "index": 5,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.000013990888440783976,
+      "correlation": -0.08743340977233642,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_6\";\n\nCREATE TABLE \"FEATURE_1_6\" AS\nSELECT MAX( t2.\"subtotal\" ) AS \"feature_1_6\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_7": {
+      "name": "feature_1_7",
+      "index": 6,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.0,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_7\";\n\nCREATE TABLE \"FEATURE_1_7\" AS\nSELECT MEDIAN( t2.\"subtotal\" ) AS \"feature_1_7\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_8": {
+      "name": "feature_1_8",
+      "index": 7,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.0,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_8\";\n\nCREATE TABLE \"FEATURE_1_8\" AS\nSELECT MIN( t2.\"subtotal\" ) AS \"feature_1_8\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_9": {
+      "name": "feature_1_9",
+      "index": 8,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.0,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_9\";\n\nCREATE TABLE \"FEATURE_1_9\" AS\nSELECT MODE( t2.\"subtotal\" ) AS \"feature_1_9\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_10": {
+      "name": "feature_1_10",
+      "index": 9,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00006613036805015637,
+      "correlation": -0.5321045343017202,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_10\";\n\nCREATE TABLE \"FEATURE_1_10\" AS\nSELECT STDDEV( t2.\"subtotal\" ) AS \"feature_1_10\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_11": {
+      "name": "feature_1_11",
+      "index": 10,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.010998898444670953,
+      "correlation": 0.9738315473173991,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_11\";\n\nCREATE TABLE \"FEATURE_1_11\" AS\nSELECT SUM( t2.\"subtotal\" ) AS \"feature_1_11\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_12": {
+      "name": "feature_1_12",
+      "index": 11,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0004942723969131093,
+      "correlation": -0.004865455558458447,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_12\";\n\nCREATE TABLE \"FEATURE_1_12\" AS\nSELECT TREND( t2.\"subtotal\", t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_12\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_13": {
+      "name": "feature_1_13",
+      "index": 12,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0014705205864972756,
+      "correlation": -0.1077089221329537,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_13\";\n\nCREATE TABLE \"FEATURE_1_13\" AS\nSELECT AVG( t2.\"order_total\" ) AS \"feature_1_13\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_14": {
+      "name": "feature_1_14",
+      "index": 13,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.24344268179240802,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_14\";\n\nCREATE TABLE \"FEATURE_1_14\" AS\nSELECT COUNT( DISTINCT t2.\"order_total\" ) AS \"feature_1_14\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_15": {
+      "name": "feature_1_15",
+      "index": 14,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.965367931424899,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_15\";\n\nCREATE TABLE \"FEATURE_1_15\" AS\nSELECT COUNT( t2.\"order_total\"  ) - COUNT( DISTINCT t2.\"order_total\" ) AS \"feature_1_15\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_16": {
+      "name": "feature_1_16",
+      "index": 15,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 2.1128581838953085e-6,
+      "correlation": -0.02523656859199447,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_16\";\n\nCREATE TABLE \"FEATURE_1_16\" AS\nSELECT FIRST( t2.\"order_total\", t2.\"ordered_at\" ) AS \"feature_1_16\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_17": {
+      "name": "feature_1_17",
+      "index": 16,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 2.597092108023668e-6,
+      "correlation": -0.19912396252283796,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_17\";\n\nCREATE TABLE \"FEATURE_1_17\" AS\nSELECT LAST( t2.\"order_total\", t2.\"ordered_at\" ) AS \"feature_1_17\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_18": {
+      "name": "feature_1_18",
+      "index": 17,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00002002898987475071,
+      "correlation": -0.246696925388448,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_18\";\n\nCREATE TABLE \"FEATURE_1_18\" AS\nSELECT MAX( t2.\"order_total\" ) AS \"feature_1_18\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_19": {
+      "name": "feature_1_19",
+      "index": 18,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": -0.249315405443099,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_19\";\n\nCREATE TABLE \"FEATURE_1_19\" AS\nSELECT MEDIAN( t2.\"order_total\" ) AS \"feature_1_19\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_20": {
+      "name": "feature_1_20",
+      "index": 19,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.0,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_20\";\n\nCREATE TABLE \"FEATURE_1_20\" AS\nSELECT MIN( t2.\"order_total\" ) AS \"feature_1_20\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_21": {
+      "name": "feature_1_21",
+      "index": 20,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": -0.249315405443099,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_21\";\n\nCREATE TABLE \"FEATURE_1_21\" AS\nSELECT MODE( t2.\"order_total\" ) AS \"feature_1_21\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_22": {
+      "name": "feature_1_22",
+      "index": 21,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.000060444685114087396,
+      "correlation": -0.5784073006761212,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_22\";\n\nCREATE TABLE \"FEATURE_1_22\" AS\nSELECT STDDEV( t2.\"order_total\" ) AS \"feature_1_22\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_23": {
+      "name": "feature_1_23",
+      "index": 22,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.01065385189390608,
+      "correlation": 0.9753017397987589,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_23\";\n\nCREATE TABLE \"FEATURE_1_23\" AS\nSELECT SUM( t2.\"order_total\" ) AS \"feature_1_23\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_24": {
+      "name": "feature_1_24",
+      "index": 23,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.000022847330877339636,
+      "correlation": -0.09280999571485186,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_24\";\n\nCREATE TABLE \"FEATURE_1_24\" AS\nSELECT TREND( t2.\"order_total\", t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_24\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_25": {
+      "name": "feature_1_25",
+      "index": 24,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00026760640778159206,
+      "correlation": -0.2239901488197435,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_25\";\n\nCREATE TABLE \"FEATURE_1_25\" AS\nSELECT AVG( t2.\"tax_paid\" ) AS \"feature_1_25\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_26": {
+      "name": "feature_1_26",
+      "index": 25,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.24344268179240802,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_26\";\n\nCREATE TABLE \"FEATURE_1_26\" AS\nSELECT COUNT( DISTINCT t2.\"tax_paid\" ) AS \"feature_1_26\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_27": {
+      "name": "feature_1_27",
+      "index": 26,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.965367931424899,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_27\";\n\nCREATE TABLE \"FEATURE_1_27\" AS\nSELECT COUNT( t2.\"tax_paid\"  ) - COUNT( DISTINCT t2.\"tax_paid\" ) AS \"feature_1_27\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_28": {
+      "name": "feature_1_28",
+      "index": 27,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.000022192905659497673,
+      "correlation": -0.06695490926186952,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_28\";\n\nCREATE TABLE \"FEATURE_1_28\" AS\nSELECT FIRST( t2.\"tax_paid\", t2.\"ordered_at\" ) AS \"feature_1_28\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_29": {
+      "name": "feature_1_29",
+      "index": 28,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.000050771435055271985,
+      "correlation": -0.2244546959349504,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_29\";\n\nCREATE TABLE \"FEATURE_1_29\" AS\nSELECT LAST( t2.\"tax_paid\", t2.\"ordered_at\" ) AS \"feature_1_29\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_30": {
+      "name": "feature_1_30",
+      "index": 29,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 5.637072797279408e-6,
+      "correlation": -0.24507195262113005,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_30\";\n\nCREATE TABLE \"FEATURE_1_30\" AS\nSELECT MAX( t2.\"tax_paid\" ) AS \"feature_1_30\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_31": {
+      "name": "feature_1_31",
+      "index": 30,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": -0.24931540544302738,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_31\";\n\nCREATE TABLE \"FEATURE_1_31\" AS\nSELECT MEDIAN( t2.\"tax_paid\" ) AS \"feature_1_31\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_32": {
+      "name": "feature_1_32",
+      "index": 31,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.0,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_32\";\n\nCREATE TABLE \"FEATURE_1_32\" AS\nSELECT MIN( t2.\"tax_paid\" ) AS \"feature_1_32\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_33": {
+      "name": "feature_1_33",
+      "index": 32,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": -0.24931540544302738,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_33\";\n\nCREATE TABLE \"FEATURE_1_33\" AS\nSELECT MODE( t2.\"tax_paid\" ) AS \"feature_1_33\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_34": {
+      "name": "feature_1_34",
+      "index": 33,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00016661128023007273,
+      "correlation": -0.3226018643942556,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_34\";\n\nCREATE TABLE \"FEATURE_1_34\" AS\nSELECT STDDEV( t2.\"tax_paid\" ) AS \"feature_1_34\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_35": {
+      "name": "feature_1_35",
+      "index": 34,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0074074764861468256,
+      "correlation": 0.5354993211888577,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_35\";\n\nCREATE TABLE \"FEATURE_1_35\" AS\nSELECT SUM( t2.\"tax_paid\" ) AS \"feature_1_35\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_36": {
+      "name": "feature_1_36",
+      "index": 35,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0000974559801931398,
+      "correlation": -0.22338752623418517,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_36\";\n\nCREATE TABLE \"FEATURE_1_36\" AS\nSELECT TREND( t2.\"tax_paid\", t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_36\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_37": {
+      "name": "feature_1_37",
+      "index": 36,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00023072051141152724,
+      "correlation": -0.25977484191410677,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_37\";\n\nCREATE TABLE \"FEATURE_1_37\" AS\nSELECT AVG( t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_37\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_38": {
+      "name": "feature_1_38",
+      "index": 37,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00004396677084312702,
+      "correlation": 0.9737799873973866,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_38\";\n\nCREATE TABLE \"FEATURE_1_38\" AS\nSELECT COUNT( DISTINCT t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_38\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_39": {
+      "name": "feature_1_39",
+      "index": 38,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00015711448486850844,
+      "correlation": 0.9268947164615706,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_39\";\n\nCREATE TABLE \"FEATURE_1_39\" AS\nSELECT COUNT( t1.\"reference_date\" - t2.\"ordered_at\"  ) - COUNT( DISTINCT t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_39\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_40": {
+      "name": "feature_1_40",
+      "index": 39,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.000019980728148008938,
+      "correlation": 0.13869142239944637,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_40\";\n\nCREATE TABLE \"FEATURE_1_40\" AS\nSELECT FIRST( t1.\"reference_date\" - t2.\"ordered_at\", t2.\"ordered_at\" ) AS \"feature_1_40\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_41": {
+      "name": "feature_1_41",
+      "index": 40,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00005597629436341022,
+      "correlation": -0.25687623092915174,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_41\";\n\nCREATE TABLE \"FEATURE_1_41\" AS\nSELECT LAST( t1.\"reference_date\" - t2.\"ordered_at\", t2.\"ordered_at\" ) AS \"feature_1_41\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_42": {
+      "name": "feature_1_42",
+      "index": 41,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.13869142239944637,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_42\";\n\nCREATE TABLE \"FEATURE_1_42\" AS\nSELECT MAX( t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_42\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_43": {
+      "name": "feature_1_43",
+      "index": 42,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0002243759446551559,
+      "correlation": -0.15958861415514666,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_43\";\n\nCREATE TABLE \"FEATURE_1_43\" AS\nSELECT MEDIAN( t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_43\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_44": {
+      "name": "feature_1_44",
+      "index": 43,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": -0.25687623092915174,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_44\";\n\nCREATE TABLE \"FEATURE_1_44\" AS\nSELECT MIN( t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_44\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_45": {
+      "name": "feature_1_45",
+      "index": 44,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00008363389505434104,
+      "correlation": 0.04572928955863,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_45\";\n\nCREATE TABLE \"FEATURE_1_45\" AS\nSELECT MODE( t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_45\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_46": {
+      "name": "feature_1_46",
+      "index": 45,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00005460331874088565,
+      "correlation": 0.0126174350637636,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_46\";\n\nCREATE TABLE \"FEATURE_1_46\" AS\nSELECT STDDEV( t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_46\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_47": {
+      "name": "feature_1_47",
+      "index": 46,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00005183729840120141,
+      "correlation": 0.9562271988412102,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_47\";\n\nCREATE TABLE \"FEATURE_1_47\" AS\nSELECT SUM( t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_47\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_48": {
+      "name": "feature_1_48",
+      "index": 47,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.0,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_48\";\n\nCREATE TABLE \"FEATURE_1_48\" AS\nSELECT TREND( t1.\"reference_date\" - t2.\"ordered_at\", t1.\"reference_date\" - t2.\"ordered_at\" ) AS \"feature_1_48\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_49": {
+      "name": "feature_1_49",
+      "index": 48,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.00006406577164882317,
+      "correlation": -0.9502064301241396,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_49\";\n\nCREATE TABLE \"FEATURE_1_49\" AS\nSELECT CASE WHEN COUNT( * ) > 1 THEN ( MAX( t2.\"ordered_at\" ) - MIN ( t2.\"ordered_at\" ) ) / ( COUNT( * ) - 1 )  ELSE 0 END AS \"feature_1_49\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "feature_1_50": {
+      "name": "feature_1_50",
+      "index": 49,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0,
+      "correlation": 0.9653493895621866,
+      "sql": "DROP TABLE IF EXISTS \"FEATURE_1_50\";\n\nCREATE TABLE \"FEATURE_1_50\" AS\nSELECT COUNT( * ) AS \"feature_1_50\",\n       t1.rowid AS rownum\nFROM \"WEEKLY_SALES_BY_STORE__STAGING_TABLE_1\" t1\nINNER JOIN \"ORDERS__STAGING_TABLE_2\" t2\nON t1.\"store_id\" = t2.\"store_id\"\nWHERE t2.\"ordered_at\" <= t1.\"reference_date\"\nAND ( t2.\"ordered_at__30_000000_days\" > t1.\"reference_date\" OR t2.\"ordered_at__30_000000_days\" IS NULL )\nGROUP BY t1.rowid;"
+    },
+    "days_since_open": {
+      "name": "days_since_open",
+      "index": 50,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.0005951427383902371,
+      "correlation": 0.34977990198007386,
+      "sql": ""
+    },
+    "next_week_orders": {
+      "name": "next_week_orders",
+      "index": 51,
+      "target": "NEXT_WEEK_SALES",
+      "importance": 0.9647357347095845,
+      "correlation": 0.9885752362918938,
+      "sql": ""
+    }
+  },
+  "feature_descriptions": {
+    "feature_1_1": {
+      "name": "feature_1_1",
+      "title": "avg_subtotal_30d",
+      "description": "Average pre-tax order amount aggregated across all transactions for the store within the 30-day lookback ending at the weekly reference timestamp. Computed by joining store-week records to the transactional table, filtering orders with ORDERED_AT <= REFERENCE_DATE and within the configured 30‑day window, then taking AVG(SUBTOTAL) [USD]. Acts as a short-term average order-value signal and proxy for recent revenue per order; in this model it shows very low direct correlation with the target, so treat it as a secondary demand-level indicator rather than the primary driver.",
+      "description_confidence": "high"
+    },
+    "feature_1_2": {
+      "name": "feature_1_2",
+      "title": "distinct_subtotal_count_30d",
+      "description": "Count of distinct pre-tax order amounts observed in the 30-day lookback for the store-week. Implemented as COUNT(DISTINCT SUBTOTAL) after time alignment to the reference date [count]. Intended to capture variety/diversity of order price points (e.g., mix of bundles or menu items); because SUBTOTAL has few unique values in the data, this metric often behaves as a volume/variety proxy. Use with caution: interpretation depends on whether subtotal discretization is business-driven.",
+      "description_confidence": "medium"
+    },
+    "feature_1_3": {
+      "name": "feature_1_3",
+      "title": "repeat_subtotal_count_30d",
+      "description": "Number of repeated pre-tax order amounts within the 30-day window, computed as total COUNT(SUBTOTAL) minus COUNT(DISTINCT SUBTOTAL) [count]. Measures how often identical subtotal values recur (i.e., how concentrated orders are around specific price points) and therefore serves as a proxy for order volume and product-price repetition. Highly correlated with next-week sales in this dataset, indicating it largely captures throughput rather than unique-price behavior.",
+      "description_confidence": "high"
+    },
+    "feature_1_4": {
+      "name": "feature_1_4",
+      "title": "first_subtotal_30d",
+      "description": "Earliest pre-tax order amount observed in the 30-day lookback relative to the weekly reference timestamp [USD]. Calculated with FIRST(SUBTOTAL, ORDERED_AT) after joining on store and applying the time filter. Provides a simple recency anchor for historical order sizes (what the first recent order looked like); useful for detecting shifts when compared to more recent values, but here it has limited standalone predictive power.",
+      "description_confidence": "high"
+    },
+    "feature_1_5": {
+      "name": "feature_1_5",
+      "title": "last_subtotal_30d",
+      "description": "Most recent pre-tax order amount within the 30-day lookback (based on ORDERED_AT) [USD]. Implemented via LAST(SUBTOTAL, ORDERED_AT) on time-aligned transactions. Serves as a short-term signal of the latest basket size; differences between this and the earlier average or first value can indicate recent shifts in order composition. In this model it has modest predictive contribution.",
+      "description_confidence": "high"
+    },
+    "feature_1_6": {
+      "name": "feature_1_6",
+      "title": "max_subtotal_30d",
+      "description": "Maximum pre-tax order amount observed in the prior 30 days for the store-week [USD]. Obtained with MAX(SUBTOTAL) after time alignment. Captures outlier large orders or high-ticket transactions in the recent window; useful to detect occasional large sales (e.g., catering) that can inflate weekly revenue but should be interpreted alongside counts/sums to avoid over-weighting rare events.",
+      "description_confidence": "high"
+    },
+    "feature_1_7": {
+      "name": "feature_1_7",
+      "title": "median_subtotal_30d",
+      "description": "Median pre-tax order amount across orders in the 30-day lookback [USD]. Computed with MEDIAN(SUBTOTAL) after joining transactions to the store-week record. Provides a robust central tendency of order sizes that is less sensitive to large outliers than mean; in datasets with many identical price points this often coincides with common menu price levels.",
+      "description_confidence": "high"
+    },
+    "feature_1_8": {
+      "name": "feature_1_8",
+      "title": "min_subtotal_30d",
+      "description": "Minimum pre-tax order amount observed in the prior 30 days [USD]. Derived via MIN(SUBTOTAL) after time filtering. Helps identify the smallest transactions (e.g., single-item or discounted orders) and complements central-tendency and dispersion metrics when assessing typical basket sizes.",
+      "description_confidence": "high"
+    },
+    "feature_1_9": {
+      "name": "feature_1_9",
+      "title": "mode_subtotal_30d",
+      "description": "Most frequently occurring pre-tax order amount in the 30-day window [USD]. Implemented with MODE(SUBTOTAL) across time-aligned transactions. Useful for capturing the dominant price point or standardized order package in the store’s recent activity; particularly informative when business operates on a small set of fixed price offerings.",
+      "description_confidence": "high"
+    },
+    "feature_1_10": {
+      "name": "feature_1_10",
+      "title": "stddev_subtotal_30d",
+      "description": "Standard deviation of pre-tax order amounts within the 30-day lookback [USD]. Calculated with STDDEV(SUBTOTAL) after joining orders to the store-week. Measures dispersion of order values: higher dispersion means more variability in basket sizes. In this model a larger dispersion is associated with lower next-week sales (negative correlation), so it may reflect unstable or sporadic demand patterns that reduce predictability.",
+      "description_confidence": "high"
+    },
+    "feature_1_11": {
+      "name": "feature_1_11",
+      "title": "sum_subtotal_30d",
+      "description": "Sum of pre-tax order amounts across all transactions in the 30-day lookback [USD]. Computed using SUM(SUBTOTAL) on time-aligned orders joined to the store-week. Serves as a recent revenue run-rate proxy and is strongly correlated with next-week sales in this dataset (very high positive correlation), making it a key short-term demand indicator complementary to order counts.",
+      "description_confidence": "high"
+    },
+    "feature_1_12": {
+      "name": "feature_1_12",
+      "title": "trend_subtotal_30d",
+      "description": "Temporal trend coefficient of pre-tax order amounts across the 30-day window, estimated by regressing SUBTOTAL against recency (REFERENCE_DATE - ORDERED_AT) [USD/day or relative trend]. Implemented via TREND(SUBTOTAL, reference_date - ordered_at) after time alignment. Captures whether order values are increasing or decreasing as the reference week approaches; can signal accelerating/decelerating average order value, though in this model its direct correlation to the target is small.",
+      "description_confidence": "medium"
+    },
+    "feature_1_13": {
+      "name": "feature_1_13",
+      "title": "avg_order_total_30d",
+      "description": "Average final order amount (post-tax/fees) aggregated over transactions in the 30-day lookback [USD]. Computed with AVG(ORDER_TOTAL) after joining and filtering by time. Provides a complementary revenue-per-order signal to pre-tax averages and helps capture tax/fee effects; modestly negatively correlated with next-week sales here, so use together with counts and sums to separate price effects from volume effects.",
+      "description_confidence": "high"
+    },
+    "feature_1_14": {
+      "name": "feature_1_14",
+      "title": "distinct_order_total_count_30d",
+      "description": "Count of distinct final order amounts observed in the 30-day lookback [count]. Calculated via COUNT(DISTINCT ORDER_TOTAL) on time-filtered orders. Intended to measure diversity of billed totals (e.g., different bundles or fee variations); when ORDER_TOTAL is heavily discretized this feature may mainly reflect volume/variety constraints rather than nuanced price changes.",
+      "description_confidence": "medium"
+    },
+    "feature_1_15": {
+      "name": "feature_1_15",
+      "title": "repeat_order_total_count_30d",
+      "description": "Number of repeated final order amounts within the 30-day window, computed as COUNT(ORDER_TOTAL) - COUNT(DISTINCT ORDER_TOTAL) [count]. Captures concentration around recurring billed totals and therefore acts as a volume proxy; shows very strong correlation with next-week sales in the data, indicating it largely tracks throughput and repeated standardized transactions.",
+      "description_confidence": "high"
+    },
+    "feature_1_16": {
+      "name": "feature_1_16",
+      "title": "first_order_total_30d",
+      "description": "Earliest final order amount in the 30-day lookback relative to the reference date [USD]. Implemented via FIRST(ORDER_TOTAL, ORDERED_AT) after joining transactions. Offers a recency-anchored snapshot of billed totals at the start of the recent window; best used in combination with last/average values to detect shifts in billing or price mix.",
+      "description_confidence": "high"
+    },
+    "feature_1_17": {
+      "name": "feature_1_17",
+      "title": "last_order_total_30d",
+      "description": "Most recent final order amount within the 30-day window based on ORDERED_AT [USD]. Calculated with LAST(ORDER_TOTAL, ORDERED_AT). Provides the latest observed billed total and can indicate immediate changes in pricing or basket composition; here it has a modest negative association with next-week sales and should be interpreted alongside count/sum features.",
+      "description_confidence": "high"
+    },
+    "feature_1_18": {
+      "name": "feature_1_18",
+      "title": "max_order_total_30d",
+      "description": "Maximum final order amount observed in the prior 30 days [USD]. Derived with MAX(ORDER_TOTAL) after time alignment. Identifies high-ticket billed transactions and helps flag occasional large orders (e.g., bulk/catering) that may disproportionately affect weekly revenue if frequent.",
+      "description_confidence": "high"
+    },
+    "feature_1_19": {
+      "name": "feature_1_19",
+      "title": "median_order_total_30d",
+      "description": "Median final order amount across transactions in the 30-day lookback [USD]. Computed with MEDIAN(ORDER_TOTAL) after joining and filtering by time. Offers a robust central measure of billed totals and is useful when distributions are skewed by occasional large orders.",
+      "description_confidence": "high"
+    },
+    "feature_1_20": {
+      "name": "feature_1_20",
+      "title": "min_order_total_30d",
+      "description": "Minimum final order amount observed in the 30-day window [USD]. Implemented via MIN(ORDER_TOTAL) on time-aligned transactions. Complements median/mean metrics by indicating the smallest billed totals and can reveal presence of many small-value transactions or discounts.",
+      "description_confidence": "high"
+    },
+    "feature_1_21": {
+      "name": "feature_1_21",
+      "title": "order_total_mode",
+      "description": "Captures the most frequently occurring final order amount within the recent lookback window [USD]. Computed by joining per-store historical orders to the store-week record and returning the statistical mode of order_total for orders with ORDERED_AT <= reference_date and within the ~30-day rolling window used by the pipeline. Serves as a compact descriptor of the dominant price point or common basket total in recent activity. Statistically this feature has a moderate negative correlation with the target (≈ -0.25) and zero measured importance in the current model run, indicating it is often redundant with higher-level volume or sum aggregates but useful for detecting dominant price tiers or menu changes. Use it for monitoring price-point shifts or as a categorical proxy for AOV when combined with count-based features. ",
+      "description_confidence": "high"
+    },
+    "feature_1_22": {
+      "name": "feature_1_22",
+      "title": "order_total_stddev",
+      "description": "Measures dispersion of final order amounts over the recent lookback window [USD]. Implemented as the sample standard deviation of order_total across all qualifying orders for the store-week (orders with ORDERED_AT <= reference_date and within the ~30-day window). Reflects variability in basket sizes or mixed-order types and, in this dataset, shows a notable negative correlation with the target (≈ -0.58) and small but nonzero model importance — higher variability has been associated with lower next-week sales in the training data. Use as an indicator of revenue stability: low stddev implies predictable revenue-per-order, while high stddev signals heterogeneous order values that can complicate sales forecasts.",
+      "description_confidence": "high"
+    },
+    "feature_1_23": {
+      "name": "feature_1_23",
+      "title": "order_total_sum",
+      "description": "Aggregates total realized revenue from orders in the recent lookback window [USD]. Calculated by summing order_total for all store orders with ORDERED_AT <= reference_date (and within the ~30-day rolling window). Acts as a short-term revenue run-rate and is a strong predictor of next-week sales (correlation ≈ 0.975; measured importance ~0.0107 in the model). Business interpretation: this is a direct proxy for recent demand level and momentum — higher recent sums indicate higher expected weekly sales. Recommended use: include as a baseline demand signal and combine with order-count forecasts to separate volume vs. AOV effects.",
+      "description_confidence": "high"
+    },
+    "feature_1_24": {
+      "name": "feature_1_24",
+      "title": "order_total_trend",
+      "description": "Estimates directional change in final order amounts across the lookback period [USD per time unit]. Computed using a trend/slope operator that regresses order_total against the time offset (reference_date - ORDERED_AT) for qualifying orders (orders on or before the reference date within the ~30-day window). Provides a short-term momentum signal for basket values (rising, stable, or declining AOV). Empirically the feature has a small negative correlation with the target (≈ -0.09) and low importance, suggesting limited additive predictive value beyond aggregate sums and counts in this dataset; still valuable for detecting systematic increases or decreases in pricing or order composition.",
+      "description_confidence": "high"
+    },
+    "feature_1_25": {
+      "name": "feature_1_25",
+      "title": "tax_paid_avg",
+      "description": "Computes the average tax amount paid per order within the recent lookback window [USD]. Implemented as the mean of tax_paid for all qualifying orders (ORDERED_AT <= reference_date and within ~30 days). Serves as a measure of tax intensity or small per-order fees and can act as a proxy for average order size when taxes scale with order value. Shows modest negative correlation with the target (≈ -0.22) and low importance, so it is more useful for monitoring or as a control variable than as a core predictive input.",
+      "description_confidence": "high"
+    },
+    "feature_1_26": {
+      "name": "feature_1_26",
+      "title": "distinct_tax_values_count",
+      "description": "Counts distinct observed tax amounts among recent orders [count]. Derived by counting unique tax_paid values for qualifying orders in the lookback window (orders at or before the reference date within ~30 days). With highly discretized pricing in the data, this feature mostly captures the diversity of tax buckets (proxy for variety in order types or price points) rather than absolute volume. Measured correlation in the dataset is positive (~0.24) but model importance is zero, indicating redundancy with other features; use primarily for diagnostics (detecting price-list changes or multiple tax regimes).",
+      "description_confidence": "high"
+    },
+    "feature_1_27": {
+      "name": "feature_1_27",
+      "title": "duplicate_tax_count",
+      "description": "Quantifies how many orders share repeated tax amounts within the lookback window [count]. Computed as total count of qualifying orders minus the count of distinct tax_paid values, effectively measuring the number of 'duplicate' tax entries (i.e., repeated tax buckets). In practice this behaves like a volume proxy when tax values are few and frequently repeated; observed a high correlation with several demand signals in this dataset (correlation reported high in tooling), though measured model importance is zero here—likely redundant with raw counts and sums. Use cautiously: useful for identifying dominant tax buckets and for data-quality checks.",
+      "description_confidence": "medium"
+    },
+    "feature_1_28": {
+      "name": "feature_1_28",
+      "title": "first_tax_paid",
+      "description": "Returns the tax amount from the earliest order in the lookback window as of the store-week reference [USD]. Implemented by selecting tax_paid associated with the chronologically first ORDERED_AT among qualifying orders (ORDERED_AT <= reference_date and within ~30 days). Captures historical tax level at the start of the window and can flag changes in tax calculation or pricing trends. Low correlation with the target (≈ -0.07) and small importance indicate limited predictive value, but it is helpful for auditing temporal shifts in tax or fee structure.",
+      "description_confidence": "high"
+    },
+    "feature_1_29": {
+      "name": "feature_1_29",
+      "title": "last_tax_paid",
+      "description": "Returns the tax amount from the most recent order within the lookback window [USD]. Computed by selecting tax_paid associated with the latest ORDERED_AT up to reference_date (within ~30 days). Acts as a short-term indicator of current tax/fee level applied to recent orders; slightly more predictive in this dataset (correlation ≈ -0.22) than the earliest tax value, suggesting recent tax/fee signals align modestly with next-week sales variations. Use alongside aggregated tax sums for both monitoring and modeling.",
+      "description_confidence": "high"
+    },
+    "feature_1_30": {
+      "name": "feature_1_30",
+      "title": "tax_paid_max",
+      "description": "Reports the maximum tax amount observed among recent orders [USD]. Calculated by taking the maximum tax_paid across qualifying orders (ORDERED_AT <= reference_date within the ~30-day window). Serves as an outlier/dominant-basket indicator (e.g., presence of a few high-value orders) and shows a moderate negative correlation with next-week sales (≈ -0.25) in the provided run. Use to detect large, infrequent transactions that may skew mean-based metrics and consider combining with sums and counts to separate volume effects from large-order noise.",
+      "description_confidence": "high"
+    },
+    "feature_1_31": {
+      "name": "feature_1_31",
+      "title": "tax_paid_median",
+      "description": "Gives the median tax amount across recent orders [USD]. Computed as the median of tax_paid values for qualifying orders in the lookback window (orders with ORDERED_AT <= reference_date and within ~30 days). Provides a robust central tendency measure less sensitive to outliers than the mean; shows moderate negative correlation with the target (≈ -0.25) in this dataset. Useful for capturing typical per-order tax burden when the tax distribution is skewed by a few large orders.",
+      "description_confidence": "high"
+    },
+    "feature_1_32": {
+      "name": "feature_1_32",
+      "title": "tax_paid_min",
+      "description": "Returns the minimum tax amount observed among recent orders [USD]. Implemented as the minimum of tax_paid across qualifying orders (ORDERED_AT <= reference_date within the ~30-day window). Acts as a lower-bound indicator for tax/fee application and is mainly useful for data-quality checks or to flag free/zero-tax transactions. Measured importance is zero in the current model run, consistent with limited predictive value relative to aggregate tax measures.",
+      "description_confidence": "high"
+    },
+    "feature_1_33": {
+      "name": "feature_1_33",
+      "title": "tax_paid_mode",
+      "description": "Returns the most frequent tax amount observed in the lookback window [USD]. Computed as the mode of tax_paid for qualifying orders (orders at or before reference_date within ~30 days). Because tax values are highly discretized, this feature often acts as a proxy for the prevailing price/tax bucket and shows a moderate negative correlation with the target (≈ -0.25). Its primary value is in detecting the dominant tax bucket and monitoring price-list stability; it is often redundant with summary statistics such as median or sum.",
+      "description_confidence": "high"
+    },
+    "feature_1_34": {
+      "name": "feature_1_34",
+      "title": "tax_paid_stddev",
+      "description": "Measures variability of tax amounts across recent orders [USD]. Implemented as the standard deviation of tax_paid over all qualifying orders (ORDERED_AT <= reference_date within the ~30-day lookback). Captures heterogeneity in applied taxes/fees and correlates negatively with next-week sales (≈ -0.32) in this dataset. Use to detect inconsistent pricing/tax practices or mixed-order types; consider pairing with count and sum features to separate variability due to volume from variability due to basket mix.",
+      "description_confidence": "high"
+    },
+    "feature_1_35": {
+      "name": "feature_1_35",
+      "title": "tax_paid_sum",
+      "description": "Aggregates total tax collected from orders in the recent lookback window [USD]. Calculated by summing tax_paid for all qualifying orders (ORDERED_AT <= reference_date and within ~30 days). Acts as a demand proxy that partially parallels revenue sums (observed correlation ≈ 0.54) and shows measurable importance in the model. Business interpretation: increases in summed tax usually reflect higher recent sales volume; use together with order counts and order_total sums to decompose revenue growth into volume and per-order effects.",
+      "description_confidence": "high"
+    },
+    "feature_1_36": {
+      "name": "feature_1_36",
+      "title": "tax_paid_trend",
+      "description": "Estimates short-term directionality of tax amounts across the lookback period [USD per time unit]. Implemented via a trend/slope operator regressing tax_paid on the time offset (reference_date - ORDERED_AT) for qualifying orders (orders up to the reference date within ~30 days). Signals whether per-order tax/fee amounts are rising or falling over the window; shows modest negative correlation with the target (≈ -0.22). Useful for detecting gradual shifts in AOV or fee application that may anticipate sales changes.",
+      "description_confidence": "high"
+    },
+    "feature_1_37": {
+      "name": "feature_1_37",
+      "title": "avg_order_age",
+      "description": "Computes the mean time difference between the store-week reference and each qualifying order in the lookback window [seconds] (approx. convertable to days by dividing by 86,400). Derived as the average of (reference_date - ORDERED_AT) for orders with ORDERED_AT <= reference_date and within the ~30-day window. Interpreted as the average recency of historical orders contributing to the weekly summary: lower values indicate more recent ordering activity. Shows a negative correlation with next-week sales (≈ -0.26) in this dataset, suggesting that more recent activity concentrates with higher future sales; use as a recency/momentum signal alongside counts and sums.",
+      "description_confidence": "high"
+    },
+    "feature_1_38": {
+      "name": "feature_1_38",
+      "title": "distinct_order_age_count",
+      "description": "Counts the number of distinct order-age values within the lookback window [count]. Calculated by counting unique values of (reference_date - ORDERED_AT) among qualifying orders (orders on or before the reference date within ~30 days). Effectively measures how many distinct ordering time offsets (e.g., days with activity) exist in the window — a proxy for temporal breadth of ordering (e.g., spread vs. clustered activity). In this dataset it correlates highly with target (≈ 0.974), reflecting that broader ordering across the window tends to accompany larger next-week sales; model importance is small because it is redundant with other volume signals.",
+      "description_confidence": "high"
+    },
+    "feature_1_39": {
+      "name": "feature_1_39",
+      "title": "duplicate_order_age_count",
+      "description": "Measures the number of orders that share non-unique order-age values within the lookback window [count]. Computed as total qualifying orders minus the number of distinct (reference_date - ORDERED_AT) values. Captures repeated orders occurring at identical time offsets (e.g., multiple orders on the same day relative to reference_date) and behaves as an alternative volume proxy. Shows a strong positive correlation with next-week sales (≈ 0.927) in the data; useful for capturing intra-window concentration of orders and order cadence.",
+      "description_confidence": "high"
+    },
+    "feature_1_40": {
+      "name": "feature_1_40",
+      "title": "first_order_age",
+      "description": "Returns the age (reference_date - ORDERED_AT) associated with the earliest-order timestamp in the lookback window [seconds]. Implemented by selecting the age value tied to the chronologically first ORDERED_AT among qualifying orders (ORDERED_AT <= reference_date within ~30 days). Acts as an indicator of the earliest activity included in the window (how far back the oldest contributing order is). Correlation with the target is modest (≈ 0.14); use primarily for diagnostic purposes or to detect shifts in order timing coverage rather than as a primary predictive input.",
+      "description_confidence": "high"
+    },
+    "feature_1_41": {
+      "name": "feature_1_41",
+      "title": "last_order_age_seconds",
+      "description": "Computes the age of the most recent transaction (in seconds) relative to the weekly reference timestamp, using only orders within the 30‑day lookback and joined by store. Concretely, it selects the last value of (reference_date - ordered_at) when ordering transactions by ordered_at. Business meaning: captures recency of the latest order before the prediction anchor for that store-week — smaller values mean a very recent order. Statistical role & relationship to target: weak-to-moderate negative correlation with next‑week sales (observed correlation ≈ -0.26), indicating that more-recent last orders are associated with higher upcoming weekly sales. Usage guidance: use as a recency feature to detect recent bursts in activity; normalize or convert to days for interpretability. [seconds]",
+      "description_confidence": "high"
+    },
+    "feature_1_42": {
+      "name": "feature_1_42",
+      "title": "max_order_age_seconds",
+      "description": "Returns the largest time gap (in seconds) between the weekly reference timestamp and any historical order within the 30‑day window for the given store-week (i.e., maximum (reference_date - ordered_at)). This measures the age of the oldest transaction included in the window and reflects the effective window coverage (e.g., missing older orders reduces this value). Relationship to target: modest positive correlation seen in metadata (≈ 0.139); may indicate stores with sparser recent activity. Usage guidance: combine with counts or sum features to distinguish low-activity windows from windows with many orders that are all recent. [seconds]",
+      "description_confidence": "high"
+    },
+    "feature_1_43": {
+      "name": "feature_1_43",
+      "title": "median_order_age_seconds",
+      "description": "Computes the median age (in seconds) of all orders within the 30‑day lookback relative to the weekly reference timestamp, aggregated per store-week. This provides a robust central tendency measure of order recency that is less sensitive to outliers than the mean. Relationship to target: small negative correlation observed (≈ -0.16), so stores with more recently concentrated orders (lower median age) tend to have higher next-week sales. Usage guidance: useful for detecting shifts in recency distribution (e.g., campaign-driven spikes); consider rescaling to days for reporting. [seconds]",
+      "description_confidence": "high"
+    },
+    "feature_1_44": {
+      "name": "feature_1_44",
+      "title": "min_order_age_seconds",
+      "description": "Yields the smallest time difference (in seconds) between the weekly reference timestamp and any order in the 30‑day window (i.e., age of the freshest order). Similar to the most‑recent-order feature but computed as a global minimum; useful to validate data quality (e.g., identical to last-order when ordering is consistent). Relationship to target: observed negative correlation (~ -0.257) consistent with more recent activity predicting higher sales. Usage guidance: treat as a companion to median/mean recency metrics; convert to days for business reporting. [seconds]",
+      "description_confidence": "high"
+    },
+    "feature_1_45": {
+      "name": "feature_1_45",
+      "title": "mode_order_age_seconds",
+      "description": "Returns the most frequent order-age value (in seconds) inside the 30‑day lookback (mode of reference_date - ordered_at) for each store-week. Business meaning: indicates a repeated cadence or dominant lag (e.g., recurring scheduled orders) within the window. Relationship to target: low-to-moderate positive correlation (~0.046), so cadence patterns may weakly relate to future sales. Usage guidance: interpret carefully when the age distribution is multimodal; consider combining with count and inter-order interval features to capture cadence vs volume effects. [seconds]",
+      "description_confidence": "high"
+    },
+    "feature_1_46": {
+      "name": "feature_1_46",
+      "title": "stddev_order_age_seconds",
+      "description": "Computes the standard deviation (in seconds) of order ages within the 30‑day lookback for each store-week. This measures dispersion in recency: high values indicate mixed recency (orders spread across the window), low values indicate clustered timing. Relationship to target: small positive correlation (~0.013) in the metadata, implying limited direct predictive power but useful to distinguish stable vs bursty demand. Usage guidance: use alongside median/mean and count features to separate variability effects from volume effects. [seconds]",
+      "description_confidence": "high"
+    },
+    "feature_1_47": {
+      "name": "feature_1_47",
+      "title": "sum_order_age_seconds",
+      "description": "Sums the time differences (in seconds) between the reference timestamp and each historical order within the 30‑day window for each store-week. Operationally this is the aggregate of order ages and grows with both number of orders and their ages. Relationship to target: strong positive correlation observed (~0.956) — in practice this behaves largely as a proxy for order volume (more orders → larger sum) and thus tracks next‑week sales. Usage guidance: treat with caution because it conflates count and recency; decompose into count and average-age components if interpretability is required. [seconds]",
+      "description_confidence": "high"
+    },
+    "feature_1_48": {
+      "name": "feature_1_48",
+      "title": "trend_order_age_seconds",
+      "description": "Estimates the temporal trend (slope) of order ages within the 30‑day window by applying a trend operator to the sequence of (reference_date - ordered_at) values. In plain terms, it captures whether the ages of orders are increasing or decreasing across the window (e.g., orders becoming more recent over time). Relationship to target: metadata shows no direct correlation or importance in this run; it can still flag accelerating or decelerating order recency that precedes demand changes. Usage guidance: interpret the sign and magnitude as a short-term recency trend (positive slope → average ages increasing = orders getting older). Implementation note: TREND semantics can be implementation-specific (e.g., slope of linear fit), so validate units and scaling before combining with other features. [slope in seconds-per-index or seconds-per-time-unit depending on implementation]",
+      "description_confidence": "medium"
+    },
+    "feature_1_49": {
+      "name": "feature_1_49",
+      "title": "avg_inter_order_interval_seconds",
+      "description": "Computes the average interval between consecutive orders (in seconds) within the 30‑day window for each store-week using (max(ordered_at) - min(ordered_at)) / (count - 1) when multiple orders exist, otherwise zero. Business meaning: measures typical cadence between orders — smaller values indicate higher transaction frequency. Statistical relationship: strong negative correlation (~ -0.95) with next‑week sales in the metadata, meaning shorter inter-order intervals (more frequent orders) align with higher upcoming weekly sales. Usage guidance: treat as a direct behavioral cadence indicator; when counts are low the metric defaults to 0 so combine with count to avoid misinterpretation. [seconds]",
+      "description_confidence": "high"
+    },
+    "feature_1_50": {
+      "name": "feature_1_50",
+      "title": "orders_count_30d",
+      "description": "Counts all orders within the 30‑day lookback prior to the weekly reference timestamp for each store-week. Business meaning: direct volume measure of recent activity; high counts imply higher throughput and typically higher next‑week revenue. Relationship to target: very high correlation (≈ 0.965) with next‑week sales — essentially a primary volume signal. Usage guidance: use as a key predictor of sales; if operationally you cannot know future counts at prediction time, ensure to replace or augment this with an order‑count forecast to avoid leakage. [count]",
+      "description_confidence": "high"
+    },
+    "days_since_open": {
+      "name": "days_since_open",
+      "title": "days_since_open",
+      "description": "Store age measured in days at the weekly reference timestamp. Captures lifecycle/ramp effects: newer stores often have different demand profiles than mature locations. Statistical properties: average increases across splits (train ≈ 577 days; validation ≈ 1189; test ≈ 1490), and shows a moderate positive correlation with next‑week sales (~0.35), indicating maturation is associated with higher sales. Usage guidance: include to control for lifecycle effects, segment models by age buckets if policy/strategy differs across ramp stages. [days]",
+      "description_confidence": "high"
+    },
+    "next_week_orders": {
+      "name": "next_week_orders",
+      "title": "next_week_orders",
+      "description": "Number of orders for the upcoming week associated with the store-week record. Business meaning: direct forward-looking volume measure for the target period. Predictive role: overwhelmingly dominant predictor in the model (importance ≈ 0.965 and correlation ≈ 0.989 to next‑week sales), reflecting that weekly sales are largely volume-driven and revenue per order is relatively stable. Caution & governance: this value is a potential source of target leakage if not truly available at prediction time; if operational forecasts cannot supply it, remove it or replace it with a forecasted order-count to obtain realistic performance. Usage guidance: when available legitimately (e.g., booked orders), include it; otherwise treat as a label-derived proxy and engineer alternative historical predictors for production use. [count]",
+      "description_confidence": "high"
+    }
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "column_descriptions": {
+    "weekly_sales_by_store": {
+      "REFERENCE_DATE": {
+        "name": "REFERENCE_DATE",
+        "description": "Weekly anchor timestamp used to align historical order activity to a specific store-week record. In the feature engineering, only transactions with order time at or before this timestamp are eligible, and a rolling lookback window of ~30 days is applied (i.e., orders within the prior 30 days relative to this date). Serves as the temporal index for train/validation/test splits (train: 2018-09 to 2022-12; validation: 2023; test: 2024). [timestamp]",
+        "description_confidence": "high"
+      },
+      "STORE_ID": {
+        "name": "STORE_ID",
+        "description": "Unique identifier for a physical store/location (6 distinct values). Primary join key connecting the weekly store-level table to the transactional orders table (one-to-many). Enables per-store aggregation of recent order history and supports store-level segmentation. [categorical key]",
+        "description_confidence": "high"
+      },
+      "SNAPSHOT_ID": {
+        "name": "SNAPSHOT_ID",
+        "description": "Identifier for the data snapshot/version associated with each store-week record. Used as a join key/row identifier to distinguish multiple extracts or pipeline runs for the same store and week, and to guarantee uniqueness of records. Values are string-typed and increase in later splits (e.g., 1–99 in train, ~1000+ later), consistent with incremental snapshotting rather than a business measure. [categorical key]",
+        "description_confidence": "medium"
+      },
+      "NEXT_WEEK_SALES": {
+        "name": "NEXT_WEEK_SALES",
+        "description": "Target outcome: total sales for the subsequent week for the given store-week record. Continuous monetary measure with typical values around 4.2k–31.4k and mean ~17.7k (train) rising to ~20.6k (test), indicating growth over time. Often well-explained by order volume (see next-week order count) and recent 30-day revenue run-rate from orders. [currency, e.g., USD]",
+        "description_confidence": "high"
+      },
+      "STORE_NAME": {
+        "name": "STORE_NAME",
+        "description": "Human-readable store label (e.g., city/neighborhood such as Brooklyn, San Francisco). Low-cardinality categorical descriptor of location; useful for reporting, sanity checks, and potentially capturing location-specific effects beyond the opaque store identifier. [categorical]",
+        "description_confidence": "high"
+      },
+      "YEAR": {
+        "name": "YEAR",
+        "description": "Calendar year label derived from the weekly reference date. Stored as a string and useful for capturing long-term trends, non-stationarity (e.g., growth/inflation), and for time-based slicing in EDA. In the provided splits: 2018–2022 (train), 2023 (validation), 2024 (test). [YYYY]",
+        "description_confidence": "high"
+      },
+      "MONTH": {
+        "name": "MONTH",
+        "description": "Calendar month number derived from the weekly reference date. Encodes within-year seasonality and is useful for grouping and plotting sales patterns across the year. Stored as a string with values 1–12 (train/validation) and 1–8 (test period). [1–12]",
+        "description_confidence": "high"
+      },
+      "WEEK_NUMBER": {
+        "name": "WEEK_NUMBER",
+        "description": "Week-of-year indicator derived from the weekly reference date (stored as a string). Provides a higher-resolution seasonal position than month; helpful for detecting holiday/seasonal peaks and aligning year-over-year comparisons. Note: string ordering may be lexicographic, so convert to integer for time series analyses. [1–53-ish]",
+        "description_confidence": "medium"
+      },
+      "IS_FULL_WEEK_AFTER_OPENING": {
+        "name": "IS_FULL_WEEK_AFTER_OPENING",
+        "description": "Flag indicating whether the store-week represents a complete operational week after store opening (i.e., excludes partial opening weeks). In the provided data it is always true, implying that the dataset has already been filtered to full weeks; still useful as a data-quality check. [boolean as string]",
+        "description_confidence": "high"
+      },
+      "HAS_ORDER_ACTIVITY": {
+        "name": "HAS_ORDER_ACTIVITY",
+        "description": "Flag indicating that there is at least some recorded order activity relevant to the store-week (e.g., within the modeling horizon/lookback). In the provided subsets it is always true, suggesting rows without orders were excluded upstream; useful primarily for validation and pipeline checks. [boolean as string]",
+        "description_confidence": "high"
+      },
+      "HAS_MIN_HISTORY": {
+        "name": "HAS_MIN_HISTORY",
+        "description": "Flag indicating whether the store has sufficient prior history before the reference week to compute historical features reliably (e.g., enough days/orders in the lookback window). Varies in train (true/false) but is always true in validation/test, consistent with later periods having more mature stores and more history. [boolean as string]",
+        "description_confidence": "high"
+      },
+      "DAYS_SINCE_OPEN": {
+        "name": "DAYS_SINCE_OPEN",
+        "description": "Store age at the reference week, measured as days since the store opened. Captures lifecycle/ramp effects; averages increase across splits (train ~577 days; validation ~1189; test ~1490), reflecting store maturation and time-based splitting. Useful for segmenting performance of new vs mature stores and for controlling growth effects. [days]",
+        "description_confidence": "high"
+      },
+      "NEXT_WEEK_ORDERS": {
+        "name": "NEXT_WEEK_ORDERS",
+        "description": "Number of orders expected/recorded for the next week for the given store-week record. Extremely predictive of next-week sales (very high model importance and correlation), implying sales are largely driven by volume and that revenue per order is relatively stable. Important governance note: if this value is not truly known at prediction time, it may constitute target leakage and should be excluded or replaced with a forecasted order-count feature in production. [count]",
+        "description_confidence": "high"
+      }
+    },
+    "orders": {
+      "ORDERED_AT": {
+        "name": "ORDERED_AT",
+        "description": "Timestamp when an individual transaction/order was placed. Used for time alignment with the weekly reference date: only orders occurring at or before the reference week are aggregated into features, typically within a rolling ~30-day lookback window. Spans 2018-09 to 2024-08 with ~913k unique timestamps. [timestamp]",
+        "description_confidence": "high"
+      },
+      "STORE_ID": {
+        "name": "STORE_ID",
+        "description": "Store/location identifier for each transaction. Connects each order to the corresponding store and enables aggregations of transaction history per store-week when joined to the weekly store table. Same key domain as the store identifier in the weekly table (6 stores). [categorical key]",
+        "description_confidence": "high"
+      },
+      "ID": {
+        "name": "ID",
+        "description": "Unique identifier of an individual order/transaction record. Serves as an entity key for deduplication and integrity checks in the transactional table; not directly used as a feature in the provided pipeline but can support audits (e.g., detecting duplicates, linking to line items if available). [categorical key/UUID-like]",
+        "description_confidence": "high"
+      },
+      "CUSTOMER": {
+        "name": "CUSTOMER",
+        "description": "Identifier for the customer/account placing the order. Allows customer-level analytics such as repeat rate, customer concentration, and distinct-customer counts in a lookback window. Low apparent cardinality (~3k unique across 2.3M orders) suggests high repeat purchasing or account-based ordering; can be informative for volatility and demand stability features if engineered. [categorical key]",
+        "description_confidence": "medium"
+      },
+      "SUBTOTAL": {
+        "name": "SUBTOTAL",
+        "description": "Pre-tax monetary amount for the order (sum of item prices before tax). Values range 0–10,100 with mean ~1,064 and relatively few distinct price points, suggesting standardized pricing/bundles. Useful for computing recent revenue run-rate (e.g., sums over last 30 days), and average order value proxies that correlate with future weekly sales. [currency, pre-tax]",
+        "description_confidence": "high"
+      },
+      "ORDER_TOTAL": {
+        "name": "ORDER_TOTAL",
+        "description": "Final monetary amount charged for the order, typically subtotal plus taxes (and possibly minor fees/discounts). Range 0–10,800 with mean ~1,125; the mean difference to subtotal closely matches average tax paid, implying taxes are the main uplift. Strong basis for revenue aggregates over recent history (e.g., rolling 30-day sum) which are predictive of next-week sales. [currency, post-tax]",
+        "description_confidence": "high"
+      },
+      "TAX_PAID": {
+        "name": "TAX_PAID",
+        "description": "Monetary tax component paid on the order. Range 0–800 with mean ~60.7; implies an effective tax rate around ~5–6% relative to subtotal on average. Useful for estimating tax intensity and validating consistency of pricing/tax policies; in aggregate (rolling sums) it partially tracks demand and therefore relates to next-week sales. [currency]",
+        "description_confidence": "high"
+      }
+    }
+  }
+}
