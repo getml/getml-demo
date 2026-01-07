@@ -1,0 +1,108 @@
+{
+  "column_descriptions": {
+    "weekly_sales_by_store": {
+      "reference_date": {
+        "name": "reference_date",
+        "description": "Weekly snapshot timestamp that anchors the observation window and target week; used as the reference point for trailing 30-day aggregations and chronological train/validation/test splits. Values span 2018–2024 and include timezone-naive timestamps. [timestamp]",
+        "description_confidence": "high"
+      },
+      "store_id": {
+        "name": "store_id",
+        "description": "Unique store identifier (UUID) used as the primary join key to link weekly snapshots with order-level records and store metadata; there are six distinct locations in the dataset. [UUID]",
+        "description_confidence": "high"
+      },
+      "snapshot_id": {
+        "name": "snapshot_id",
+        "description": "Identifier for the specific weekly snapshot row (string); acts as an additional join/index key that distinguishes repeated snapshots per store across time (many unique values). Useful for traceability and aligning predictions with snapshot records. [string/id]",
+        "description_confidence": "medium"
+      },
+      "next_week_sales": {
+        "name": "next_week_sales",
+        "description": "Weekly revenue to be predicted (model target). Monetary units are stored in cents (e.g., 17742 ≈ $177.42). Summary stats: mean ≈ 17,700, wide range reflecting seasonality and store maturity. Strongly correlated with order volume and used to evaluate model performance. [cents]",
+        "description_confidence": "high"
+      },
+      "store_name": {
+        "name": "store_name",
+        "description": "Categorical label for physical location (human-readable city/area names). Low cardinality (six values) and useful for grouping, stratified evaluation and store-level analysis; could be used as a categorical feature or to join external store metadata. [categorical]",
+        "description_confidence": "high"
+      },
+      "year": {
+        "name": "year",
+        "description": "Calendar year derived from the snapshot timestamp. Stored as a categorical value for modeling seasonality and splitting/backtesting across years. Useful for detecting long-term trends and concept drift. [YYYY, categorical]",
+        "description_confidence": "high"
+      },
+      "month": {
+        "name": "month",
+        "description": "Calendar month derived from the timestamp (1–12), represented as a categorical value in the dataset. Helps capture monthly seasonality and calendar effects when aggregated at the weekly level. [1-12, categorical]",
+        "description_confidence": "high"
+      },
+      "week_number": {
+        "name": "week_number",
+        "description": "Week-of-period identifier (categorical) that encodes the weekly position within the year or reporting period; useful for weekly seasonality and alignment with calendar-based events. [categorical]",
+        "description_confidence": "high"
+      },
+      "is_full_week_after_opening": {
+        "name": "is_full_week_after_opening",
+        "description": "Boolean-like flag (stored as string) indicating whether the snapshot corresponds to a full trading week after store opening; used to exclude partial weeks or to control for initial ramp effects. In provided subsets this flag is mostly true. [boolean/string]",
+        "description_confidence": "medium"
+      },
+      "has_order_activity": {
+        "name": "has_order_activity",
+        "description": "Indicator (boolean-like) showing if any orders occurred in the trailing window used for feature aggregation. Can be used to filter out inactive snapshots or to treat cold-start periods differently; present values are typically true in training/validation/test subsets. [boolean/string]",
+        "description_confidence": "high"
+      },
+      "has_min_history": {
+        "name": "has_min_history",
+        "description": "Flag (boolean-like) denoting whether a minimum required historical record exists for the store at the snapshot date (e.g., sufficient prior days/orders for stable aggregates). Helps identify early ramp weeks vs. mature weeks. [boolean/string]",
+        "description_confidence": "medium"
+      },
+      "days_since_open": {
+        "name": "days_since_open",
+        "description": "Numeric count of days between store opening and the snapshot date; measures maturity/ramp stage of a location. Range and distribution vary by subset (e.g., median ~510 in train, larger in validation/test). Positively correlated with the target, useful to model maturation effects. [days]",
+        "description_confidence": "high"
+      },
+      "next_week_orders": {
+        "name": "next_week_orders",
+        "description": "Forecasted or observed order volume for the target week (numeric count). Acts as the primary driver of revenue in the model (very high feature importance and correlation with the target). Ensure upstream order forecasts are generated without leakage when used at inference. [count/orders]",
+        "description_confidence": "high"
+      }
+    },
+    "orders": {
+      "ordered_at": {
+        "name": "ordered_at",
+        "description": "Exact timestamp when each order was placed. Used to determine inclusion in trailing lookback windows (30 days in this pipeline), compute recency features, and align orders to weekly snapshots. Range: 2018-09-01 to 2024-08-29. [timestamp]",
+        "description_confidence": "high"
+      },
+      "store_id": {
+        "name": "store_id",
+        "description": "Store-level join key (UUID) that links each transaction to the corresponding weekly snapshot and store attributes; same domain as the population join key, enabling one-to-many joins. [UUID]",
+        "description_confidence": "high"
+      },
+      "id": {
+        "name": "id",
+        "description": "Unique order identifier (UUID/string) for the transaction record. Primary key at the order level; used to deduplicate and to compute order counts. High cardinality consistent with the number of transactions. [UUID/string]",
+        "description_confidence": "high"
+      },
+      "customer": {
+        "name": "customer",
+        "description": "Customer identifier (UUID/string). Low cardinality relative to order volume, indicating many repeat customers; useful for customer-level aggregates (frequency, recency) and loyalty analysis if privacy/compliance allows. [UUID/string]",
+        "description_confidence": "high"
+      },
+      "subtotal": {
+        "name": "subtotal",
+        "description": "Monetary amount before tax for the individual order. Stored in cents (e.g., 1063 ≈ $10.63). Distribution shows discrete menu-driven pricing (limited unique values, strong modes) and occasional zeros (comps/refunds). Widely used to build rolling AOV, sums, means, and variability features. [cents]",
+        "description_confidence": "high"
+      },
+      "order_total": {
+        "name": "order_total",
+        "description": "Total charged for the order including tax (subtotal + tax component). Stored in cents (e.g., 1124 ≈ $11.24). Used for revenue aggregates and to validate consistency with subtotal and tax components. [cents]",
+        "description_confidence": "high"
+      },
+      "tax_paid": {
+        "name": "tax_paid",
+        "description": "Tax amount applied to the order. Stored in cents (mean ≈ 60.7). Useful to compute effective tax rates, to reconcile order_total with subtotal, and as a low-magnitude feature for mix/price analyses; zeros exist for some transactions. [cents]",
+        "description_confidence": "high"
+      }
+    }
+  }
+}

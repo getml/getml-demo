@@ -7,7 +7,7 @@ requires-python = "==3.12.*"
 
 dependencies = [
     "jupyterlab==4.1.1",
-    "getml==1.5.0",
+    "getml==1.5.1",
     "featuretools==1.31.0",
     "tsfresh==0.20.3",
     "seaborn==0.13.2",
@@ -25,8 +25,9 @@ spark = [
 databricks = [
     "databricks-connect==17.3.2",
     "requests==2.32.5",
-    "pydantic==2.12.5",
+    "pydantic==2.11.7",
     "sqlglot==28.4.1",
+    "getml-interpretations",
 ]
 
 dev = [
@@ -37,3 +38,6 @@ dev = [
 
 [tool.basedpyright]
 typeCheckingMode = "standard"
+
+[tool.uv.sources]
+getml-interpretations = { path = "../getml-interpretations", editable = true }
