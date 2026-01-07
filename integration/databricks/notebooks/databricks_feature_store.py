@@ -313,8 +313,9 @@ for tables in column_descriptions_report.column_descriptions.values():
 for feature_description in feature_descriptions_report.feature_descriptions.values():
     # Escape single quotes to prevent SQL syntax errors
     description = feature_description.description.replace("'", "\\'")
+    description_with_original_name = f"({feature_description.name}) {description}"
     spark.sql(
-        f"ALTER TABLE {FEATURES_TABLE_FULL_NAME} CHANGE COLUMN {feature_description.title} COMMENT '{description}'"
+        f"ALTER TABLE {FEATURES_TABLE_FULL_NAME} CHANGE COLUMN {feature_description.title} COMMENT '{description_with_original_name}'"
     )
 
 
