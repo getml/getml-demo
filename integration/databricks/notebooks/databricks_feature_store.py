@@ -33,15 +33,20 @@
 # ## Setup and Data Loading
 
 # %%
+from pathlib import Path
+
 import getml
 from databricks.connect import DatabricksSession
 
-getml.set_project("databricks_feature_store")
+PROJECT_NAME = "databricks_feature_store"
+
+getml.set_project(PROJECT_NAME)
 
 # %%
 spark = DatabricksSession.builder.serverless().getOrCreate()
 
 # %%
+# Load population table
 weekly_sales_by_store_spark = spark.table(
     "workspace.prepared.weekly_sales_by_store_with_target"
 )
@@ -50,7 +55,7 @@ weekly_sales_by_store = getml.DataFrame.from_arrow(
     weekly_sales_by_store_spark.toArrow(), name="weekly_sales_by_store"
 )
 
-# # Load orders table
+# Load peripheral table
 orders_spark = spark.table("workspace.raw.raw_orders")
 orders = getml.DataFrame.from_arrow(orders_spark.toArrow(), name="orders")
 
@@ -150,8 +155,12 @@ container = getml.data.Container(
 container.add(
     orders=orders,
 )
-# container.save()
-# getml.project.data_frames.save()
+
+getml.project.data_frames.save()
+container.save()
+
+# %%
+container._id
 
 # %% [markdown]
 # ## Training
@@ -172,16 +181,11 @@ pipe = getml.Pipeline(
 )
 
 pipe.fit(container.train)
+pipe.score(container.test)
 
 # %%
-# predictions = pipe.predict(container.test)
-
-# # Calculate metrics
-# scores = pipe.score(container.test)
-# scores
-
-# %%
-pipe = getml.pipeline.load("CzNABb")
+# container = getml.data.load_container("uzNVUz")
+# pipe = getml.pipeline.load("2aj2Dm")
 
 # %% [markdown]
 # ## Feature Export
@@ -200,30 +204,123 @@ features_spark = spark.createDataFrame(features_df.to_arrow())
 features_df
 
 # %%
-spark.sql("DROP TABLE IF EXISTS workspace.getml_fs.getml_features")
+from getml_interpretations import (
+    ColumnDescriptionsReport,
+    generate_column_descriptions_report,
+)
+
+column_descriptions_report_path = Path("column_descriptions_report.json")
+jaffle_shop_annotations = Path("annotations.yml")
+user_prompt = f"""
+Please use the following annotations as source of truth for generating the
+column descriptions report:
+
+{jaffle_shop_annotations.read_text()}.
+"""
+
+if column_descriptions_report_path.exists():
+    column_descriptions_report = ColumnDescriptionsReport.from_json(
+        column_descriptions_report_path
+    )
+else:
+    column_descriptions_report: ColumnDescriptionsReport = (
+        await generate_column_descriptions_report(
+            project_name=PROJECT_NAME,
+            pipeline=pipe,
+            container=container,
+            model="gpt-5-mini",
+            user_prompt=user_prompt,
+        )
+    )
+    column_descriptions_report.to_json(column_descriptions_report_path)
+
+
+# %%
+from pathlib import Path
+
+from getml_interpretations import (
+    FeatureDescriptionsReport,
+    generate_feature_descriptions_report,
+)
+
+feature_descriptions_report_path = Path("feature_descriptions_report.json")
+
+user_prompt = """
+Feature descriptions are limited to max. 256 characters and 2-3 sentences.
+Please ensure that each feature description does not exceed this limit.
+Also no bullet points, new lines or line breaks etc.
+Keep the descriptions concise, straight-forward and informative.
+"""
+
+if feature_descriptions_report_path.exists():
+    feature_descriptions_report = FeatureDescriptionsReport.from_json(
+        feature_descriptions_report_path
+    )
+else:
+    feature_descriptions_report: FeatureDescriptionsReport = (
+        await generate_feature_descriptions_report(
+            project_name=PROJECT_NAME,
+            pipeline=pipe,
+            container=container,
+            user_prompt=user_prompt,
+            model="gpt-5-mini",
+            batch_size=20,
+        )
+    )
+    feature_descriptions_report.to_json(feature_descriptions_report_path)
+
+# %%
+column_mapping = {
+    desc.name: desc.title
+    for desc in feature_descriptions_report.feature_descriptions.values()
+}
+
+for old_name, new_name in column_mapping.items():
+    features_spark = features_spark.withColumnRenamed(old_name, new_name)
+
+
+# %%
+FEATURES_TABLE_FULL_NAME = "workspace.getml_fs.getml_features_explained"
+spark.sql(f"DROP TABLE IF EXISTS {FEATURES_TABLE_FULL_NAME}")
 
 features_spark.write.format("delta").mode("overwrite").option(
     "overwriteSchema", "true"
-).saveAsTable("workspace.getml_fs.getml_features")
+).saveAsTable(FEATURES_TABLE_FULL_NAME)
 
-spark.sql("""
-    ALTER TABLE workspace.getml_fs.getml_features
+spark.sql(f"""
+    ALTER TABLE {FEATURES_TABLE_FULL_NAME}
     ALTER COLUMN snapshot_id SET NOT NULL
 """)
 
-spark.sql("""
-    ALTER TABLE workspace.getml_fs.getml_features
-    ADD CONSTRAINT getml_features_pk PRIMARY KEY(snapshot_id)
+FEATURES_TABLE_NAME = FEATURES_TABLE_FULL_NAME.split(".")[-1]
+
+spark.sql(f"""
+    ALTER TABLE {FEATURES_TABLE_FULL_NAME}
+    ADD CONSTRAINT {FEATURES_TABLE_NAME}_pk PRIMARY KEY(snapshot_id)
 """)
 
 # %%
-for feature in pipe.features:
+for tables in column_descriptions_report.column_descriptions.values():
+    for column_name, column_description in tables.items():
+        if column_name in features_df.colnames:
+            # Escape single quotes to prevent SQL syntax errors
+            description = column_description.description.replace("'", "\\'")
+            spark.sql(
+                f"ALTER TABLE {FEATURES_TABLE_FULL_NAME} CHANGE COLUMN {column_name} COMMENT '{description}'"
+            )
+
+# %%
+for feature_description in feature_descriptions_report.feature_descriptions.values():
+    # Escape single quotes to prevent SQL syntax errors
+    description = feature_description.description.replace("'", "\\'")
+    description_with_original_name = f"({feature_description.name}) {description}"
     spark.sql(
-        f"ALTER TABLE workspace.getml_fs.getml_features CHANGE COLUMN {feature.name} COMMENT '{feature.sql}'"
+        f"ALTER TABLE {FEATURES_TABLE_FULL_NAME} CHANGE COLUMN {feature_description.title} COMMENT '{description_with_original_name}'"
     )
+
 
 # %%
 # Verify the Feature Table was created
 print("Table schema:")
-spark.sql("DESCRIBE TABLE workspace.getml_fs.getml_features").show(100, truncate=False)
+spark.sql(f"DESCRIBE TABLE {FEATURES_TABLE_FULL_NAME}").show(100, truncate=False)
 
