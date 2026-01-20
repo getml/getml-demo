@@ -380,8 +380,11 @@ def _load_all_tables(session: Session, schema_name: str) -> dict[str, int]:
     logger.info("Loading tables from stage...")
     results: dict[str, int] = {}
 
-    for table_name in JAFFLE_SHOP_TABLE_NAMES:
-        row_count: int = _load_single_table(session, table_name, schema_name)
+    for source_name in JAFFLE_SHOP_TABLE_NAMES:
+        table_name = source_name.removeprefix("raw_")
+        row_count: int = _load_single_table(
+            session, source_name, table_name, schema_name
+        )
         results[table_name] = row_count
 
     return results
@@ -389,6 +392,7 @@ def _load_all_tables(session: Session, schema_name: str) -> dict[str, int]:
 
 def _load_single_table(
     session: Session,
+    source_name: str,
     table_name: str,
     schema_name: str,
 ) -> int:
@@ -398,10 +402,11 @@ def _load_single_table(
     1. Creates empty table with schema inferred from Parquet metadata (INFER_SCHEMA)
     2. Copies data from stage using MATCH_BY_COLUMN_NAME for proper column mapping
     """
-    logger.info(f"Loading {table_name}...")
+    logger.info(f"Loading {source_name} -> {table_name}...")
 
     create_sql: str = load_sql(
         path="ingestion/create_table_from_parquet.sql",
+        source_name=source_name,
         table_name=table_name,
         stage_name=DEFAULT_STAGE_NAME,
         schema_name=schema_name,
@@ -410,6 +415,7 @@ def _load_single_table(
 
     copy_sql: str = load_sql(
         path="ingestion/copy_into_table.sql",
+        source_name=source_name,
         table_name=table_name,
         stage_name=DEFAULT_STAGE_NAME,
         schema_name=schema_name,

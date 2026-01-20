@@ -10,7 +10,7 @@ CREATE OR REPLACE TABLE {schema_name}.{table_name}
     ))
       FROM TABLE(
         INFER_SCHEMA(
-          LOCATION=>'@{schema_name}.{stage_name}/{table_name}.parquet',
+          LOCATION=>'@{schema_name}.{stage_name}/{source_name}.parquet',
           FILE_FORMAT=>'{schema_name}.PARQUET_FORMAT'
         )
       ));
