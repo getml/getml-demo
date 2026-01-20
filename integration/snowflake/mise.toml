@@ -1,9 +1,11 @@
 [env]
 SNOWFLAKE_ACCOUNT = "{{ exec(command='op read --account getml.1password.eu \"op://svibqfali56qralxbzg6wanc5i/Snowflake/account\"', cache_key='snowflake_account', duration='1w') }}"
 SNOWFLAKE_USER = "{{ exec(command='op read --account getml.1password.eu \"op://svibqfali56qralxbzg6wanc5i/Snowflake/username\"', cache_key='snowflake_user', duration='1w') }}"
-SNOWFLAKE_PASSWORD = "{{ exec(command='op read --account getml.1password.eu \"op://svibqfali56qralxbzg6wanc5i/Snowflake/password\"', cache_key='snowflake_password', duration='1w') }}"
+SNOWFLAKE_PASSWORD = "{{ exec(command='op read --account getml.1password.eu \"op://svibqfali56qralxbzg6wanc5i/Snowflake/access_token\"', cache_key='snowflake_access_token__', duration='1w') }}"
 
 SNOWFLAKE_ROLE = "ACCOUNTADMIN"
 SNOWFLAKE_WAREHOUSE = "COMPUTE_WH"
 SNOWFLAKE_DATABASE = "JAFFLE_SHOP"
 SNOWFLAKE_SCHEMA = "RAW"
+
+FDS_API_KEY = "{{ exec(command='op read --account getml.1password.eu \"op://svibqfali56qralxbzg6wanc5i/SupabaseProject/TEST_API_KEY\"', cache_key='fds_api_key', duration='1w') }}"
