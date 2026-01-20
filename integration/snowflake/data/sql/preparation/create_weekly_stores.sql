@@ -22,15 +22,15 @@ WITH store_activity AS (
         MAX(TRY_TO_TIMESTAMP(o.ordered_at)) as last_order_date,
         DATE_TRUNC('week', MIN(TRY_TO_TIMESTAMP(o.ordered_at))) as first_order_week,
         DATE_TRUNC('week', MAX(TRY_TO_TIMESTAMP(o.ordered_at))) as last_order_week
-    FROM {source_schema}.raw_stores s
-    LEFT JOIN {source_schema}.raw_orders o ON o.store_id = s.id
+    FROM {source_schema}.stores s
+    LEFT JOIN {source_schema}.orders o ON o.store_id = s.id
     GROUP BY s.id, s.name, TRY_TO_TIMESTAMP(s.opened_at)
 ),
 
 all_weeks AS (
     SELECT DISTINCT
         DATE_TRUNC('week', TRY_TO_TIMESTAMP(ordered_at)) as reference_date
-    FROM {source_schema}.raw_orders
+    FROM {source_schema}.orders
     WHERE ordered_at IS NOT NULL
 ),
 

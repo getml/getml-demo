@@ -15,7 +15,7 @@ WITH weekly_order_totals AS (
         DATE_TRUNC('week', TRY_TO_TIMESTAMP(ordered_at)) as week_start,
         SUM(order_total) / 100.0 as week_sales,
         COUNT(*) as week_orders
-    FROM {source_schema}.raw_orders
+    FROM {source_schema}.orders
     WHERE ordered_at IS NOT NULL
     GROUP BY store_id, DATE_TRUNC('week', TRY_TO_TIMESTAMP(ordered_at))
 )

@@ -77,7 +77,7 @@ def create_weekly_sales_by_store_with_target(
         session: Active Snowflake Snowpark session.
         settings: Optional settings for auto-bootstrapping warehouse and database.
             When provided, ensures infrastructure exists before preparing data.
-        source_schema: Schema containing raw_stores and raw_orders tables.
+        source_schema: Schema containing stores and orders tables.
         target_schema: Schema where prepared tables/views will be created.
         table_name: Name of the population view to create.
 
@@ -138,7 +138,7 @@ Population table: {qualified_table_name}
 
 def _validate_source_tables(session: Session, source_schema: str) -> None:
     """Validate that source schema exists and contains required tables."""
-    required_tables: list[str] = ["raw_stores", "raw_orders"]
+    required_tables: list[str] = ["stores", "orders"]
     logger.info(f"Validating {source_schema} schema and required tables...")
 
     try:
