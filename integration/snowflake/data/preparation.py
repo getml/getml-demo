@@ -2,7 +2,7 @@
 
 This module creates:
 - weekly_stores table: Store-week combinations with reference_date (Monday week start)
-- Population view with target (next week's sales)
+- Population dynamic table with target (next week's sales)
 
 reference_date is the Monday (week start) derived from DATE_TRUNC('week', ordered_at).
 
@@ -67,7 +67,7 @@ def create_weekly_sales_by_store_with_target(
 
     Creates:
     - weekly_stores: Table with store-week combinations (reference_date = Monday)
-    - Population view with target column (configurable name via table_name)
+    - Population dynamic table with target column (configurable name via table_name)
     - Target: Sum of order_total for the 7-day window starting at reference_date
 
     When settings are provided, auto-bootstraps the warehouse and database
@@ -104,9 +104,13 @@ PREPARING WEEKLY SALES FORECASTING DATA BY STORE FOR getML
 ================================================================================
 """)
 
+    warehouse = session.get_current_warehouse()
+    if not warehouse:
+        raise DataPreparationError("No warehouse set. Required for dynamic table creation.")
+
     _analyze_and_display_stores(session, source_schema)
-    per_store = _create_weekly_stores_table(session, source_schema, target_schema)
-    _create_target_view(session, source_schema, target_schema, table_name)
+    per_store = _create_weekly_stores_dynamic_table(session, source_schema, target_schema, warehouse)
+    _create_target_dynamic_table(session, source_schema, target_schema, table_name, warehouse)
 
     _display_sample_data(session, target_schema, per_store, table_name)
     _display_store_statistics(session, target_schema, table_name)
@@ -122,8 +126,8 @@ DATA PREPARATION COMPLETE!
 ================================================================================
 
 Objects created in {target_schema} schema:
-  - weekly_stores (TABLE)
-  - {table_name} (VIEW - USE THIS FOR getML)
+  - weekly_stores (DYNAMIC TABLE)
+  - {table_name} (DYNAMIC TABLE - USE THIS FOR getML)
 
 Population table: {qualified_table_name}
 """)
@@ -192,29 +196,28 @@ def _analyze_and_display_stores(session: Session, source_schema: str) -> None:
         )
 
 
-def _create_weekly_stores_table(
+def _create_weekly_stores_dynamic_table(
     session: Session,
     source_schema: str,
     target_schema: str,
+    warehouse: str,
 ) -> list[Row]:
-    """Create weekly_stores table with store-week combinations.
+    """Create weekly_stores dynamic table with store-week combinations.
 
     Creates one row per store per week using reference_date (Monday week start).
 
     Returns:
         List of store information rows.
     """
-    logger.info("\n2. Creating weekly_stores table (store-week combinations)...")
+    logger.info("\n2. Creating weekly_stores dynamic table (store-week combinations)...")
     logger.info("   reference_date is Monday (week start) from DATE_TRUNC('week', ...)")
 
-    _ = session.sql(
-        load_sql(path="preparation/drop_weekly_stores.sql", target_schema=target_schema)
-    ).collect()
     _ = session.sql(
         query=load_sql(
             path="preparation/create_weekly_stores.sql",
             source_schema=source_schema,
             target_schema=target_schema,
+            warehouse=warehouse,
         )
     ).collect()
 
@@ -244,20 +247,22 @@ def _create_weekly_stores_table(
     return per_store
 
 
-def _create_target_view(
+def _create_target_dynamic_table(
     session: Session,
     source_schema: str,
     target_schema: str,
     table_name: str,
+    warehouse: str,
 ) -> None:
-    """Create view with target - total sales for the following week per store."""
-    logger.info("\n3. Creating target view: next week's total sales per store...")
+    """Create dynamic table with target - total sales for the following week per store."""
+    logger.info("\n3. Creating target dynamic table: next week's total sales per store...")
     _ = session.sql(
         query=load_sql(
             path="preparation/calculate_target.sql",
             source_schema=source_schema,
             target_schema=target_schema,
             table_name=table_name,
+            warehouse=warehouse,
         )
     ).collect()
 

@@ -1,6 +1,6 @@
 -- Create store-week combinations for weekly sales forecasting
 --
--- This table creates the base data for getML: one row per store per week.
+-- This dynamic table creates the base data for getML: one row per store per week.
 -- reference_date is the Monday (week start) derived from DATE_TRUNC('week', ordered_at).
 --
 -- Filtering logic:
@@ -11,7 +11,10 @@
 -- - is_full_week_after_opening: Store had a full week of operation before this week
 -- - has_order_activity: Store has order data spanning this week
 -- - has_min_history: At least 7 days since store opened
-CREATE TABLE {target_schema}.weekly_stores AS
+CREATE OR REPLACE DYNAMIC TABLE {target_schema}.weekly_stores
+  TARGET_LAG = '1 day'
+  WAREHOUSE = {warehouse}
+AS
 WITH store_activity AS (
     SELECT
         s.id as store_id,
@@ -35,7 +38,7 @@ all_weeks AS (
 ),
 
 store_weeks AS (
-    SELECT 
+    SELECT
         sa.store_id,
         sa.store_name,
         w.reference_date,
@@ -49,8 +52,8 @@ store_weeks AS (
       AND w.reference_date < sa.last_order_week
 )
 
-SELECT 
-    ROW_NUMBER() OVER (ORDER BY reference_date, store_id) as snapshot_id,
+SELECT
+    HASH(store_id, reference_date) as snapshot_id,
     store_id,
     store_name,
     reference_date,
@@ -59,9 +62,8 @@ SELECT
     EXTRACT(week FROM reference_date) as week_number,
     DATEDIFF('day', opened_at, reference_date) as days_since_open,
     reference_date >= first_full_week as is_full_week_after_opening,
-    first_order_week IS NOT NULL 
+    first_order_week IS NOT NULL
         AND reference_date >= first_order_week
         AND reference_date < last_order_week as has_order_activity,
     DATEDIFF('day', opened_at, reference_date) >= 7 as has_min_history
-FROM store_weeks
-ORDER BY reference_date, store_id;
+FROM store_weeks;
