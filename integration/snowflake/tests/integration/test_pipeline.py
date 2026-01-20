@@ -56,7 +56,7 @@ class TestDataIngestion:
             SELECT COLUMN_NAME
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = 'RAW'
-            AND TABLE_NAME = 'RAW_ORDERS'
+            AND TABLE_NAME = 'ORDERS'
             ORDER BY ORDINAL_POSITION
         """).collect()
 

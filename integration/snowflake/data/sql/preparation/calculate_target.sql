@@ -1,6 +1,6 @@
--- Create view with target: next week's sales per store
+-- Create dynamic table with target: next week's sales per store
 --
--- This view joins weekly_stores with pre-aggregated order totals.
+-- Dynamic table joins weekly_stores with pre-aggregated order totals.
 -- Target is the sum of order_total for the 7-day window starting at reference_date.
 --
 -- Window: [reference_date, reference_date + 7 days)
@@ -8,14 +8,17 @@
 -- - Target covers Monday through Sunday of that week
 --
 -- Optimized: Single aggregation pass instead of correlated subqueries
-CREATE OR REPLACE VIEW {target_schema}.{table_name} AS
+CREATE OR REPLACE DYNAMIC TABLE {target_schema}.{table_name}
+  TARGET_LAG = '1 day'
+  WAREHOUSE = {warehouse}
+AS
 WITH weekly_order_totals AS (
     SELECT
         store_id,
         DATE_TRUNC('week', TRY_TO_TIMESTAMP(ordered_at)) as week_start,
         SUM(order_total) / 100.0 as week_sales,
         COUNT(*) as week_orders
-    FROM {source_schema}.raw_orders
+    FROM {source_schema}.orders
     WHERE ordered_at IS NOT NULL
     GROUP BY store_id, DATE_TRUNC('week', TRY_TO_TIMESTAMP(ordered_at))
 )
